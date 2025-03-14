@@ -1,0 +1,34 @@
+{
+  "name": "Undead Sensei Index",
+  "icon": "kenjiscombatforms:textures/book_images/icons/undead_sensei_icon.png",
+  "category": "kenjiscombatforms:mob_index",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Undead Sensei is the first sensei-mob that this mod adds to the game.$(br)This mob is quite powerful, and one of the main reasons is it's Ai and Fighting style! $(br2)--Any additional info can be found in the following pages--"
+    },
+    {
+      "title": "Undead Sensei",
+      "type": "patchouli:entity",
+      "name": "Undead Sensei",
+      "entity": "kenjiscombatforms:undead_sensei",
+      "text": "Here's what it looks like"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Undead Sensei can be found anywhere in the overworld and can only spawn at night. He will only spawn if there is somewhere to spawn, such as the ground(unless, air? no..).",
+      "title": "Spawn Location"
+    },
+    {
+    "type": "kenjiscombatforms:overworld_image"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "While The Undead Sensei is the weakest of the Sensei's, by no means is he weak.. $(br)Not only does he have a new Ai, fighting style and more Health, but it can also randomly inflit poisoning when attacking aswell as hunger on being attacked!. $(br2)Bonuses/abilities:$(br)--Poison Inflict--$(br)--Hunger Thorns--",
+      "title": "Attributes/Combat"
+    },
+    {
+      "type": "kenjiscombatforms:undead_sensei_attributes"
+    }
+  ]
+}

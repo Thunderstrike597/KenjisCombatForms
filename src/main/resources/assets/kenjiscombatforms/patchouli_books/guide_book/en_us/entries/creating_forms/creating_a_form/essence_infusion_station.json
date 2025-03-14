@@ -1,0 +1,20 @@
+{
+  "name": "The Essence Infusion Station",
+  "icon": "kenjiscombatforms:textures/book_images/icons/essence_infusion_station_icon.png",
+  "category": "kenjiscombatforms:creating_forms_subs/creating_a_form",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Essence Infusion Station",
+      "images": [
+        "kenjiscombatforms:textures/book_images/blocks/essence_infusion_station_picture.png"
+      ],
+      "text": "Sure, you might have the ingredients to your form, but how do you craft it? Crafting table? nahhh that would be too simple! If you want a form, you'll be able to craft it from the essence infusion station, which recipe is -->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:essence_infusion_station-recipe"
+    }
+  ]
+  }

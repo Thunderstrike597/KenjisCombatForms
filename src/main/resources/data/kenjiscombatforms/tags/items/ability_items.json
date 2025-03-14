@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "kenjiscombatforms:void_ability1_component",
+    "kenjiscombatforms:void_ability2_component",
+    "kenjiscombatforms:void_ability3_component",
+    "kenjiscombatforms:void_core_component",
+    "kenjiscombatforms:wither_ability1_component",
+    "kenjiscombatforms:wither_ability2_component",
+    "kenjiscombatforms:wither_ability3_component",
+    "kenjiscombatforms:swift_ability1_component",
+    "kenjiscombatforms:swift_ability2_component",
+    "kenjiscombatforms:power_ability1_component",
+    "kenjiscombatforms:power_ability2_component",
+    "kenjiscombatforms:wither_core_component"
+  ]
+}

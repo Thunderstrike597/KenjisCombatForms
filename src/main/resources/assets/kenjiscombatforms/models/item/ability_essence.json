@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "kenjiscombatforms:item/form_essence/ability_essence"
+  }
+}

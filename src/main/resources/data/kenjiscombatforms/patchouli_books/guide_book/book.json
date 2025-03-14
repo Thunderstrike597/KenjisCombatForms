@@ -1,0 +1,9 @@
+{
+  "name": "Kenji's Combat Forms:",
+  "landing_text": "This Book is a guide/index to everything this mod has to offer!$(br2) )This guide book is currently not up to date with all the mod changing features from this update. $(br) I do apoligise, for not providing info about the update in this book. This update is really big and has taken a lot of work. Anyways, enjoy! $(br2) --<3",
+  "version": 1,
+  "creative_tab": "kenjiscombatforms:kenjiscombattab",
+  "model": "kenjiscombatforms:guide_book",
+  "show_progress": false,
+  "use_resource_pack": true
+}

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:tier1_swiftness_essence"
+    },
+    "B": {
+      "item": "minecraft:feather"
+    },
+    "C": {
+      "item": "minecraft:gold_block"
+    },
+    "D": {
+      "item": "minecraft:slime_ball"
+    },
+    "E": {
+      "item": "minecraft:sugar"
+    },
+    "F": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "pattern": [
+    "EFE",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:swift_ability1_component"
+  }
+}

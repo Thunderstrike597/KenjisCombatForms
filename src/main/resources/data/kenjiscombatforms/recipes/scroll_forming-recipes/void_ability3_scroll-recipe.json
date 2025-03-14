@@ -1,0 +1,21 @@
+{
+  "type": "kenjiscombatforms:scroll_forming",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "kenjiscombatforms:blank_ability_scroll"
+    },
+    {
+      "item": "kenjiscombatforms:void_ability3_component",
+      "count": 1
+    },
+    {
+      "item": "kenjiscombatforms:glowing_scroll_dust",
+      "count": 12
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "kenjiscombatforms:void_final_scroll"
+  }
+}

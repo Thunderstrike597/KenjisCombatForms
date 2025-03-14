@@ -1,0 +1,46 @@
+{
+  "name": "Form Component Recipes",
+  "icon": "minecraft:crafting_table",
+  "category": "kenjiscombatforms:creating_forms_subs/form_components",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Component 1",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component1_icon.png"
+      ],
+      "text": "Here is the recipe for the Type 1 Component -->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:component-recipes/type1_component-recipe"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Component 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component2_icon.png"
+      ],
+      "text": "Here is the recipe for the Type 2 Component -->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:component-recipes/type2_component-recipe"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Component 3",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component3_icon.png"
+      ],
+      "text": "Here is the recipe for the Type 3 Component -->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:component-recipes/type3_component-recipe"
+    }
+  ]
+}

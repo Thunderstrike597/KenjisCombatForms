@@ -1,0 +1,6 @@
+{
+  "parent": "kenjiscombatforms:creating_forms",
+  "name": "Essence",
+  "description": "In Kenjis's Combat Forms, A crafting component that is crucial to being able to craft a form is the \"Form Essence\". Each Combat Form item has it's own corresponding essence needed in order for it to be crafted & each colour represents its tier... \"Green\" represents tier 1, \"Yellow\" represents tier 2, and \"Red\" represents tier 3.",
+  "icon": "kenjiscombatforms:textures/book_images/icons/tier3_swiftness_essence_icon.png"
+}

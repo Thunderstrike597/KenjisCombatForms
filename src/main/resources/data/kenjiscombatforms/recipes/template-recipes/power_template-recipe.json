@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:iron_block"
+    },
+    "B": {
+      "item": "minecraft:gray_wool"
+    },
+    "C": {
+      "item": "minecraft:white_wool"
+    },
+    "D": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "pattern": [
+    "BD ",
+    "DBC",
+    " CA"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:power_form_template"
+  }
+}

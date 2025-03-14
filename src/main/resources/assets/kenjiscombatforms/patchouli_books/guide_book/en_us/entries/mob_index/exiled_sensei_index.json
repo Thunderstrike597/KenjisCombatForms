@@ -1,0 +1,46 @@
+{
+  "name": "Exiled Sensei Index",
+  "icon": "kenjiscombatforms:textures/book_images/icons/exiled_sensei_small-icon.png",
+  "category": "kenjiscombatforms:mob_index",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Exiled Sensei, this fugly guy with a big nose is the second of the new Sensei-mobs added to the game! $(br)Quite a bit stronger than the Undead Sensei and one again, has another unique fighting style! $(br2)--Any additional info can be found on the following pages--"
+    },
+    {
+      "title": "Exiled Sensei",
+      "type": "patchouli:entity",
+      "name": "Exiled Sensei",
+      "entity": "kenjiscombatforms:exiled_sensei",
+      "text": "Here's what he looks like"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "This guy spawns in the overworld, but is quite rare to find(I think a bit rarer than a which or enderman maybe), and It can only spawn on solid blocks.",
+      "title": "Spawn Location"
+    },
+    {
+    "type": "kenjiscombatforms:overworld_image2"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Exiled Sensei is quite strong, not only does he have a new move-set, but he can also inflict Weakness I when attacking and Slowness I when attacked! $(br2)Bonuses/abilities:$(br)--weakness Inflict--$(br)--Slowness Thorns--",
+      "title": "Attributes/Combat"
+    },
+    {
+      "type": "kenjiscombatforms:exiled_sensei_attributes"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Exiled Sensei can also be tamed!$(br)In order to do this, first you'll lower him to under 20 health, only then will he have a chance to be tamed.$(br)You'll now if he is tamable via if he is glowing or not. Once he is, give him 5 Emeralds and a Power Form 2.$(br) Then you'll have a best friend ;)",
+      "title": "Taming"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Tame Items",
+      "images": [
+        "kenjiscombatforms:textures/book_images/template_pictures/tame-picture.png"
+      ]
+    }
+  ]
+}

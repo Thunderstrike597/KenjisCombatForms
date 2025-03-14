@@ -1,0 +1,19 @@
+{
+  "name": "Repair Your Forms!",
+  "icon": "kenjiscombatforms:textures/book_images/icons/empty_slot_icon.png",
+  "category": "kenjiscombatforms:forms_category",
+  "pages": [
+    {
+    "type": "patchouli:text",
+      "text": "Some forms are immune to breaking, but not all!$(br) non-Tier 3 forms have durability, a lot usually but still can break. If you don't want the trouble of going to get a form just to repair yours, you can just craft an Empty Slot and repair your form!"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Empty Slot",
+      "images": [
+        "kenjiscombatforms:textures/book_images/misc/empty_slot_picture.png"
+      ],
+      "text": "Here's the Empty Slot"
+    }
+  ]
+}

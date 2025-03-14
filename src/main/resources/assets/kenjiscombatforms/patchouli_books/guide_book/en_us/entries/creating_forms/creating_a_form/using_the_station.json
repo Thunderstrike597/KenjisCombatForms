@@ -1,0 +1,28 @@
+{
+  "name": "Using The Station",
+  "icon": "minecraft:diamond",
+  "category": "kenjiscombatforms:creating_forms_subs/creating_a_form",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Firstly, the essence slot. As shown on the the page to the right-->] This is the slot you insert your \"Essence\" of whatever type into!"
+    },
+    {
+      "type": "kenjiscombatforms:essence_infusion_guide1"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Secondly, the component slot. The component slot is used for- You guessed it.. Putting form components into! It is found right under the \"Essence\" slot as shown --> "
+    },
+    {
+      "type": "kenjiscombatforms:essence_infusion_guide2"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Thirdly, the template slot. Once you put your chosen template into the slot, (Considering you actually have the essence and component), You should now have your form!"
+    },
+    {
+      "type": "kenjiscombatforms:essence_infusion_guide3"
+    }
+  ]
+}

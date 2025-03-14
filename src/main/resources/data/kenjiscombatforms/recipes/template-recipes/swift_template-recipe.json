@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:iron_block"
+    },
+    "B": {
+      "item": "minecraft:feather"
+    },
+    "C": {
+      "item": "minecraft:gray_wool"
+    },
+    "D": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "pattern": [
+    " DC",
+    "BCD",
+    "AB "
+  ],
+  "result": {
+    "item": "kenjiscombatforms:swift_form_template"
+  }
+}

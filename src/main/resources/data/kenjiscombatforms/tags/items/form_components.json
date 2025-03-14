@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "kenjiscombatforms:type1_component",
+    "kenjiscombatforms:type2_component",
+    "kenjiscombatforms:type3_component",
+    "kenjiscombatforms:ability_component"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "components": [
+    {
+      "type": "patchouli:image",
+      "image":  "kenjiscombatforms:textures/book_images/template_pictures/exiled_devil-attributes.png",
+      "width": 256,
+      "height": 256,
+      "scale": 0.45
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Here is the List of Attributes for the mob.",
+      "y": 120
+    }
+  ]
+}

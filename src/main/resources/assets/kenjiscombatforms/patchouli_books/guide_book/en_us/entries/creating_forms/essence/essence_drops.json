@@ -1,0 +1,49 @@
+{
+  "name": "Obtaining Essence",
+  "icon": "kenjiscombatforms:textures/book_images/icons/dual_essence_icon.png",
+  "category": "kenjiscombatforms:creating_forms_subs/essence",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Swiftness/Power Essence: Tier 1",
+      "images": [
+        "kenjiscombatforms:textures/book_images/essence/tier1_essence_dual-picture.png"
+      ],
+      "text": "You can acquire Tier 1 Swiftness/Power Essence via killing an Undead Sensei. It has a chance to drop either tier 1 Swiftness, tier 1 Power Essence... Or nothing lol                                                 "
+    },
+    {
+      "type": "patchouli:entity",
+      "name": "Undead Sensei",
+      "entity": "kenjiscombatforms:undead_sensei",
+      "text": "More info about this mob in the Mobs Category."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Swiftness Essence: Tier 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/essence/tier2_essence_dual-picture.png"
+      ],
+      "text": "You can acquire Tier 2 Swiftness Essence via killing bob- Uhh I mean, the Exiled Sensei. He has a chance to drop either that or a tier 1 Power Essence... Or once again a chance for nothing ;)                                                 "
+    },
+    {
+      "type": "patchouli:entity",
+      "name": "Exiled Sensei",
+      "entity": "kenjiscombatforms:exiled_sensei",
+      "text": "More info about bob-Exiled Sensei in the Mobs Category."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Swiftness Essence: Tier 3",
+      "images": [
+        "kenjiscombatforms:textures/book_images/essence/tier3_essence_dual-picture.png"
+      ],
+      "text": "You can acquire Tier 3 Swiftness Essence via killing an Exiled Devil... You know what I was gonna say.                                                 "
+    },
+    {
+      "type": "patchouli:entity",
+      "name": "Exiled Devil",
+      "entity": "kenjiscombatforms:exiled_devil",
+      "text": "More info on the Exiled Devil in the Mobs Category"
+    }
+  ]
+}

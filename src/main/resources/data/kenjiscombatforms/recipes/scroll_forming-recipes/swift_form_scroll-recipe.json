@@ -1,0 +1,20 @@
+{
+  "type": "kenjiscombatforms:scroll_forming",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "kenjiscombatforms:blank_form_scroll"
+    },
+    {
+      "item": "kenjiscombatforms:swift_core_component"
+    },
+    {
+      "item": "kenjiscombatforms:glowing_scroll_dust",
+      "count": 5
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "kenjiscombatforms:swift_form_scroll"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:polished_deepslate"
+    },
+    "D": {
+      "item": "minecraft:stripped_spruce_log"
+    },
+    "E": {
+      "item": "minecraft:smooth_stone"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "BDB",
+    "BEB"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:essence_infusion_station"
+  }
+}

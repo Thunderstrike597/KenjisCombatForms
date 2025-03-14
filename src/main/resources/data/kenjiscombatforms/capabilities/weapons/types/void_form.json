@@ -1,0 +1,101 @@
+{
+  "category": "fist",
+  "hit_particle": "epicfight:entity.hit.blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
+  "swing_sound": "epicfight:entity.weapon.whoosh_rod",
+  "styles":
+  {
+    "cases":
+    [
+      {
+        "condition": "epicfight:offhand_category",
+        "predicate": {
+          "category": "fist"
+        },
+        "style": "two_hand"
+      }
+    ],
+    "default": "one_hand"
+  },
+  "offhand_item_compatible_predicate":
+  {
+    "condition": "epicfight:offhand_category",
+    "predicate": {
+      "category": "greatsword"
+    }
+  },
+  "collider":
+  {
+    "number": 3,
+    "center": [0.0, 0.0, -0.75],
+    "size": [0.4, 0.4, 0.8]
+  },
+  "combos":
+  {
+    "one_hand":
+    [
+      "wom:biped/combat/agony_auto_1",
+      "wom:biped/combat/agony_auto_3",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/moonless_auto_1",
+      "wom:biped/combat/enderblaster_onehand_dash",
+      "wom:biped/combat/staff_auto_2",
+      "wom:biped/combat/agony_auto_3",
+      "wom:biped/combat/moonless_auto_2",
+      "wom:biped/combat/moonless_auto_3",
+      "wom:biped/combat/moonless_auto_3_verso",
+      "wom:biped/skill/enderblaster_onehand_shoot_3",
+
+      "wom:biped/combat/katana_sheathed_dash",
+      "wom:biped/combat/katana_tsukuyomi"
+
+    ],
+    "two_hand":
+    [
+      "wom:biped/combat/agony_auto_1",
+      "wom:biped/combat/agony_auto_3",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/moonless_auto_1",
+      "wom:biped/combat/enderblaster_onehand_dash",
+      "wom:biped/combat/staff_auto_2",
+      "wom:biped/combat/agony_auto_3",
+      "wom:biped/combat/moonless_auto_2",
+      "wom:biped/combat/moonless_auto_3",
+      "wom:biped/combat/moonless_auto_3_verso",
+      "wom:biped/skill/enderblaster_onehand_shoot_3",
+
+      "wom:biped/combat/katana_sheathed_dash",
+      "wom:biped/combat/katana_tsukuyomi"
+
+    ],
+    "mount":
+    [
+      "epicfight:biped/combat/sword_mount_attack"
+    ]
+  },
+  "innate_skills":
+  {
+    "one_hand": "wom:ender_fusion",
+    "two_hand": "wom:ender_fusion"
+  },
+  "livingmotion_modifier": {
+    "one_hand":
+    {
+      "block": "wom:biped/skill/katana_guard",
+      "idle": "wom:biped/living/agony_idle",
+      "run" : "wom:biped/living/agony_run",
+      "walk": "wom:biped/living/agony_walk",
+      "chase" : "wom:biped/living/agony_run"
+    },
+    "two_hand":
+    {
+      "block": "wom:biped/skill/katana_guard",
+      "idle": "wom:biped/living/agony_idle",
+      "run" : "wom:biped/living/agony_run",
+      "walk": "wom:biped/living/agony_walk",
+      "chase" : "wom:biped/living/agony_run"
+    }
+  }
+}

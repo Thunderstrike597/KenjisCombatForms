@@ -1,0 +1,13 @@
+{
+  "type": "kenjiscombatforms:swift_form1",
+  "attributes": {
+      "common":{
+        "armor_negation": 0.6,
+        "impact": 0.6,
+        "max_strikes": 2,
+        "damage_bonus": 1.8,
+        "speed_bonus": -2.6
+      }
+
+  }
+}

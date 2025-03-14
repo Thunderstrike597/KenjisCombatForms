@@ -1,0 +1,34 @@
+{
+  "name": "Exiled Devil Index",
+  "icon": "kenjiscombatforms:textures/book_images/icons/exiled_devil_icon.png",
+  "category": "kenjiscombatforms:mob_index",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Exiled Devil, third of the Sensei Mobs more powerful than the last two! $(br)This powerful enemy will definitely test your skills! $(br2)--Any additional info can be found in the following pages--"
+    },
+    {
+      "title": "Exiled Devil",
+      "type": "patchouli:entity",
+      "name": "Exiled Devil",
+      "entity": "kenjiscombatforms:exiled_devil",
+      "text": "Here's what he looks like"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Unlike the last two Sensei's, this guy doesn't spawn in the overworld, Instead he spawns in the nether! Although like the other Sensei's He isn't all that common but when he does spawn, make sure you aren't next to lava.. $(br)Why? You know why...",
+      "title": "Spawn Location"
+    },
+    {
+    "type": "kenjiscombatforms:nether_image"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Exiled Devil is an opponent to be feared and you should always be cautious when fighting it. $(br) This Sensei, like the last two can inflict status effects when hit and/or attacked, however this sensei inflicts two effects at a time, while having a chance to set you on fire! so be ready! $(br) Lastly his Ai is more advance allowing for more attack combos! $(br2)Bonuses/abilities: $(br)--Fire Infliction-- $(br)--Wither Inflict-- $(br)--Blindness Thorns-- $(br)--Slowness Inflict-- $(br)--Poison Thorns--",
+      "title": "Attributes/Combat"
+    },
+    {
+      "type": "kenjiscombatforms:exiled_devil_attributes"
+    }
+  ]
+}

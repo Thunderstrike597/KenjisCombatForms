@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:empty_slot"
+    },
+    "B": {
+      "item": "minecraft:diamond"
+    },
+    "C": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "D": {
+      "item": "minecraft:iron_sword"
+    },
+    "E": {
+      "item": "minecraft:iron_axe"
+    },
+    "F": {
+      "item": "minecraft:iron_hoe"
+    }
+  },
+  "pattern": [
+    "ECD",
+    "CAB",
+    "DBF"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:type1_component"
+  }
+}

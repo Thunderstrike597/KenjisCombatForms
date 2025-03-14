@@ -1,0 +1,6 @@
+{
+  "parent": "kenjiscombatforms:creating_forms",
+  "name": "Form Templates",
+  "description": "The last crafting component you will need to craft a form is the form's template... Luckily, its easy to craft and works for all tiers of its type!",
+  "icon": "kenjiscombatforms:textures/book_images/icons/swift_form_template_icon.png"
+}

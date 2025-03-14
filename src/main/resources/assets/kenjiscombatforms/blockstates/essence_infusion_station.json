@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "": {
+      "model": "kenjiscombatforms:block/essence_infusion_station",
+      "uvlock": true
+    }
+  }
+}

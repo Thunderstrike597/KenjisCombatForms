@@ -1,0 +1,19 @@
+{
+  "type": "kenjiscombatforms:essence_infusion",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "kenjiscombatforms:ability_form_template"
+    },
+    {
+      "item": "kenjiscombatforms:ability_essence"
+    },
+    {
+      "item": "kenjiscombatforms:ability_component"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "kenjiscombatforms:empty_ability_form"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "B": {
+      "item": "kenjiscombatforms:overcharged_nether_plasma"
+    },
+    "C": {
+      "item": "minecraft:gold_block"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    }
+  },
+  "pattern": [
+    "CBD",
+    "BAB",
+    "DBC"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:wither_ability3_component"
+  }
+}

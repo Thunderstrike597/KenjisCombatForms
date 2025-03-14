@@ -1,0 +1,211 @@
+{
+  "messages.kenjiscombatforms.stay_message": "指示があるまでここにいます。",
+  "messages.kenjiscombatforms.follow_message": "はい、あなたについていきます。",
+  "messages.kenjiscombatforms.wander_message": "周りをさまよいます。どこに行くでしょうか？",
+  "messages.kenjiscombatforms.tame_message": "慈悲をくださったのですか？永遠の忠誠を誓います。",
+  "messages.kenjiscombatforms.defend_message": "命をかけてあなたを守ります。",
+  "messages.kenjiscombatforms.passive_message": "そう言うなら、攻撃はしません。",
+
+  "menu.kenjiscombatforms.void": "虚無の形態",
+  "menu.kenjiscombatforms.wither": "ウィザーの形態",
+  "menu.kenjiscombatforms.swift": "俊敏の形態",
+  "menu.kenjiscombatforms.power": "力の形態",
+
+  "screen.kenjiscombatforms.choose_form_screen": "形態を選択",
+  "screen.kenjiscombatforms.swap_form_screen": "形態を交換",
+  "menu.kenjiscombatforms.basic_form_button": "基本形態",
+  "menu.kenjiscombatforms.void_form_button": "虚無の形態",
+  "menu.kenjiscombatforms.wither_form_button": "ウィザーの形態",
+  "menu.kenjiscombatforms.level_up_button": "レベルアップ！",
+
+  "menu.kenjiscombatforms.void_ability1": "テレポート",
+  "menu.kenjiscombatforms.void_ability2": "虚無の裂け目",
+  "menu.kenjiscombatforms.void_final": "エンダーの形態",
+  "menu.kenjiscombatforms.wither_ability1": "ウィザーダッシュ",
+  "menu.kenjiscombatforms.wither_ability2": "魂の漂流",
+  "menu.kenjiscombatforms.wither_final": "ウィザーの形態",
+
+  "menu.kenjiscombatforms.swift_ability1": "スピードブースト",
+  "menu.kenjiscombatforms.power_ability1": "力のブースト",
+  "menu.kenjiscombatforms.swift_ability2": "鈍化付与",
+  "menu.kenjiscombatforms.power_ability2": "弱体化付与",
+  "menu.kenjiscombatforms.none": "§r",
+
+  "key.category.kenjiscombatforms.abilities": "ケンジの戦闘形態 - アビリティ",
+  "key.kenjiscombatforms.ability1": "アビリティ: 1",
+  "key.kenjiscombatforms.ability2": "アビリティ: 2",
+  "key.kenjiscombatforms.ability3": "アビリティ: 3",
+  "key.category.kenjiscombatforms.misc": "ケンジの戦闘形態 - その他",
+  "key.kenjiscombatforms.open_form_menu": "形態メニューを開く",
+  "key.kenjiscombatforms.quick_form_change": "形態クイックチェンジ",
+  "key.kenjiscombatforms.toggle_hand_combat": "素手戦闘の切り替え",
+
+  "entity.kenjiscombatforms.exiled_devil": "追放された悪魔",
+  "entity.kenjiscombatforms.exiled_sensei": "追放された先生",
+  "entity.kenjiscombatforms.undead_sensei": "不死の先生",
+  "entity.kenjiscombatforms.ability_trader": "アビリティ商人",
+  "entity.kenjiscombatforms.ender_entity": "エンダーエンティティ",
+  "entity.kenjiscombatforms.shadow_player": "影のプレイヤー",
+  "entity.kenjiscombatforms.wither_player": "ウィザープレイヤー",
+  "entity.kenjiscombatforms.wither_minion": "ウィザーの手下",
+
+  "enchantment.kenjiscombatforms.heavy_hitter": "重打撃",
+  "enchantment.kenjiscombatforms.quick_striker": "速攻",
+
+  "block.kenjiscombatforms.essence_infusion_station": "エッセンス注入ステーション",
+  "block.kenjiscombatforms.scroll_forming_table": "巻物作成台",
+  "block.kenjiscombatforms.void_rift": "虚無の裂け目",
+
+  "item.kenjiscombatforms.empty_slot": "空きスロット",
+  "item.kenjiscombatforms.slot_liner": "スロットライナー",
+  "item.kenjiscombatforms.swift_form_template": "テンプレート：俊敏の形態",
+  "item.kenjiscombatforms.power_form_template": "テンプレート：力の形態",
+  "item.kenjiscombatforms.ability_form_template": "アビリティ形態テンプレート",
+
+  "item.kenjiscombatforms.exiled_devil_spawn_egg": "スポーンエッグ：追放された悪魔",
+  "item.kenjiscombatforms.exiled_sensei_spawn_egg": "スポーンエッグ：追放された先生",
+  "item.kenjiscombatforms.undead_sensei_spawn_egg": "スポーンエッグ：不死の先生",
+  "item.kenjiscombatforms.ability_trader_spawn_egg": "スポーンエッグ：アビリティ商人",
+
+  "item.kenjiscombatforms.tier1_swiftness_essence": "俊敏のエッセンス：ランク1",
+  "item.kenjiscombatforms.tier2_swiftness_essence": "俊敏のエッセンス：ランク2",
+  "item.kenjiscombatforms.tier3_swiftness_essence": "俊敏のエッセンス：ランク3",
+
+  "item.kenjiscombatforms.tier1_power_essence": "力のエッセンス：ランク1",
+  "item.kenjiscombatforms.tier2_power_essence": "力のエッセンス：ランク2",
+  "item.kenjiscombatforms.tier3_power_essence": "力のエッセンス：ランク3",
+  "item.kenjiscombatforms.ability_essence": "アビリティのエッセンス",
+
+  "item.kenjiscombatforms.empty_ability_form": "空のアビリティ形態",
+  "item.kenjiscombatforms.wither_ability1_component": "ウィザーコンポーネント：アビリティ1",
+  "item.kenjiscombatforms.wither_ability2_component": "ウィザーコンポーネント：アビリティ2",
+  "item.kenjiscombatforms.wither_ability3_component": "ウィザーコンポーネント：アビリティ3",
+  "item.kenjiscombatforms.void_ability1_component": "虚無コンポーネント：アビリティ1",
+  "item.kenjiscombatforms.void_ability2_component": "虚無コンポーネント：アビリティ2",
+  "item.kenjiscombatforms.void_ability3_component": "虚無コンポーネント：アビリティ3",
+  "item.kenjiscombatforms.swift_ability1_component": "俊敏コンポーネント：アビリティ1",
+  "item.kenjiscombatforms.power_ability1_component": "力コンポーネント：アビリティ1",
+  "item.kenjiscombatforms.swift_ability2_component": "俊敏コンポーネント：アビリティ2",
+  "item.kenjiscombatforms.power_ability2_component": "力コンポーネント：アビリティ2",
+
+  "item.kenjiscombatforms.void_core_component": "虚無コアコンポーネント",
+  "item.kenjiscombatforms.wither_core_component": "ウィザーコアコンポーネント",
+  "item.kenjiscombatforms.swift_core_component": "俊敏コアコンポーネント",
+  "item.kenjiscombatforms.power_core_component": "力コアコンポーネント",
+
+  "item.kenjiscombatforms.ender_charge": "エンダーチャージ",
+  "item.kenjiscombatforms.nether_charge": "ネザーチャージ",
+  "item.kenjiscombatforms.overcharged_ender_plasma": "過充電エンダープラズマ",
+  "item.kenjiscombatforms.overcharged_nether_plasma": "過充電ネザープラズマ",
+
+  "item.kenjiscombatforms.type1_component": "形態コンポーネント：タイプ1",
+  "item.kenjiscombatforms.type2_component": "形態コンポーネント：タイプ2",
+  "item.kenjiscombatforms.type3_component": "形態コンポーネント：タイプ3",
+
+  "item.kenjiscombatforms.ability_component": "アビリティコンポーネント",
+  "item.kenjiscombatforms.ability_charge": "アビリティチャージ",
+  "item.kenjiscombatforms.glowing_scroll_dust": "輝く巻物の粉",
+  "item.kenjiscombatforms.mysterious_dust": "謎の粉",
+
+  "item.kenjiscombatforms.blank_form_scroll": "白紙の形態巻物",
+
+  "item.kenjiscombatforms.void_form_scroll": "虚無の巻物",
+  "item.kenjiscombatforms.wither_form_scroll": "ウィザーの巻物",
+  "item.kenjiscombatforms.swift_form_scroll": "俊敏の巻物",
+  "item.kenjiscombatforms.power_form_scroll": "力の巻物",
+
+  "item.kenjiscombatforms.blank_ability_scroll": "白紙のアビリティ巻物",
+
+  "item.kenjiscombatforms.void_ability1_scroll": "能力の巻物：テレポート",
+  "item.kenjiscombatforms.wither_ability1_scroll": "能力の巻物：ウィザーダッシュ",
+  "item.kenjiscombatforms.swift_ability1_scroll": "能力の巻物：スピードブースト",
+  "item.kenjiscombatforms.power_ability1_scroll": "能力の巻物：筋力ブースト",
+
+  "item.kenjiscombatforms.void_ability2_scroll": "能力の巻物：アンカーリフト",
+  "item.kenjiscombatforms.wither_ability2_scroll": "能力の巻物：ソウルドリフト",
+  "item.kenjiscombatforms.swift_ability2_scroll": "能力の巻物：俊敏付与",
+  "item.kenjiscombatforms.power_ability2_scroll": "能力の巻物：パワー付与",
+
+  "item.kenjiscombatforms.void_final_scroll": "最終能力の巻物：エンダーフォーム",
+  "item.kenjiscombatforms.wither_final_scroll": "最終能力の巻物：ウィザーフォーム",
+
+  "item.kenjiscombatforms.basic_form1": "基本形態：1",
+  "item.kenjiscombatforms.basic_form2": "基本形態：2",
+  "item.kenjiscombatforms.basic_form3": "基本形態：3",
+
+  "item.kenjiscombatforms.swift_form1": "俊敏形態：タイプ1",
+  "item.kenjiscombatforms.swift_form2": "俊敏形態：タイプ2",
+  "item.kenjiscombatforms.swift_form3": "俊敏形態：タイプ3",
+
+  "item.kenjiscombatforms.power_form1": "力の形態：タイプ1",
+  "item.kenjiscombatforms.power_form2": "力の形態：タイプ2",
+  "item.kenjiscombatforms.power_form3": "力の形態：タイプ3",
+
+  "item.kenjiscombatforms.fist": "§r",
+  "item.kenjiscombatforms.fist_tier2": "§r",
+  "item.kenjiscombatforms.fist_tier3": "§r",
+  "item.kenjiscombatforms.void_fist": "§r",
+  "item.kenjiscombatforms.void_fist_tier2": "§r",
+  "item.kenjiscombatforms.void_fist_tier3": "§r",
+  "item.kenjiscombatforms.wither_fist": "§r",
+  "item.kenjiscombatforms.wither_fist_tier2": "§r",
+  "item.kenjiscombatforms.wither_fist_tier3": "§r",
+  "item.kenjiscombatforms.swift_fist": "§r",
+  "item.kenjiscombatforms.swift_fist_tier2": "§r",
+  "item.kenjiscombatforms.swift_fist_tier3": "§r",
+  "item.kenjiscombatforms.power_fist": "§r",
+  "item.kenjiscombatforms.power_fist_tier2": "§r",
+  "item.kenjiscombatforms.power_fist_tier3": "§r",
+
+  "item.kenjiscombatforms.void_form": "虚無の形態",
+  "item.kenjiscombatforms.void_form_type2": "虚無の形態：タイプ2",
+  "item.kenjiscombatforms.void_form_type3": "虚無の形態：タイプ3",
+  "item.kenjiscombatforms.wither_form": "ウィザーの形態",
+  "item.kenjiscombatforms.wither_form_type2": "ウィザーの形態：タイプ2",
+  "item.kenjiscombatforms.wither_form_type3": "ウィザーの形態：タイプ3",
+
+  "tooltip.kenjiscombatforms.basic_form1.tooltip":"この形態は適切に使えば強力ですが、\n多くの面で不足があります。",
+  "tooltip.kenjiscombatforms.basic_form2.tooltip":"最初の基本形態よりもやや強力なバージョンで、\nより多くのコンボとダメージ/ヒットが可能です。",
+  "tooltip.kenjiscombatforms.basic_form3.tooltip":"基本形態の最も強力なバージョンで、\n強力な攻撃と長いコンボを可能にします。",
+
+  "tooltip.kenjiscombatforms.swift_form1.tooltip": "[ダメージは低いが、素早く機敏]\n「基本レベルで自己防衛する方法を知っています。」\n\nこの動きセットで、あなたは非常に機敏で、強力なパンチと激しい回転を繰り出すことができます。",
+  "tooltip.kenjiscombatforms.power_form1.tooltip": "[ダメージは高いが、やや遅い]\n「どんな敵でも簡単に倒す方法を知っています。」\n\nこの動きセットで、あなたは重い一撃で戦うことができ、確実に各打撃を有効にします。",
+  "tooltip.kenjiscombatforms.swift_form2.tooltip": "[ダメージは低いが、素早く機敏]\n「簡単に自己防衛する方法を知っています。」\n\nこの動きセットで、あなたは非常に機敏で、強力なパンチと激しい回転を繰り出すことができます。",
+  "tooltip.kenjiscombatforms.power_form2.tooltip": "[ダメージは高いが、やや遅い]\n「どんな敵でも簡単に倒す方法を知っています。」\n\nこの動きセットで、あなたは重い一撃で戦うことができ、確実に各打撃を有効にします。",
+  "tooltip.kenjiscombatforms.swift_form3.tooltip": "[ダメージは低いが、素早く機敏]\n「完璧に自己防衛する方法を知っています。」\n\nこの動きセットで、あなたは非常に機敏で、強力なパンチと激しい回転を繰り出すことができます。",
+  "tooltip.kenjiscombatforms.power_form3.tooltip": "[ダメージは高いが、やや遅い]\n「どんな敵でも完璧に倒す方法を知っています。」\n\nこの動きセットで、あなたは重い一撃で戦うことができ、確実に各打撃を有効にします。",
+
+  "tooltip.kenjiscombatforms.void_form.tooltip":"これを持つと虚無の力が響きます",
+  "tooltip.kenjiscombatforms.void_form_type2.tooltip":"これを持つと虚無の力が響き、叫びます",
+  "tooltip.kenjiscombatforms.void_form_type3.tooltip":"これを持つと虚無の力が響き、叫びます...\n不吉な存在を感じます。なぜこんなに現実味があるのでしょうか？",
+
+  "tooltip.kenjiscombatforms.wither_form.tooltip":"これを持つとネザーの邪悪さが震えますが、\nあなたはそれを恐れていません",
+  "tooltip.kenjiscombatforms.wither_form_type2.tooltip":"これを持つとネザーの邪悪さが震えます。\nあなたはそれを恐れていませんが、何かを感じます...",
+  "tooltip.kenjiscombatforms.wither_form_type3.tooltip":"これを持つとネザーの邪悪さが震え、泣きます。\nあなたはそれを恐れていませんが...何かしらつながりを感じます。",
+
+  "tooltip.kenjiscombatforms.tier1_swiftness_essence.tooltip":"「この小さな物体から機敏で激しいエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.tier2_swiftness_essence.tooltip":"「この小さな物体から機敏で激しいエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.tier3_swiftness_essence.tooltip":"「この小さな物体から機敏で激しいエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.tier1_power_essence.tooltip":"「この小さな物体から強力で力強いエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.tier2_power_essence.tooltip":"「この小さな物体から強力で力強いエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.tier3_power_essence.tooltip":"「この小さな物体から強力で力強いエネルギーが放出されています...」",
+  "tooltip.kenjiscombatforms.ability_essence.tooltip":"「この小さな物体から奇妙だが非常に強力なエネルギーが放出されています」",
+
+  "tooltip.kenjiscombatforms.type1_component.tooltip": "「これは役に立ちそうです...」",
+  "tooltip.kenjiscombatforms.type2_component.tooltip":"「これは役に立ちそうです...」",
+  "tooltip.kenjiscombatforms.type3_component.tooltip": "「これは役に立ちそうです...」",
+  "tooltip.kenjiscombatforms.ability_component.tooltip": "「これは役に立ちそうです...」",
+
+  "tooltip.kenjiscombatforms.slot_liner.tooltip":"「空きスロット」の作成に使用",
+  "tooltip.kenjiscombatforms.empty_slot.tooltip":"「エッセンス注入ステーション」で使用",
+
+  "tooltip.kenjiscombatforms.void_fist1.tooltip": "虚無の拳",
+  "tooltip.kenjiscombatforms.void_fist2.tooltip": "虚無の拳：2",
+  "tooltip.kenjiscombatforms.void_fist3.tooltip": "虚無の拳：3",
+
+  "tooltip.kenjiscombatforms.wither_fist1.tooltip": "ウィザーの拳",
+  "tooltip.kenjiscombatforms.wither_fist2.tooltip": "ウィザーの拳：2",
+  "tooltip.kenjiscombatforms.wither_fist3.tooltip": "ウィザーの拳：3",
+
+  "creativetab.kenjiscombattab": "ケンジの戦闘形態"
+}

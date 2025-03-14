@@ -1,0 +1,11 @@
+{
+  "type": "kenjiscombatforms:wither_fist_tier3",
+  "attributes": {
+      "common":{
+        "impact": 0.65,
+        "max_strikes": 4,
+        "damage_bonus": 6,
+        "speed_bonus": -1.85
+      }
+  }
+}

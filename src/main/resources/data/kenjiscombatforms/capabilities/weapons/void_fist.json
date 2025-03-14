@@ -1,0 +1,11 @@
+{
+  "type": "kenjiscombatforms:void_fist",
+  "attributes": {
+      "common":{
+        "damage_bonus": 3,
+        "max_strikes": 1,
+        "impact": 0.3,
+        "speed_bonus": -2
+      }
+  }
+}

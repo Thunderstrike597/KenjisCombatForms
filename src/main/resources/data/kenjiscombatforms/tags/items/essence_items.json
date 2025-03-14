@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "kenjiscombatforms:tier1_swiftness_essence",
+    "kenjiscombatforms:tier2_swiftness_essence",
+    "kenjiscombatforms:tier3_swiftness_essence",
+    "kenjiscombatforms:tier1_power_essence",
+    "kenjiscombatforms:tier2_power_essence",
+    "kenjiscombatforms:tier3_power_essence",
+    "kenjiscombatforms:ability_essence"
+  ]
+}

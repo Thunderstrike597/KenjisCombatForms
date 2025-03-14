@@ -1,0 +1,33 @@
+{
+  "name": "Form Templates",
+  "icon": "kenjiscombatforms:textures/book_images/icons/power_form_template_icon.png",
+  "category": "kenjiscombatforms:creating_forms_subs/form_templates",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Swiftness Template",
+      "images": [
+        "kenjiscombatforms:textures/book_images/form_templates/swift_form_template.png"
+      ],
+      "text": "Here is the recipe for the Swiftness Template-->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:template-recipes/swift_template-recipe"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Power Template",
+      "images": [
+        "kenjiscombatforms:textures/book_images/form_templates/power_form_template.png"
+      ],
+      "text": "Here is the recipe for the Power Template-->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:template-recipes/power_template-recipe"
+    }
+  ]
+}

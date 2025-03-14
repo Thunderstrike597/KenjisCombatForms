@@ -1,0 +1,35 @@
+{
+  "name": "Material Recipes",
+  "icon": "kenjiscombatforms:textures/book_images/icons/empty_slot_icon.png",
+  "category": "kenjiscombatforms:creating_forms_subs/form_components",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Empty Slot",
+      "images": [
+        "kenjiscombatforms:textures/book_images/misc/empty_slot_picture.png"
+      ],
+      "text": "The Empty Slot is needed in order to craft any of the Form Components! Here's the recipe -->"
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:empty_slot-recipe",
+      "text": "You'll find the Slot Liner-Recipe on the next page >>"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Slot Liner",
+      "images": [
+        "kenjiscombatforms:textures/book_images/misc/slot_liner_picture.png"
+      ],
+      "text": "The Slot Liner is pretty much only used to craft the Empty Form Slot from the previous page."
+    },
+    {
+      "title": "--Recipe--",
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:slot_liner-recipe",
+      "text": "here's the recipe!"
+    }
+  ]
+}

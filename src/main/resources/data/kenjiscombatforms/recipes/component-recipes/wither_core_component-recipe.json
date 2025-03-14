@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:nether_charge"
+    },
+    "B": {
+      "item": "minecraft:soul_lantern"
+    },
+    "C": {
+      "item": "minecraft:blaze_powder"
+    },
+    "D": {
+      "item": "minecraft:iron_sword"
+    },
+    "E": {
+      "item": "minecraft:iron_hoe"
+    },
+    "F": {
+      "item": "epicfight:glove"
+    },
+    "G": {
+      "item": "epicfight:diamond_dagger"
+    }
+  },
+  "pattern": [
+    "ECG",
+    "ABA",
+    "FCD"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:wither_core_component"
+  }
+}

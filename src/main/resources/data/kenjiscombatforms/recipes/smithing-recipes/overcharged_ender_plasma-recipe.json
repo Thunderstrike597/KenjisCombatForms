@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "kenjiscombatforms:void_core_component"
+  },
+  "base": {
+    "item": "kenjiscombatforms:ender_charge"
+  },
+  "addition": {
+    "item": "kenjiscombatforms:ability_essence"
+  },
+  "result": {
+    "item": "kenjiscombatforms:overcharged_ender_plasma"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "kenjiscombatforms:power_form2",
+  "attributes": {
+      "common":{
+        "armor_negation": 1.0,
+          "impact": 0.6,
+        "max_strikes": 3,
+        "damage_bonus": 0,
+        "speed_bonus": -2.6
+      }
+
+  }
+}

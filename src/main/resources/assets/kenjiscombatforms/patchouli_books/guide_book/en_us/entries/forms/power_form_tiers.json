@@ -1,0 +1,40 @@
+{
+  "name": "Power Forms",
+  "icon":  "kenjiscombatforms:textures/book_images/icons/power_form_icon.png",
+  "category": "kenjiscombatforms:forms_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "So, the first tier of the \"Power\" Form is very basic, however it is easily obtainable. There aren't any added effect's or passive bonuses, those are for the higher tiers!                                                 "
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Power: Form 1",
+      "images": [
+          "kenjiscombatforms:textures/book_images/forms/power_form1_picture.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "So, the second tier of the \"Power\" Form is a bit more advanced, allowing you to have a different move-set and inflict a status affect on hit depending on if you have something in the off-hand or not! Firstly, if you do not have any item in the offhand, you will default to move-set 1 allowing you inflict \"Withering\" on your target! Secondly, if you have an item in the off-hand you will switch to move-set 2 and can inflict the \"Weakness\" status effect!                                                 "
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Power: Form 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/forms/power_form2_picture.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "So, the third tier of the \"Power\" Form is the final and strongest form, allowing you to -once again, inflict an effect depending on your move-set, however you also get a passive bonus depending it as well! If you aren't holding anything, you gain \"Strength II\"! If you are, you will gain \"Absorption II\"!                                                 "
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Power: Form 3",
+      "images": [
+        "kenjiscombatforms:textures/book_images/forms/power_form3_picture.png"
+      ]
+    }
+  ]
+}

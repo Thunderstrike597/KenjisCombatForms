@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "kenjiscombatforms:swift_form_template",
+    "kenjiscombatforms:power_form_template",
+    "kenjiscombatforms:ability_form_template"
+  ]
+}

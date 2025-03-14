@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:tier1_power_essence"
+    },
+    "B": {
+      "item": "minecraft:bricks"
+    },
+    "C": {
+      "item": "minecraft:iron_block"
+    },
+    "D": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "E": {
+      "item": "minecraft:iron_sword"
+    },
+    "F": {
+      "item": "minecraft:golden_sword"
+    }
+  },
+  "pattern": [
+    "DED",
+    "BAB",
+    "CFC"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:power_ability1_component"
+  }
+}

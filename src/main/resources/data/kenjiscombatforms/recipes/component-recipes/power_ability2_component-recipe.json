@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:tier2_power_essence"
+    },
+    "B": {
+      "item": "minecraft:red_dye"
+    },
+    "C": {
+      "item": "minecraft:emerald_block"
+    },
+    "D": {
+      "item": "minecraft:iron_block"
+    },
+    "E": {
+      "item": "wom:diamond_greataxe"
+    },
+    "F": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "CEC",
+    "BAB",
+    "FDF"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:power_ability2_component"
+  }
+}

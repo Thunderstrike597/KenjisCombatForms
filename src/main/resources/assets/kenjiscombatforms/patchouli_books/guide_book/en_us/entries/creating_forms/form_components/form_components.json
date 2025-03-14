@@ -1,0 +1,35 @@
+{
+  "name": "Form Components",
+  "icon": "kenjiscombatforms:textures/book_images/icons/form_component1_icon.png",
+  "category": "kenjiscombatforms:creating_forms_subs/form_components",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "In this mod there are 3 Form Component items(So Far). Each component is used in the Essence Infusion Station to craft a form of any type as long as it is of the same tier. You'll need one of these if you want to craft a form!"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Component: Type 1",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component1_icon.png"
+      ],
+      "text": "Can be used for Type1 Forms"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Component: Type 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component2_icon.png"
+      ],
+      "text": "Can be used for Type2 Forms"
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Component: Type 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/icons/form_component3_icon.png"
+      ],
+      "text": "Can be used for Type3 Forms"
+      }
+    ]
+  }

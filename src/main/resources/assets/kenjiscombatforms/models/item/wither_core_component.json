@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "kenjiscombatforms:item/ability_items/wither_core_component"
+  }
+}

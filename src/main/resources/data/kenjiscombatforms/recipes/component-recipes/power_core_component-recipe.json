@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:empty_slot"
+    },
+    "B": {
+      "item": "kenjiscombatforms:tier1_power_essence"
+    },
+    "C": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:gold_ingot"
+    },
+    "E": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "ECE",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:power_core_component"
+  }
+}

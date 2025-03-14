@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:tier2_swiftness_essence"
+    },
+    "B": {
+      "item": "minecraft:scute"
+    },
+    "C": {
+      "item": "minecraft:iron_block"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "wom:iron_staff"
+    }
+  },
+  "pattern": [
+    "DED",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:swift_ability2_component"
+  }
+}

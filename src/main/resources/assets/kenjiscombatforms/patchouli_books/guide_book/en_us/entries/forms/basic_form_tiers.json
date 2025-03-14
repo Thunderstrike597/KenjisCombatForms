@@ -1,0 +1,46 @@
+{
+  "name": "Basic Forms",
+  "icon": "kenjiscombatforms:textures/book_images/icons/basic_form1_icon.png",
+  "category": "kenjiscombatforms:forms_category",
+  "pages": [
+    {
+      "type": "patchouli:image",
+      "title": "Basic Form 1",
+      "images": [
+          "kenjiscombatforms:textures/book_images/forms/basic_form_picture.png"
+      ],
+      "text": "This is the first of the basic forms, which can be crafted. It isn't that powerful, but it gets the job done.."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:non_essence_form-recipes/basic_form1-recipe",
+      "text": "Here's the recipe."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Basic Form 2",
+      "images": [
+        "kenjiscombatforms:textures/book_images/forms/basic_form2_picture.png"
+      ],
+      "text": "This is the second of the basic forms, which can also be crafted. It isn't overly powerful, but can be in the right hands.."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:non_essence_form-recipes/basic_form2-recipe",
+      "text": "Here's the recipe."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Basic Form 3",
+      "images": [
+        "kenjiscombatforms:textures/book_images/forms/basic_form3_picture.png"
+      ],
+      "text": "This is the third and last of the basic forms, which can be crafted as well. It is quite powerful, and can match many foes.."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kenjiscombatforms:non_essence_form-recipes/basic_form3-recipe",
+      "text": "Here's the recipe."
+    }
+  ]
+}

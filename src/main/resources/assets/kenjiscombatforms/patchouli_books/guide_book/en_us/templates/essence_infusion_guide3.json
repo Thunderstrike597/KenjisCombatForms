@@ -1,0 +1,11 @@
+{
+  "components": [
+    {
+      "type": "patchouli:image",
+      "image": "kenjiscombatforms:textures/book_images/template_pictures/essence_infusion_guide3.png",
+      "width": 192,
+      "height": 192,
+      "scale": 0.65
+    }
+  ]
+}

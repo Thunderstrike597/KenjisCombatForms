@@ -1,0 +1,8 @@
+{
+  "essence_infusion_sound": {
+    "sounds": ["kenjiscombatforms:essence_infusion_sound"]
+  },
+  "void_rift_sound": {
+    "sounds": ["kenjiscombatforms:void_rift_sound"]
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "messages.kenjiscombatforms.stay_message": "Ich werde hier bleiben, bis du etwas anderes sagst.",
+  "messages.kenjiscombatforms.follow_message": "Okay, ich werde dir folgen",
+  "messages.kenjiscombatforms.wander_message": "Ich werde umherwandern, wohin werde ich gehen?",
+  "messages.kenjiscombatforms.tame_message": "Du hast mir Gnade gewährt? Ich werde dir meine unsterbliche Loyalität schenken",
+  "messages.kenjiscombatforms.defend_message": "Ich werde dich mit meinem Leben verteidigen",
+  "messages.kenjiscombatforms.passive_message": "Wenn du darauf bestehst, werde ich nicht angreifen",
+
+  "menu.kenjiscombatforms.void": "Leere-Form",
+  "menu.kenjiscombatforms.wither": "Wither-Form",
+  "menu.kenjiscombatforms.swift": "Schnelle Form",
+  "menu.kenjiscombatforms.power": "Kraft-Form",
+
+  "screen.kenjiscombatforms.choose_form_screen": "Form wählen",
+  "screen.kenjiscombatforms.swap_form_screen": "Form wechseln",
+  "menu.kenjiscombatforms.basic_form_button": "Grundform",
+  "menu.kenjiscombatforms.void_form_button": "Leere-Form",
+  "menu.kenjiscombatforms.wither_form_button": "Wither-Form",
+  "menu.kenjiscombatforms.level_up_button": "Aufleveln!",
+
+  "menu.kenjiscombatforms.void_ability1": "Teleportieren",
+  "menu.kenjiscombatforms.void_ability2": "Leere-Riss",
+  "menu.kenjiscombatforms.void_final": "Ender-Form",
+  "menu.kenjiscombatforms.wither_ability1": "Wither-Sprung",
+  "menu.kenjiscombatforms.wither_ability2": "Seelendrift",
+  "menu.kenjiscombatforms.wither_final": "Wither-Form",
+
+  "menu.kenjiscombatforms.swift_ability1": "Geschwindigkeitsschub",
+  "menu.kenjiscombatforms.power_ability1": "Stärkeschub",
+  "menu.kenjiscombatforms.swift_ability2": "Langsamkeit zufügen",
+  "menu.kenjiscombatforms.power_ability2": "Schwäche zufügen",
+  "menu.kenjiscombatforms.none": "§r",
+
+  "key.category.kenjiscombatforms.abilities": "Kenjis Kampfformen - Fähigkeiten",
+  "key.kenjiscombatforms.ability1": "Fähigkeit: 1",
+  "key.kenjiscombatforms.ability2": "Fähigkeit: 2",
+  "key.kenjiscombatforms.ability3": "Fähigkeit: 3",
+  "key.category.kenjiscombatforms.misc": "Kenjis Kampfformen - Sonstiges",
+  "key.kenjiscombatforms.open_form_menu": "Formmenü öffnen",
+  "key.kenjiscombatforms.quick_form_change": "Schneller Formwechsel",
+  "key.kenjiscombatforms.toggle_hand_combat": "Handkampf umschalten",
+
+  "entity.kenjiscombatforms.exiled_devil": "Verbannter Teufel",
+  "entity.kenjiscombatforms.exiled_sensei": "Verbannter Sensei",
+  "entity.kenjiscombatforms.undead_sensei": "Untoter Sensei",
+  "entity.kenjiscombatforms.ability_trader": "Fähigkeitenhändler",
+  "entity.kenjiscombatforms.ender_entity": "Ender-Wesen",
+  "entity.kenjiscombatforms.shadow_player": "Schattenspieler",
+  "entity.kenjiscombatforms.wither_player": "Wither-Spieler",
+  "entity.kenjiscombatforms.wither_minion": "Wither-Diener",
+
+
+  "enchantment.kenjiscombatforms.heavy_hitter": "Schwerer Schläger",
+  "enchantment.kenjiscombatforms.quick_striker": "Schneller Angreifer",
+
+  "block.kenjiscombatforms.essence_infusion_station": "Essenz-Infusionsstation",
+  "block.kenjiscombatforms.scroll_forming_table": "Schriftrollenformungstisch",
+  "block.kenjiscombatforms.void_rift": "Leere-Riss",
+
+  "item.kenjiscombatforms.empty_slot": "Leerer Slot",
+  "item.kenjiscombatforms.slot_liner": "Slot-Auskleidung",
+  "item.kenjiscombatforms.swift_form_template": "Vorlage: Schnelle Form",
+  "item.kenjiscombatforms.power_form_template": "Vorlage: Kraft-Form",
+  "item.kenjiscombatforms.ability_form_template": "Fähigkeitsform-Vorlage",
+
+  "item.kenjiscombatforms.exiled_devil_spawn_egg": "Spawn-Ei: Verbannter Teufel",
+  "item.kenjiscombatforms.exiled_sensei_spawn_egg": "Spawn-Ei: Verbannter Sensei",
+  "item.kenjiscombatforms.undead_sensei_spawn_egg": "Spawn-Ei: Untoter Sensei",
+  "item.kenjiscombatforms.ability_trader_spawn_egg": "Spawn-Ei: Fähigkeitenhändler",
+
+  "item.kenjiscombatforms.tier1_swiftness_essence": "Essenz der Schnelligkeit: Stufe 1",
+  "item.kenjiscombatforms.tier2_swiftness_essence": "Essenz der Schnelligkeit: Stufe 2",
+  "item.kenjiscombatforms.tier3_swiftness_essence": "Essenz der Schnelligkeit: Stufe 3",
+
+  "item.kenjiscombatforms.tier1_power_essence": "Essenz der Kraft: Stufe 1",
+  "item.kenjiscombatforms.tier2_power_essence": "Essenz der Kraft: Stufe 2",
+  "item.kenjiscombatforms.tier3_power_essence": "Essenz der Kraft: Stufe 3",
+  "item.kenjiscombatforms.ability_essence": "Essenz der Fähigkeiten",
+
+  "item.kenjiscombatforms.empty_ability_form": "Leere Fähigkeitsform",
+  "item.kenjiscombatforms.wither_ability1_component": "Wither-Komponente: Fähigkeit 1",
+  "item.kenjiscombatforms.wither_ability2_component": "Wither-Komponente: Fähigkeit 2",
+  "item.kenjiscombatforms.wither_ability3_component": "Wither-Komponente: Fähigkeit 3",
+  "item.kenjiscombatforms.void_ability1_component": "Leere-Komponente: Fähigkeit 1",
+  "item.kenjiscombatforms.void_ability2_component": "Leere-Komponente: Fähigkeit 2",
+  "item.kenjiscombatforms.void_ability3_component": "Leere-Komponente: Fähigkeit 3",
+  "item.kenjiscombatforms.swift_ability1_component": "Schnelligkeits-Komponente: Fähigkeit 1",
+  "item.kenjiscombatforms.power_ability1_component": "Kraft-Komponente: Fähigkeit 1",
+  "item.kenjiscombatforms.swift_ability2_component": "Schnelligkeits-Komponente: Fähigkeit 2",
+  "item.kenjiscombatforms.power_ability2_component": "Kraft-Komponente: Fähigkeit 2",
+
+  "item.kenjiscombatforms.void_core_component": "Leere-Kernkomponente",
+  "item.kenjiscombatforms.wither_core_component": "Wither-Kernkomponente",
+  "item.kenjiscombatforms.swift_core_component": "Schnelligkeits-Kernkomponente",
+  "item.kenjiscombatforms.power_core_component": "Kraft-Kernkomponente",
+
+  "item.kenjiscombatforms.ender_charge": "Ender-Ladung",
+  "item.kenjiscombatforms.nether_charge": "Nether-Ladung",
+  "item.kenjiscombatforms.overcharged_ender_plasma": "Überladenes Ender-Plasma",
+  "item.kenjiscombatforms.overcharged_nether_plasma": "Überladenes Nether-Plasma",
+
+
+  "item.kenjiscombatforms.type1_component": "Formkomponente: Typ 1",
+  "item.kenjiscombatforms.type2_component": "Formkomponente: Typ 2",
+  "item.kenjiscombatforms.type3_component": "Formkomponente: Typ 3",
+
+  "item.kenjiscombatforms.ability_component": "Fähigkeitskomponente",
+  "item.kenjiscombatforms.ability_charge": "Fähigkeitsladung",
+  "item.kenjiscombatforms.glowing_scroll_dust": "Leuchtender Schriftrollenstaub",
+  "item.kenjiscombatforms.mysterious_dust": "Mysteriöser Staub",
+
+  "item.kenjiscombatforms.blank_form_scroll": "Leere Formschriftrolle",
+
+  "item.kenjiscombatforms.void_form_scroll": "Leere-Schriftrolle",
+  "item.kenjiscombatforms.wither_form_scroll": "Wither-Schriftrolle",
+  "item.kenjiscombatforms.swift_form_scroll": "Schnelligkeits-Schriftrolle",
+  "item.kenjiscombatforms.power_form_scroll": "Kraft-Schriftrolle",
+
+  "item.kenjiscombatforms.blank_ability_scroll": "Leere Fähigkeitsschriftrolle",
+
+  "item.kenjiscombatforms.void_ability1_scroll": "Fähigkeitsrolle: Teleportation",
+  "item.kenjiscombatforms.wither_ability1_scroll": "Fähigkeitsrolle: Withersprint",
+  "item.kenjiscombatforms.swift_ability1_scroll": "Fähigkeitsrolle: Geschwindigkeitsschub",
+  "item.kenjiscombatforms.power_ability1_scroll": "Fähigkeitsrolle: Stärkeschub",
+
+  "item.kenjiscombatforms.void_ability2_scroll": "Fähigkeitsrolle: Ankerriss",
+  "item.kenjiscombatforms.wither_ability2_scroll": "Fähigkeitsrolle: Seelendrift",
+  "item.kenjiscombatforms.swift_ability2_scroll": "Fähigkeitsrolle: Schnelligkeit Zufügen",
+  "item.kenjiscombatforms.power_ability2_scroll": "Fähigkeitsrolle: Kraft Zufügen",
+
+  "item.kenjiscombatforms.void_final_scroll": "Finale Fähigkeitsrolle: Enderform",
+  "item.kenjiscombatforms.wither_final_scroll": "Finale Fähigkeitsrolle: Witherform",
+
+  "item.kenjiscombatforms.basic_form1": "Grundform: 1",
+  "item.kenjiscombatforms.basic_form2": "Grundform: 2",
+  "item.kenjiscombatforms.basic_form3": "Grundform: 3",
+
+  "item.kenjiscombatforms.swift_form1": "Schnelle Form: Typ 1",
+  "item.kenjiscombatforms.swift_form2": "Schnelle Form: Typ 2",
+  "item.kenjiscombatforms.swift_form3": "Schnelle Form: Typ 3",
+
+  "item.kenjiscombatforms.power_form1": "Kraft-Form: Typ 1",
+  "item.kenjiscombatforms.power_form2": "Kraft-Form: Typ 2",
+  "item.kenjiscombatforms.power_form3": "Kraft-Form: Typ 3",
+
+  "item.kenjiscombatforms.fist": "§r",
+  "item.kenjiscombatforms.fist_tier2": "§r",
+  "item.kenjiscombatforms.fist_tier3": "§r",
+  "item.kenjiscombatforms.void_fist": "§r",
+  "item.kenjiscombatforms.void_fist_tier2": "§r",
+  "item.kenjiscombatforms.void_fist_tier3": "§r",
+  "item.kenjiscombatforms.wither_fist": "§r",
+  "item.kenjiscombatforms.wither_fist_tier2": "§r",
+  "item.kenjiscombatforms.wither_fist_tier3": "§r",
+  "item.kenjiscombatforms.swift_fist": "§r",
+  "item.kenjiscombatforms.swift_fist_tier2": "§r",
+  "item.kenjiscombatforms.swift_fist_tier3": "§r",
+  "item.kenjiscombatforms.power_fist": "§r",
+  "item.kenjiscombatforms.power_fist_tier2": "§r",
+  "item.kenjiscombatforms.power_fist_tier3": "§r",
+
+  "item.kenjiscombatforms.void_form": "Leere-Form",
+  "item.kenjiscombatforms.void_form_type2": "Leere-Form: Typ 2",
+  "item.kenjiscombatforms.void_form_type3": "Leere-Form: Typ 3",
+  "item.kenjiscombatforms.wither_form": "Wither-Form",
+  "item.kenjiscombatforms.wither_form_type2": "Wither-Form: Typ 2",
+  "item.kenjiscombatforms.wither_form_type3": "Wither-Form: Typ 3",
+
+  "tooltip.kenjiscombatforms.basic_form1.tooltip": "Diese Form kann in den richtigen Händen mächtig sein,\njedoch fehlt es ihr in vielen Bereichen.",
+  "tooltip.kenjiscombatforms.basic_form2.tooltip": "Eine etwas stärkere Version der ersten Grundform,\ndie mehr Kombos und Schaden pro Treffer ermöglicht.",
+  "tooltip.kenjiscombatforms.basic_form3.tooltip": "Die mächtigste Version der Grundform,\ndie dir kraftvolle Angriffe und längere Kombos ermöglicht.",
+
+  "tooltip.kenjiscombatforms.swift_form1.tooltip": "[Nicht sehr schadensträchtig, aber schnell und wendig]\n\"Du weißt, wie du dich auf grundlegendem Niveau verteidigen kannst.\"\n\nMit diesem Bewegungsset bist du sehr wendig und kannst kraftvolle Schläge und heftige Drehungen ausführen.",
+  "tooltip.kenjiscombatforms.power_form1.tooltip": "[Sehr schadensträchtig, aber ziemlich langsam]\n\"Du weißt, wie du jeden Feind mit Leichtigkeit niederschlagen kannst.\"\n\nMit diesem Bewegungsset kannst du mit schweren Schlägen kämpfen und sicherstellst, dass jeder Treffer zählt.",
+  "tooltip.kenjiscombatforms.swift_form2.tooltip": "[Nicht sehr schadensträchtig, aber schnell und wendig]\n\"Du weißt, wie du dich leicht verteidigen kannst.\"\n\nMit diesem Bewegungsset bist du sehr wendig und kannst kraftvolle Schläge und heftige Drehungen ausführen.",
+  "tooltip.kenjiscombatforms.power_form2.tooltip": "[Sehr schadensträchtig, aber ziemlich langsam]\n\"Du weißt, wie du jeden Feind mit Leichtigkeit niederschlagen kannst.\"\n\nMit diesem Bewegungsset kannst du mit schweren Schlägen kämpfen und sicherstellst, dass jeder Treffer zählt.",
+  "tooltip.kenjiscombatforms.swift_form3.tooltip": "[Nicht sehr schadensträchtig, aber schnell und wendig]\n\"Du weißt, wie du dich makellos verteidigen kannst.\"\n\nMit diesem Bewegungsset bist du sehr wendig und kannst kraftvolle Schläge und heftige Drehungen ausführen.",
+  "tooltip.kenjiscombatforms.power_form3.tooltip": "[Sehr schadensträchtig, aber ziemlich langsam]\n\"Du weißt, wie du jeden Feind makellos niederschlagen kannst.\"\n\nMit diesem Bewegungsset kannst du mit schweren Schlägen kämpfen und sicherstellst, dass jeder Treffer zählt.",
+
+  "tooltip.kenjiscombatforms.void_form.tooltip": "Die Macht der Leere hallt wider, wenn du dies hältst.",
+  "tooltip.kenjiscombatforms.void_form_type2.tooltip": "Die Macht der Leere hallt wider und schreit, wenn du dies hältst.",
+  "tooltip.kenjiscombatforms.void_form_type3.tooltip": "Die Macht der Leere hallt wider und schreit, wenn du dies hältst...\nDu spürst auch eine unheimliche Präsenz, warum fühlt es sich so real an?",
+
+  "tooltip.kenjiscombatforms.wither_form.tooltip": "Das Böse des Nethers bebt, wenn du dies hältst,\naber du hast keine Angst davor.",
+  "tooltip.kenjiscombatforms.wither_form_type2.tooltip": "Das Böse des Nethers bebt, wenn du dies hältst,\nDu hast keine Angst davor, aber du spürst etwas...",
+  "tooltip.kenjiscombatforms.wither_form_type3.tooltip": "Das Böse des Nethers bebt und weint, wenn du dies hältst,\nDu hast keine Angst davor, aber... Du fühlst dich irgendwie verbunden.",
+
+  "tooltip.kenjiscombatforms.tier1_swiftness_essence.tooltip": "\"Eine wendige und wilde Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.tier2_swiftness_essence.tooltip": "\"Eine wendige und wilde Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.tier3_swiftness_essence.tooltip": "\"Eine wendige und wilde Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.tier1_power_essence.tooltip": "\"Eine kraftvolle und mächtige Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.tier2_power_essence.tooltip": "\"Eine kraftvolle und mächtige Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.tier3_power_essence.tooltip": "\"Eine kraftvolle und mächtige Energie strahlt von diesem kleinen Objekt aus...\"",
+  "tooltip.kenjiscombatforms.ability_essence.tooltip": "\"Eine seltsame, jedoch extrem mächtige Energie strahlt von diesem kleinen Objekt aus\"",
+
+  "tooltip.kenjiscombatforms.type1_component.tooltip": "\"Es scheint, als könnte dies nützlich sein...\",",
+  "tooltip.kenjiscombatforms.type2_component.tooltip": "\"Es scheint, als könnte dies nützlich sein...\",",
+  "tooltip.kenjiscombatforms.type3_component.tooltip": "\"Es scheint, als könnte dies nützlich sein...\",",
+  "tooltip.kenjiscombatforms.ability_component.tooltip": "\"Es scheint, als könnte dies nützlich sein...\",",
+
+  "tooltip.kenjiscombatforms.slot_liner.tooltip": "Wird verwendet, um \"Leerer Slot\" herzustellen",
+  "tooltip.kenjiscombatforms.empty_slot.tooltip": "Wird in der \"Essenz-Infusionsstation\" verwendet",
+
+  "tooltip.kenjiscombatforms.void_fist1.tooltip": "Leere-Faust",
+  "tooltip.kenjiscombatforms.void_fist2.tooltip": "Leere-Faust: 2",
+  "tooltip.kenjiscombatforms.void_fist3.tooltip": "Leere-Faust: 3",
+
+  "tooltip.kenjiscombatforms.wither_fist1.tooltip": "Wither-Faust",
+  "tooltip.kenjiscombatforms.wither_fist2.tooltip": "Wither-Faust: 2",
+  "tooltip.kenjiscombatforms.wither_fist3.tooltip": "Wither-Faust: 3",
+
+  "creativetab.kenjiscombattab": "Kenjis Kampfformen"
+}

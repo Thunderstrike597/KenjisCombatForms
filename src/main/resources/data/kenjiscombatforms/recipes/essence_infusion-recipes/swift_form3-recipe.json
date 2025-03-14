@@ -1,0 +1,19 @@
+{
+  "type": "kenjiscombatforms:essence_infusion",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "kenjiscombatforms:swift_form_template"
+    },
+    {
+      "item": "kenjiscombatforms:tier3_swiftness_essence"
+    },
+    {
+      "item": "kenjiscombatforms:type3_component"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "kenjiscombatforms:swift_form3"
+  }
+}

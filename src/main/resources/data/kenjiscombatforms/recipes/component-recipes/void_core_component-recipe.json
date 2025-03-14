@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:ender_charge"
+    },
+    "B": {
+      "item": "minecraft:ender_eye"
+    },
+    "C": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "D": {
+      "item": "minecraft:iron_sword"
+    },
+    "E": {
+      "item": "minecraft:iron_hoe"
+    },
+    "F": {
+      "item": "epicfight:glove"
+    },
+    "G": {
+      "item": "epicfight:diamond_dagger"
+    }
+  },
+  "pattern": [
+    "ECG",
+    "ABA",
+    "FCD"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:void_core_component"
+  }
+}

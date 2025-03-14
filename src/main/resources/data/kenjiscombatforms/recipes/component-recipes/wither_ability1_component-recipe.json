@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:nether_charge"
+    },
+    "B": {
+      "item": "minecraft:firework_rocket"
+    },
+    "C": {
+      "item": "minecraft:feather"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:wither_ability1_component"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "components": [
+    {
+      "type": "patchouli:image",
+      "image":  "kenjiscombatforms:textures/book_images/template_pictures/overworld_image.png",
+      "width": 256,
+      "height": 256,
+      "scale": 0.45
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Once again, another pictures of some trees.",
+      "y": 120,
+      "x": 10
+    }
+  ]
+}

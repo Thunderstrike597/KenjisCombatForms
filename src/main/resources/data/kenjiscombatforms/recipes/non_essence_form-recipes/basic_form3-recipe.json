@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "kenjiscombatforms:empty_slot"
+    },
+    "B": {
+      "item": "epicfight:diamond_dagger"
+    },
+    "C": {
+      "item": "minecraft:diamond_sword"
+    },
+    "D": {
+      "item": "epicfight:glove"
+    },
+    "E": {
+      "item": "minecraft:ghast_tear"
+    },
+    "F": {
+      "item": "minecraft:blaze_rod"
+    }
+  },
+  "pattern": [
+    "CBE",
+    "BAF",
+    "EFD"
+  ],
+  "result": {
+    "item": "kenjiscombatforms:basic_form3"
+  }
+}
