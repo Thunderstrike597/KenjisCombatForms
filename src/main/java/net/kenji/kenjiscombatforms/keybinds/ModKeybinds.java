@@ -12,11 +12,10 @@ public class ModKeybinds {
     public static String KEY_ABILITY3 = "key.kenjiscombatforms.ability3";
 
     public static String MISC_KEY_CATEGORY = "key.category.kenjiscombatforms.misc";
-    public static String SWITCH_ITEMS = "key.kenjiscombatforms.swap_combat";
+    public static String TOGGLE_HAND_COMBAT = "key.kenjiscombatforms.toggle_hand_combat";
 
     public static String KEY_FORM_MENU_OPEN = "key.kenjiscombatforms.open_form_menu";
     public static String KEY_QUICK_FORM_CHANGE = "key.kenjiscombatforms.quick_form_change";
-    public static String KEY_TOGGLE_HAND_COMBAT = "key.kenjiscombatforms.toggle_hand_combat";
 
 
    public static KeyMapping ABILITY1_KEY = new KeyMapping(KEY_ABILITY1, KeyConflictContext.IN_GAME,
@@ -29,8 +28,6 @@ public class ModKeybinds {
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
     public static KeyMapping QUICK_FORM_CHANGE_KEY = new KeyMapping(KEY_QUICK_FORM_CHANGE, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
-    public static KeyMapping TOGGLE_HAND_COMBAT_KEY = new KeyMapping(KEY_TOGGLE_HAND_COMBAT, KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
-    public static KeyMapping SWITCH_ITEMS_KEY = new KeyMapping(SWITCH_ITEMS, KeyConflictContext.IN_GAME,
+    public static KeyMapping TOGGLE_HAND_COMBAT_KEY = new KeyMapping(TOGGLE_HAND_COMBAT, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
 }

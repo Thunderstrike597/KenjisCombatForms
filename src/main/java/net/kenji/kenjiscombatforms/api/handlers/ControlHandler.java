@@ -177,20 +177,6 @@ public class ControlHandler {
                         }
                     }
                 }
-                if (ModKeybinds.TOGGLE_HAND_COMBAT_KEY.consumeClick()) {
-                    data.currentToggleState = (data.currentToggleState + 1) % 2;
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
-                        data.lastPressTime = currentTime;
-                        if (data.isHandCombat) {
-                            data.isHandCombat = false;
-                            NetworkHandler.INSTANCE.sendToServer(new UpdateHandCombatPacket(false));
-                        } else {
-                            data.isHandCombat = true;
-                            NetworkHandler.INSTANCE.sendToServer(new UpdateHandCombatPacket(true));
-                        }
-                    }
-                }
             }
         }
     }

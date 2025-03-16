@@ -25,10 +25,8 @@ import net.kenji.kenjiscombatforms.network.witherform.WitherFormDashPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -48,6 +46,9 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEventHandler {
+
+    private static long lastPressTime = 0;
+    private static final long PRESS_COOLDOWN = 100;
 
     private static final ClientEventHandler INSTANCE = new ClientEventHandler();
     public Player currentPlayer;
@@ -73,45 +74,49 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
 
+
+
         if (player == null) return;
+        if (ModKeybinds.TOGGLE_HAND_COMBAT_KEY.consumeClick()) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastPressTime > PRESS_COOLDOWN) {
+                    lastPressTime = currentTime;
 
-        if (ModKeybinds.SWITCH_ITEMS_KEY.consumeClick()) {
+                int selectedSlot = player.getInventory().selected;
+                ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+                player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                    ItemStack storedItem = container.getStoredItem();
+                    if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
+                        if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                            container.setStoredItem(currentItem.copy());
+                        }
+                        player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                        originalSlot = selectedSlot; // Save the original slot
+                        NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
+                        player.getInventory().setChanged();
 
+                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 
-            int selectedSlot = player.getInventory().selected;
-            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-                if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
-                    if (!(currentItem.getItem() instanceof BaseFistClass)) {
-                        container.setStoredItem(currentItem.copy());
+                    } else if (!container.getStoredItem().isEmpty()) {
+                        player.getInventory().setItem(originalSlot, storedItem);
+                        container.setStoredItem(ItemStack.EMPTY);
+                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+
+                        originalSlot = -1;
+                        player.getInventory().setChanged();
+
+                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
                     }
-                    player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
-                    originalSlot = selectedSlot; // Save the original slot
-                    NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
-                    player.getInventory().setChanged();
+                    if (currentItem.getItem() instanceof BaseFistClass) {
+                        player.getInventory().setItem(originalSlot, storedItem);
+                        container.setStoredItem(ItemStack.EMPTY);
+                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
 
-                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 
-                } else if (!container.getStoredItem().isEmpty()) {
-                    player.getInventory().setItem(originalSlot, storedItem);
-                    container.setStoredItem(ItemStack.EMPTY);
-                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-
-                    originalSlot = -1;
-                    player.getInventory().setChanged();
-
-                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-                }
-                if (currentItem.getItem() instanceof BaseFistClass) {
-                    player.getInventory().setItem(originalSlot, storedItem);
-                    container.setStoredItem(ItemStack.EMPTY);
-                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-
-                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-
-                }
-            });
+                    }
+                });
+            }
         }
     }
 

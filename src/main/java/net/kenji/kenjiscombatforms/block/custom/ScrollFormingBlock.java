@@ -2,8 +2,15 @@ package net.kenji.kenjiscombatforms.block.custom;
 
 import net.kenji.kenjiscombatforms.block.entity.ScrollFormingBlockEntity;
 import net.kenji.kenjiscombatforms.block.entity.ModBlockEntities;
+import net.kenji.kenjiscombatforms.event.sound.SoundManager;
+import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.sound.SoundTriggerPacket;
+import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.SyncVoidData4Packet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,6 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +72,7 @@ public class ScrollFormingBlock extends BaseEntityBlock {
             BlockEntity entity = plevel.getBlockEntity(blockPos);
             if(entity instanceof ScrollFormingBlockEntity) {
                 NetworkHooks.openScreen(((ServerPlayer)player_), (ScrollFormingBlockEntity)entity, blockPos);
+                SoundManager.playCustomSound(player_.level(), blockPos, SoundEvents.UI_LOOM_SELECT_PATTERN, SoundSource.BLOCKS, 1.0f, 1.0f);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

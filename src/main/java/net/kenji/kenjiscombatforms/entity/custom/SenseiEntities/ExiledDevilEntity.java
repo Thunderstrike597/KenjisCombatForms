@@ -140,6 +140,16 @@ public class ExiledDevilEntity extends PathfinderMob {
     }
 
     @Override
+    public boolean canPickUpLoot() {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeItem(ItemStack p_21522_) {
+        return false;
+    }
+
+    @Override
     protected boolean isSunBurnTick() {
         return false;
     }
@@ -148,6 +158,7 @@ public class ExiledDevilEntity extends PathfinderMob {
     public boolean fireImmune() {
         return true;
     }
+
 
     protected void registerGoals() {
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));

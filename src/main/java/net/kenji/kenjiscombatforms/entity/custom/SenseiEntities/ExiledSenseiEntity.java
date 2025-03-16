@@ -117,6 +117,15 @@ public class ExiledSenseiEntity extends TamableAnimal implements NeutralMob{
         return false;
     }
 
+    @Override
+    public boolean canPickUpLoot() {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeItem(ItemStack p_21522_) {
+        return false;
+    }
 
     @Override
     public boolean isAngryAt(@NotNull LivingEntity livingEntity) {

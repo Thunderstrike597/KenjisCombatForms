@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -94,7 +95,15 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
 
     private static final Random RANDOM = new Random();
 
+    @Override
+    public boolean canPickUpLoot() {
+        return false;
+    }
 
+    @Override
+    public boolean canTakeItem(ItemStack p_21522_) {
+        return false;
+    }
 
 
     @Override
