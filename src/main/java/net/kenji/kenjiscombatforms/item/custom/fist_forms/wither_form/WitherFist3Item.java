@@ -62,10 +62,8 @@ public class WitherFist3Item extends BaseWitherClass {
     }
 
 
-    public void setWitherFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setWitherFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
 
 

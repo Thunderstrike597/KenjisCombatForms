@@ -42,10 +42,8 @@ public class PowerFist2Item extends BasePowerClass {
     }
 
 
-    public void setFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
 
 

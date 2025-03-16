@@ -48,5 +48,8 @@ public class ModEventBusClientEvents {
         event.register(ModKeybinds.FORM_MENU_OPEN_KEY);
         event.register(ModKeybinds.QUICK_FORM_CHANGE_KEY);
         event.register(ModKeybinds.TOGGLE_HAND_COMBAT_KEY);
+        event.register(ModKeybinds.SWITCH_ITEMS_KEY);
     }
+
+
 }

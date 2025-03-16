@@ -1,21 +1,24 @@
 package net.kenji.kenjiscombatforms.api.handlers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.event.ticking.FormChangeTick;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,7 +27,15 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEventHandler {
 
+    int originalSlot = -1;
 
+    int getOriginalSlot(){
+        return originalSlot;
+    }
+
+    public void setOriginalSlot(int slotIndex){
+        originalSlot = slotIndex;
+    }
 
     private FormLevelManager.PlayerFormLevelData getOrCreateLevelData(ServerPlayer player){
         return LevelHandler.getInstance().getOrCreatePlayerLevelData(player);
@@ -44,12 +55,50 @@ public class CommonEventHandler {
     }
 
 
+    @SubscribeEvent
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        Player player = event.getEntity();
+
+        int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            if (!container.getStoredItem().isEmpty()){
+                player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
+                container.setStoredItem(ItemStack.EMPTY);
+                NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(),storedItem));
+
+                //getInstance().setOriginalSlot(-1);
+                player.getInventory().setChanged();
+            }
+        });
+    }
 
 
+    @SubscribeEvent
+    public static void onDeath(LivingDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if(entity instanceof Player player) {
+
+            int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
 
 
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+                if (!container.getStoredItem().isEmpty()) {
+                    player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
+                    container.setStoredItem(ItemStack.EMPTY);
+                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
 
-
+                    //getInstance().setOriginalSlot(-1);
+                    player.getInventory().setChanged();
+                }
+            });
+        }
+    }
 
     @SubscribeEvent
 public void itemTossEvent(ItemTossEvent event){
@@ -79,15 +128,15 @@ public void itemTossEvent(ItemTossEvent event){
         boolean areFinalActive = isWitherActive || isEnderActive;
 
 
-        for(int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() instanceof BaseFistClass) {
-                if (i != KenjisCombatFormsCommon.FORM_LOCK_SLOT.get() || !FormChangeTick.isHandCombat(player) || areFinalActive) {
-                    player.getInventory().setItem(i,ItemStack.EMPTY);
-                }
-            }
-        }
-    }
+       // for(int i = 0; i < player.getInventory().getContainerSize(); i++) {
+         //   ItemStack stack = player.getInventory().getItem(i);
+         //   if (stack.getItem() instanceof BaseFistClass) {
+           //     if (i != KenjisCombatFormsCommon.FORM_LOCK_SLOT.get() || !FormChangeTick.isHandCombat(player) || areFinalActive) {
+                   //player.getInventory().setItem(i,ItemStack.EMPTY);
+            //    }
+          //  }
+       // }
+   }
 
 
     private boolean isNearItem(Player player) {

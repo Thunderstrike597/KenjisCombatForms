@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "kenjiscombatforms:item/forms/fist"
+    "layer0": "kenjiscombatforms:item/forms/power_form3"
   },
   "display": {
     "ground": {

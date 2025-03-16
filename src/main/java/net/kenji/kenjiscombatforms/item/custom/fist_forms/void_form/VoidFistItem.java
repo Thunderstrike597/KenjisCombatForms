@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form;
 
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseVoidClass;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -49,10 +50,8 @@ public class VoidFistItem extends BaseVoidClass {
     }
 
 
-    public void setVoidFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setVoidFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
 
 

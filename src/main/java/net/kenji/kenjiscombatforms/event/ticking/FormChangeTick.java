@@ -87,35 +87,13 @@ public class FormChangeTick {
                             entity.kill();
                         }
                     }
-
-
-
-                    if (isGuiOpen(player) || !isHandCombat(player) || areFinalActive || CommonEventHandler.getInstance().getIsNearItem(player)) {
-                        // GUI is open, remove fist form
-                        playersWithOpenGui.add(player.getUUID());
-                        CommonEventHandler.removeFistFormFromInventory(player);
-                    } else if (isHandCombat(player) ) {
-                        // GUI is closed, set fist form if necessary
-                        playersWithOpenGui.remove(player.getUUID());
-                        if (basicSelected(player)) {
-                            setBasicFistForm(serverPlayer, levelHandler);
-                        } else if (voidSelected(player)) {
-                            setVoidFistForm(serverPlayer, levelHandler);
-                        } else if (witherSelected(player)) {
-                            setWitherFistForm(serverPlayer, levelHandler);
-                        }  else if (swiftSelected(player)) {
-                            setSwiftFistForm(serverPlayer, levelHandler);
-                        } else if (powerSelected(player)) {
-                            setPowerFistForm(serverPlayer, levelHandler);
-                        }
-                    }
                 }
             }
         }
     }
 
     private static boolean basicSelected(Player player){
-        return FormChangeHandler.getInstance().getBasicSelected(player);
+       return FormChangeHandler.getInstance().getBasicSelected(player);
     }
     private static boolean voidSelected(Player player){
         return FormChangeHandler.getInstance().getVoidSelected(player);
@@ -141,7 +119,7 @@ public class FormChangeTick {
         return !playersWithOpenGui.contains(player.getUUID());
     }
 
-    private static void setBasicFistForm(ServerPlayer player, LevelHandler levelHandler){
+    private static void setBasicFistForm(ServerPlayer player, int slot){
         BasicFistItem basicFistItem = BasicFistItem.getInstance();
         BasicFist2Item basicFist2Item = BasicFist2Item.getInstance();
         BasicFist3Item basicFist3Item = BasicFist3Item.getInstance();
@@ -149,17 +127,17 @@ public class FormChangeTick {
         AbstractFormData basicFormData = BasicForm.getInstance().getFormData(player.getUUID());
 
         if (basicFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            basicFistItem.setDefaultFormMainHand(player);
+            basicFistItem.setFormMainHand(player, slot);
         }
         else if (basicFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
-            basicFist2Item.setFormMainHand(player);
+            basicFist2Item.setFormMainHand(player, slot);
         }
         else if (basicFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            basicFist3Item.setFormMainHand(player);
+            basicFist3Item.setFormMainHand(player, slot);
         }
     }
 
-    private static void setVoidFistForm(ServerPlayer player, LevelHandler levelHandler){
+    private static void setVoidFistForm(ServerPlayer player, int slot){
         VoidFistItem voidFistItem = VoidFistItem.getInstance();
         VoidFist2Item voidFist2Item = VoidFist2Item.getInstance();
         VoidFist2Item voidFist3Item = VoidFist2Item.getInstance();
@@ -167,16 +145,16 @@ public class FormChangeTick {
         AbstractFormData voidFormData = VoidForm.getInstance().getFormData(player.getUUID());
 
         if (voidFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            voidFistItem.setVoidFormMainHand(player);
+            voidFistItem.setVoidFormMainHand(player,slot);
         }
         else if (voidFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
-            voidFist2Item.setVoidFormMainHand(player);
+            voidFist2Item.setVoidFormMainHand(player, slot);
         }
         else if (voidFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            voidFist3Item.setVoidFormMainHand(player);
+            voidFist3Item.setVoidFormMainHand(player, slot);
         }
     }
-    private static void setWitherFistForm(ServerPlayer player, LevelHandler levelHandler){
+    private static void setWitherFistForm(ServerPlayer player, int slot){
         WitherFistItem witherFistItem = WitherFistItem.getInstance();
         WitherFist2Item witherFist2Item = WitherFist2Item.getInstance();
         WitherFist3Item witherFist3Item = WitherFist3Item.getInstance();
@@ -184,16 +162,16 @@ public class FormChangeTick {
         AbstractFormData witherFormData = WitherForm.getInstance().getFormData(player.getUUID());
 
         if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            witherFistItem.setWitherFormMainHand(player);
+            witherFistItem.setWitherFormMainHand(player, slot);
         }
         else if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            witherFist2Item.setWitherFormMainHand(player);
+            witherFist2Item.setWitherFormMainHand(player, slot);
         }
         else if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            witherFist3Item.setWitherFormMainHand(player);
+            witherFist3Item.setWitherFormMainHand(player, slot);
         }
     }
-    private static void setSwiftFistForm(ServerPlayer player, LevelHandler levelHandler){
+    private static void setSwiftFistForm(ServerPlayer player, int slot){
         SwiftFistItem fistItem = SwiftFistItem.getInstance();
         SwiftFist2Item fist2Item = SwiftFist2Item.getInstance();
         SwiftFist3Item fist3Item = SwiftFist3Item.getInstance();
@@ -201,16 +179,16 @@ public class FormChangeTick {
         AbstractFormData swiftFormData = SwiftForm.getInstance().getFormData(player.getUUID());
 
         if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            fistItem.setFormMainHand(player);
+            fistItem.setFormMainHand(player, slot);
         }
         else if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            fist2Item.setFormMainHand(player);
+            fist2Item.setFormMainHand(player, slot);
         }
         else if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            fist3Item.setFormMainHand(player);
+            fist3Item.setFormMainHand(player, slot);
         }
     }
-    private static void setPowerFistForm(ServerPlayer player, LevelHandler levelHandler){
+    private static void setPowerFistForm(ServerPlayer player, int slot){
         PowerFistItem fistItem = PowerFistItem.getInstance();
         PowerFist2Item fist2Item = PowerFist2Item.getInstance();
         PowerFist3Item fist3Item = PowerFist3Item.getInstance();
@@ -218,13 +196,13 @@ public class FormChangeTick {
         AbstractFormData powerFormData = PowerForm.getInstance().getFormData(player.getUUID());
 
         if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            fistItem.setFormMainHand(player);
+            fistItem.setFormMainHand(player, slot);
         }
         else if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            fist2Item.setFormMainHand(player);
+            fist2Item.setFormMainHand(player, slot);
         }
         else if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            fist3Item.setFormMainHand(player);
+            fist3Item.setFormMainHand(player, slot);
         }
     }
 }

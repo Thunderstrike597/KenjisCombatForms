@@ -63,12 +63,9 @@ public class SwiftFist3Item extends BaseSwiftClass {
     }
 
 
-    public void setFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
-
 
 
 

@@ -24,6 +24,8 @@ import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPack
 import net.kenji.kenjiscombatforms.network.power_form.ability1.SyncPowerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
+import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
+import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
@@ -490,6 +492,20 @@ public class NetworkHandler {
                 .decoder(SyncAbilitiesAndFormsPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     SyncAbilitiesAndFormsPacket.handle(msg, ctx.get());
+                }).add();
+
+        INSTANCE.messageBuilder(SwitchItemPacket.class, packetId++)
+                .encoder(SwitchItemPacket::encode)
+                .decoder(SwitchItemPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SwitchItemPacket.handle(msg, ctx.get());
+                }).add();
+
+        INSTANCE.messageBuilder(RemoveItemPacket.class, packetId++)
+                .encoder(RemoveItemPacket::encode)
+                .decoder(RemoveItemPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    RemoveItemPacket.handle(msg, ctx.get());
                 }).add();
     }
 }

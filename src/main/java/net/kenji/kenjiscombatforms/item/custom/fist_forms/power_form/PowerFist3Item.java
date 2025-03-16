@@ -63,12 +63,9 @@ public class PowerFist3Item extends BasePowerClass {
     }
 
 
-    public void setFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
-
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int i, boolean b) {
         double randomChance = RANDOM.nextDouble();

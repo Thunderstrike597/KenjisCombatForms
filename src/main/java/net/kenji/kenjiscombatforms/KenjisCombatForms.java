@@ -21,6 +21,7 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.particles.ModParticles;
 import net.kenji.kenjiscombatforms.recipe.ModRecipes;
@@ -47,6 +48,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import top.theillusivec4.curios.api.CuriosApi;
 
 import static net.kenji.kenjiscombatforms.entity.ModEntities.*;
 
@@ -152,8 +154,6 @@ public class KenjisCombatForms
          init();
 
         });
-
-
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
 

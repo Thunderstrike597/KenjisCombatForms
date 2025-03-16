@@ -134,42 +134,45 @@ public class ControlHandler {
 
                     long currentTime = System.currentTimeMillis();
                     if (!isFinalActive) {
-                        clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
                         if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
                             data.lastPressTime = currentTime;
                             // Increment the state
                             data.currentState = (data.currentState + 1) % 4;  // Cycle through 0, 1, 2, 3
 
-                            // Determine the next form based on the current state
-                            switch (data.currentState) {
-                                case 0:
-                                    NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
-                                    break;
-                                case 1:
-                                    if (ClientFistData.getForm1Option() != FormManager.FormSelectionOption.NONE) {
-                                        NetworkHandler.INSTANCE.sendToServer(new Form1ChoosePacket(currentForm1.name()));
-                                    } else {
-                                        data.currentState = 0;
+                            if (clientPlayer.getMainHandItem().getItem() instanceof BaseFistClass) {
+
+                                clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+                                switch (data.currentState) {
+                                    case 0:
                                         NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
-                                    }
-                                    break;
-                                case 2:
-                                    if (ClientFistData.getForm2Option() != FormManager.FormSelectionOption.NONE) {
-                                        FormChangeHandler.getInstance().chooseForm2(clientPlayer, currentForm2);
-                                        NetworkHandler.INSTANCE.sendToServer(new Form2ChoosePacket(currentForm2.name()));
-                                    } else {
-                                        data.currentState = 0;
-                                        NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
-                                    }
-                                    break;
-                                case 3:
-                                    if (ClientFistData.getForm3Option() != FormManager.FormSelectionOption.NONE) {
-                                        NetworkHandler.INSTANCE.sendToServer(new Form3ChoosePacket(currentForm3.name()));
-                                    } else {
-                                        data.currentState = 0;
-                                        NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
-                                    }
-                                    break;
+                                        break;
+                                    case 1:
+                                        if (ClientFistData.getForm1Option() != FormManager.FormSelectionOption.NONE) {
+                                            NetworkHandler.INSTANCE.sendToServer(new Form1ChoosePacket(currentForm1.name()));
+                                        } else {
+                                            data.currentState = 0;
+                                            NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
+                                        }
+                                        break;
+                                    case 2:
+                                        if (ClientFistData.getForm2Option() != FormManager.FormSelectionOption.NONE) {
+                                            FormChangeHandler.getInstance().chooseForm2(clientPlayer, currentForm2);
+                                            NetworkHandler.INSTANCE.sendToServer(new Form2ChoosePacket(currentForm2.name()));
+                                        } else {
+                                            data.currentState = 0;
+                                            NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
+                                        }
+                                        break;
+                                    case 3:
+                                        if (ClientFistData.getForm3Option() != FormManager.FormSelectionOption.NONE) {
+                                            NetworkHandler.INSTANCE.sendToServer(new Form3ChoosePacket(currentForm3.name()));
+                                        } else {
+                                            data.currentState = 0;
+                                            NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }

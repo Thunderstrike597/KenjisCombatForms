@@ -63,12 +63,9 @@ public class VoidFist3Item extends BaseVoidClass {
     }
 
 
-    public void setVoidFormMainHand(Player player){
-        if(isValidReplaceItem(player)){
-            player.setItemInHand(InteractionHand.MAIN_HAND, this.getDefaultInstance());
-        }
+    public void setVoidFormMainHand(Player player, int slot){
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
-
 
     private boolean isValidReplaceItem(Player player){
         ItemStack mainHandItem = player.getMainHandItem();

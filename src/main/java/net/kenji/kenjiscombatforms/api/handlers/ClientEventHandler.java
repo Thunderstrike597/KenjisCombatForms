@@ -2,26 +2,35 @@ package net.kenji.kenjiscombatforms.api.handlers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.PowerControl;
+import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
+
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.event.EntityCameraMovements;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.UpdateInventoryOpenPacket;
 import net.kenji.kenjiscombatforms.network.movers.PlayerInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.EnderEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.WitherEntityAttackPacket;
+import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
+import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.TeleportEnderEntityPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.WitherFormDashPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -42,7 +51,7 @@ public class ClientEventHandler {
     private static final ClientEventHandler INSTANCE = new ClientEventHandler();
     public Player currentPlayer;
 
-    public static ClientEventHandler getInstance(){
+    public static ClientEventHandler getInstance() {
         return INSTANCE;
     }
 
@@ -51,13 +60,71 @@ public class ClientEventHandler {
     }
 
 
+    private static int originalSlot = -1; // -1 means no item is stored yet
+
+    public int getOriginalSlot() {
+        return originalSlot;
+    }
+
+    // Handle key press to store the item
+    @SubscribeEvent
+    public static void onKeyPress(InputEvent.Key event) {
+        Player player = Minecraft.getInstance().player;
+        FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
+
+        if (player == null) return;
+
+        if (ModKeybinds.SWITCH_ITEMS_KEY.consumeClick()) {
+
+
+            int selectedSlot = player.getInventory().selected;
+            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+                if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
+                    if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                        container.setStoredItem(currentItem.copy());
+                    }
+                    player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                    originalSlot = selectedSlot; // Save the original slot
+                    NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
+                    player.getInventory().setChanged();
+
+                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+                } else if (!container.getStoredItem().isEmpty()) {
+                    player.getInventory().setItem(originalSlot, storedItem);
+                    container.setStoredItem(ItemStack.EMPTY);
+                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+
+                    originalSlot = -1;
+                    player.getInventory().setChanged();
+
+                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                }
+                if (currentItem.getItem() instanceof BaseFistClass) {
+                    player.getInventory().setItem(originalSlot, storedItem);
+                    container.setStoredItem(ItemStack.EMPTY);
+                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+
+                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+                }
+            });
+        }
+    }
+
+    public int getSelectedExtraSlot(Player player) {
+        return player.getInventory().selected;
+    }
+
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft mc = Minecraft.getInstance();
             Player clientPlayer = mc.player;
             ControllEngine controllEngine = ClientEngine.getInstance().controllEngine;
-            if(clientPlayer != null) {
+            if (clientPlayer != null) {
                 if (controllEngine != null) {
                     onClickInput();
                 }
@@ -70,19 +137,33 @@ public class ClientEventHandler {
                     boolean sneak = ControlHandler.controlRelatedEvents.getInstance().getShiftDown(clientPlayer);
 
                     mc.cameraEntity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
-                                if (cap instanceof LivingEntityPatch<?> livingEntityPatch) {
+                        if (cap instanceof LivingEntityPatch<?> livingEntityPatch) {
 
-                                    if (!livingEntityPatch.getEntityState().attacking()) {
-                                        NetworkHandler.INSTANCE.sendToServer(new PlayerInputPacket(forward, backward, left, right, jump, sneak, mc.cameraEntity.getUUID()));
-                                        EntityCameraMovements.handleEntityRotation(mc.cameraEntity);
-                                    }
-                                }
+                            if (!livingEntityPatch.getEntityState().attacking()) {
+                                NetworkHandler.INSTANCE.sendToServer(new PlayerInputPacket(forward, backward, left, right, jump, sneak, mc.cameraEntity.getUUID()));
+                                EntityCameraMovements.handleEntityRotation(mc.cameraEntity);
+                            }
+                        }
+                    });
+                }
+
+                if (originalSlot != -1 && clientPlayer.getInventory().selected != originalSlot) {
+                    clientPlayer.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                        ItemStack storedItem = container.getStoredItem();
+                        if (!storedItem.isEmpty() || clientPlayer.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass) {
+                            // Check if the original slot is empty before restoring
+                            clientPlayer.getInventory().setItem(originalSlot, storedItem);
+                            container.setStoredItem(ItemStack.EMPTY);
+                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+
+                            originalSlot = -1;
+                            clientPlayer.getInventory().setChanged();
+                        }
                     });
                 }
             }
         }
     }
-
 
 
     @SubscribeEvent
@@ -97,17 +178,18 @@ public class ClientEventHandler {
         Player player = event.getEntity();
         getInstance().currentPlayer = player;
         Minecraft mc = Minecraft.getInstance();
-       // KeybindManager.getInstance().storeOriginalKey(player, mc.options.keyDrop.getKey());
+        // KeybindManager.getInstance().storeOriginalKey(player, mc.options.keyDrop.getKey());
     }
+
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         Player player = event.getEntity();
         Minecraft mc = Minecraft.getInstance();
-      //  InputConstants.Key originalKey = KeybindManager.getInstance().getOriginalKey(player);
-      // mc.options.keyDrop.setKey(originalKey);
+        //  InputConstants.Key originalKey = KeybindManager.getInstance().getOriginalKey(player);
+        // mc.options.keyDrop.setKey(originalKey);
     }
 
-    Player returnPlayer(){
+    Player returnPlayer() {
         return getInstance().currentPlayer;
     }
 
@@ -117,7 +199,21 @@ public class ClientEventHandler {
         return player.getMainHandItem().getItem() instanceof BaseFistClass;
     }
 
+    @SubscribeEvent
+    public static void onInventoryOpen(ScreenEvent.Init event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null) {
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
 
+                if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
+                    if (event.getScreen() instanceof InventoryScreen) {
+                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+                    }
+                }
+            });
+        }
+    }
 
 
 
@@ -163,7 +259,7 @@ public class ClientEventHandler {
     public static void onGuiOpen(ScreenEvent.Init event) {
         if (event.getScreen() instanceof AbstractContainerScreen<?>) {
                 // Send packet to server to update
-            lastScreenWasContainer = true;
+                lastScreenWasContainer = true;
                 NetworkHandler.INSTANCE.sendToServer(new UpdateInventoryOpenPacket(true));
         }
     }
