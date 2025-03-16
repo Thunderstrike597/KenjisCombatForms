@@ -26,7 +26,6 @@ import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflic
 import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
-import net.kenji.kenjiscombatforms.network.sound.SoundTriggerPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
@@ -507,13 +506,6 @@ public class NetworkHandler {
                 .decoder(RemoveItemPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     RemoveItemPacket.handle(msg, ctx.get());
-                }).add();
-
-        INSTANCE.messageBuilder(SoundTriggerPacket.class, packetId++)
-                .encoder(SoundTriggerPacket::encode)
-                .decoder(SoundTriggerPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SoundTriggerPacket.handle(msg, ctx.get());
                 }).add();
     }
 }
