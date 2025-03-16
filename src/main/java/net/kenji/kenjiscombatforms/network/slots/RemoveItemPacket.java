@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.network.slots;
 
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -48,6 +49,9 @@ public class RemoveItemPacket {
                         container.setStoredItem(ItemStack.EMPTY);
                         player.getInventory().setChanged();
 
+                        CompoundTag nbt = player.getPersistentData();
+                        nbt.remove("storedItem");
+                        System.out.println("Has fired remove NBT item packet");
                     // Always place a weapon, regardless of capability state
                 });
             }

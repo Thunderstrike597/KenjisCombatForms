@@ -4,6 +4,7 @@ import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -49,6 +50,11 @@ public class SwitchItemPacket {
                     CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
                     formChangeHandler.setSelectedFormChanged(player, selectedSlot);
                     player.getInventory().setChanged();
+
+                    CompoundTag nbt = player.getPersistentData();
+                    nbt.put("storedItem", msg.storedItem.serializeNBT());
+
+                    System.out.println("Has fired NBT to store item packet");
                     // Always place a weapon, regardless of capability state
                 }
                 else if(currentItem.isEmpty() && container.getStoredItem().isEmpty()){

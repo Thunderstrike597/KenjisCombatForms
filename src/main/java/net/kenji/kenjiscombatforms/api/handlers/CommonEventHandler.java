@@ -8,6 +8,7 @@ import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -53,6 +54,19 @@ public class CommonEventHandler {
     public boolean getIsHoldingFistForm(Player player){
         return isHoldingFistForm(player);
     }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        CompoundTag nbt = player.getPersistentData();
+
+        if (nbt.contains("storedItem")) {
+            ItemStack storedItem = ItemStack.of(nbt);
+            player.getInventory().setItem(originalSlot, storedItem);
+            nbt.remove("storedItem");
+        }
+    }
+
 
 
     @SubscribeEvent
@@ -100,13 +114,13 @@ public class CommonEventHandler {
         }
     }
 
-    @SubscribeEvent
-public void itemTossEvent(ItemTossEvent event){
-        if(isHoldingFistForm(event.getPlayer())){
+        @SubscribeEvent
+        public void itemTossEvent(ItemTossEvent event) {
+            if (isHoldingFistForm(event.getPlayer())) {
 
-            event.setCanceled(true);
+                event.setCanceled(true);
+            }
         }
-}
 
     @SubscribeEvent
     public static void onGuiOpen(PlayerContainerEvent.Open event) {
@@ -118,25 +132,6 @@ public void itemTossEvent(ItemTossEvent event){
         Item handItem = player.getMainHandItem().getItem();
         return handItem instanceof BaseFistClass;
     }
-
-    public static void removeFistFormFromInventory(Player player){
-        WitherPlayerDataSets.WitherFormPlayerData wData = WitherPlayerDataSets.getInstance().getOrCreateWitherFormPlayerData(player);
-        EnderPlayerDataSets.EnderFormPlayerData eData = EnderPlayerDataSets.getInstance().getOrCreateEnderFormPlayerData(player);
-        boolean isWitherActive = wData.isAbilityActive();
-        boolean isEnderActive = eData.isAbilityActive();
-
-        boolean areFinalActive = isWitherActive || isEnderActive;
-
-
-       // for(int i = 0; i < player.getInventory().getContainerSize(); i++) {
-         //   ItemStack stack = player.getInventory().getItem(i);
-         //   if (stack.getItem() instanceof BaseFistClass) {
-           //     if (i != KenjisCombatFormsCommon.FORM_LOCK_SLOT.get() || !FormChangeTick.isHandCombat(player) || areFinalActive) {
-                   //player.getInventory().setItem(i,ItemStack.EMPTY);
-            //    }
-          //  }
-       // }
-   }
 
 
     private boolean isNearItem(Player player) {

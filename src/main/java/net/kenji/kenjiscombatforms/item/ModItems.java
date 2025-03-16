@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.item;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility1Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility2Component;
@@ -37,22 +38,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Tiers;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ModItems {
 
-   private static ItemStack stack;
 
-    public ModItems(ItemStack stack){
-       ModItems.stack = stack;
-    }
+    public ModItems(){}
 
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, KenjisCombatForms.MOD_ID);
@@ -181,21 +177,6 @@ public class ModItems {
 
     public static String getDefaultItemName() {
         return BuiltInRegistries.ITEM.getKey(POWERFORM2.get()).toString();
-    }
-
-
-
-    public static List<String> getValidItemNames() {
-        System.out.println("Getting valid item names");
-        return Arrays.asList(
-                BuiltInRegistries.ITEM.getKey(POWERFORM1.get()).toString(),
-                BuiltInRegistries.ITEM.getKey(POWERFORM2.get()).toString(),
-                BuiltInRegistries.ITEM.getKey(POWERFORM3.get()).toString(),
-                BuiltInRegistries.ITEM.getKey(SWIFTFORM1.get()).toString(),
-                BuiltInRegistries.ITEM.getKey(SWIFTFORM2.get()).toString(),
-                BuiltInRegistries.ITEM.getKey(SWIFTFORM3.get()).toString()
-
-        );
     }
 
 

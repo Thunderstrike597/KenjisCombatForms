@@ -70,6 +70,11 @@ public class KenjisCombatFormsCommon {
     public static final ForgeConfigSpec.ConfigValue<Integer> COMPAT_MODE_UNDEAD_SENSEI_HEALTH;
     public static final ForgeConfigSpec.ConfigValue<Integer> COMPAT_MODE_EXILED_DEVIL_HEALTH;
 
+    public static final ForgeConfigSpec.ConfigValue<Integer> BASIC_FORM_COMPAT;
+    public static final ForgeConfigSpec.ConfigValue<Integer> SWIFT_FORM_COMPAT;
+    public static final ForgeConfigSpec.ConfigValue<Integer> POWER_FORM_COMPAT;
+    public static final ForgeConfigSpec.ConfigValue<Integer> VOID_FORM_COMPAT;
+    public static final ForgeConfigSpec.ConfigValue<Integer> WITHER_FORM_COMPAT;
 
 
 
@@ -209,6 +214,17 @@ public class KenjisCombatFormsCommon {
                 .define("compat mode undead sensei health", 12);
         COMPAT_MODE_EXILED_DEVIL_HEALTH = BUILDER.comment("How much health the \"Exiled Devil\" should start with if dynamic difficulty combat is enabled")
                 .define("compat mode exiled devil health", 18);
+
+        BASIC_FORM_COMPAT = BUILDER.comment("How much more base damage the 'Basic Form' is multiplied by.")
+                .defineInRange("Basic Form Damage Multiplier", 1, 1, 5);
+        SWIFT_FORM_COMPAT = BUILDER.comment("How much more base damage the 'Swift Form' is multiplied by.")
+                .defineInRange("Swift Form Damage Multiplier", 1, 1, 5);
+        POWER_FORM_COMPAT = BUILDER.comment("How much more base damage the 'Power Form' is multiplied by.")
+                .defineInRange("Power Form Damage Multiplier", 1, 1, 5);
+        VOID_FORM_COMPAT = BUILDER.comment("How much more base damage the 'Void Form' is multiplied by.")
+                .defineInRange("Power Form Damage Multiplier", 1, 1, 5);
+        WITHER_FORM_COMPAT = BUILDER.comment("How much more base damage the 'Void Form' is multiplied by.")
+                .defineInRange("Power Form Damage Multiplier", 1, 1, 5);
 
 
         SPEC = BUILDER.build();

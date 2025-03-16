@@ -1,12 +1,8 @@
 {
-  "category": "sword",
-  "hit_particle": "epicfight:entity.hit.blunt",
-  "hit_sound": "epicfight:entity.hit.blunt",
-  "swing_sound": "epicfight:entity.weapon.whoosh_rod",
-  "styles":
-  {
-    "cases":
-    [
+  "category": "fist",
+  "styles": {
+    "default": "one_hand",
+    "cases": [
       {
         "condition": "epicfight:offhand_category",
         "predicate": {
@@ -14,21 +10,32 @@
         },
         "style": "two_hand"
       }
-    ],
-    "default": "one_hand"
+    ]
   },
   "offhand_item_compatible_predicate":
   {
-    "condition": "epicfight:offhand_category",
-    "predicate": {
-      "category": "greatsword"
-    }
+    "hit_particle": "epicfight:hit_blunt",
+    "hit_sound": "epicfight:entity.hit.blunt",
+    "livingmotion_modifier": {},
+    "offhand_item_compatible_predicate": [
+      {
+        "predicate": "epicfight:offhand_item_category",
+        "category": "dagger"
+      }
+    ]
   },
-  "collider":
-  {
+  "collider": {
     "number": 3,
-    "center": [0.0, 0.0, -0.75],
-    "size": [0.4, 0.4, 0.8]
+    "size": [
+      0.4,
+      0.4,
+      0.4
+    ],
+    "center": [
+      0.0,
+      0.0,
+      0.0
+    ]
   },
   "combos":
   {
@@ -78,8 +85,7 @@
   },
   "innate_skills":
   {
-    "one_hand": "epicfight:biped/skill/blade_rush_combo1",
-    "two_hand": "epicfight:biped/skill/blade_rush_combo1"
+    "common": "epicfight:biped/skill/blade_rush_combo1"
   },
   "livingmotion_modifier": {
     "one_hand":

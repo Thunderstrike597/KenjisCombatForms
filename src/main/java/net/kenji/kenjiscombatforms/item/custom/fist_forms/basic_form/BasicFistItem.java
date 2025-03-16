@@ -25,6 +25,10 @@ public class BasicFistItem extends BaseBasicClass implements ICurioItem {
         }
     }
 
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+        super.setDamage(stack, damage);
+    }
 
     @Override
     public boolean hasCurioCapability(ItemStack stack) {
