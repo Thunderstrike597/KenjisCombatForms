@@ -1,38 +1,52 @@
 package net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
-import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 
-public class BasicFistItem extends BaseBasicClass implements ICurioItem {
+public class BasicFistItem extends BaseBasicClass {
    private static BasicFistItem INSTANCE;
 
     public BasicFistItem(Properties properties) {
-        super(properties);
-        if(INSTANCE == null){
-            INSTANCE = this;
+            super();
+            if (INSTANCE == null) {
+                INSTANCE = this;
+            }
+    }
+
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+            builder.putAll(super.getDefaultAttributeModifiers(slot));
+
+            int baseDamage = KenjisCombatFormsCommon.BASIC_FORM_BASE_DAMAGE.get();
+            double damageMultiplier = KenjisCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
+            double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
+
+            builder.put(Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
+                            finalDamage - 1, AttributeModifier.Operation.ADDITION));
+            return builder.build();
         }
-    }
-
-    @Override
-    public void setDamage(ItemStack stack, int damage) {
-        super.setDamage(stack, damage);
-    }
-
-    @Override
-    public boolean hasCurioCapability(ItemStack stack) {
-        return ICurioItem.super.hasCurioCapability(stack);
+        return super.getDefaultAttributeModifiers(slot);
     }
 
     public static BasicFistItem getInstance(){
@@ -51,27 +65,6 @@ public class BasicFistItem extends BaseBasicClass implements ICurioItem {
 
     public void setFormMainHand(Player player, int slot){
              player.getInventory().setItem(slot, this.getDefaultInstance());
-    }
-
-
-    private boolean isValidReplaceItem(Player player){
-        ItemStack mainHandItem = player.getMainHandItem();
-        return mainHandItem.getItem() instanceof BaseFistClass &&
-                !(mainHandItem.getItem() instanceof BasicFistItem);
-    }
-
-    public void syncInventory(Player player, ItemStack stack) {
-        if (player instanceof ServerPlayer) {
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-
-        }
-
-        //  private boolean isValidReplaceItem(Player player){
-        //     ExtendedInventory extendedInv = new ExtendedInventory(player);
-        //    ItemStack extraSlotItem = player.getInventory().getItem(extendedInv.getExtraSlotIndex());
-        //     return !(extraSlotItem.getItem() instanceof BasicFistItem) || extraSlotItem.getItem() instanceof AirItem;
-        //  }
-
     }
 }
 

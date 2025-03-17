@@ -100,7 +100,7 @@ public class PowerAbility1CooldownGui {
                 if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility1 == AbilityManager.AbilityOption1.POWER_ABILITY1 ||
                         ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.POWER_ABILITY1) {
 
-                    simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
+               //     simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
                 }
             }
         }

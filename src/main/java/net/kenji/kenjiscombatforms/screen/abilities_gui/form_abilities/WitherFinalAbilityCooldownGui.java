@@ -82,7 +82,7 @@ public class WitherFinalAbilityCooldownGui {
             if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||
                     ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.WITHER_FINAL) {
 
-                SimpleAbilityBarHandler.drawAbility3Icon(event, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
+               // SimpleAbilityBarHandler.drawAbility3Icon(event, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
             }
         }
     }

@@ -15,7 +15,7 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
+//@Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
 public class SwiftAbility2CooldownGui {
 
 
@@ -95,7 +95,7 @@ public class SwiftAbility2CooldownGui {
                     ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.SWIFT_ABILITY2) {
 
                 if (!areFinalsActive) {
-                    SimpleAbilityBarHandler.drawAbility2Icon(event, true, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
+                   // SimpleAbilityBarHandler.drawAbility2Icon(event, true, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
                 }
             }
         }

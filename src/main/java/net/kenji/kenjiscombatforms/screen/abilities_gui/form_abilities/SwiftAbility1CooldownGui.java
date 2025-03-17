@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
+//@Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
 public class SwiftAbility1CooldownGui {
 
     private static final SimpleAbilityBarHandler simpleAbilityBarHandler = new SimpleAbilityBarHandler();
@@ -44,12 +44,6 @@ public class SwiftAbility1CooldownGui {
         Player player = mcInstance.player;
 
 
-        ResourceLocation abilityResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/swift_abilities/swift_ability1_gui.png");
-        ResourceLocation abilityBgResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/swift_abilities/swift_ability1_bg-gui.png");
-        ResourceLocation abilityOverlayResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/swift_abilities/swift_ability1_gui_overlay.png");
-
-        ResourceLocation emptyResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/item/forms/fist.png");
-
         ResourceLocation simpleAbilityResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/simple_ability_bars.png");
 
         if (player != null) {
@@ -68,25 +62,10 @@ public class SwiftAbility1CooldownGui {
             int abilityX = voidScreenWidth - voidImageWidth;
             int abilityY = voidScreenHeight - voidImageHeight;
 
-
-            int voidAbility1FullHeight = 38;
-            int voidAbility1MaxCooldown = tpData.getMAX_COOLDOWN();
-            float voidAbility1ElapsedCooldown = voidAbility1MaxCooldown - abilityCooldown;
-            float voidAbility1CooldownProgress = (float) voidAbility1ElapsedCooldown / voidAbility1MaxCooldown;
-            int abilityBarHeight = (int) (voidAbility1FullHeight * voidAbility1CooldownProgress);
-
-            int abilityU = 0;
-            int abilityV = 38;
-            int abilityWidth = 34;
-            int abilityHeight = 38;
-
-
             int simpleAbilityU = 0;
             int simpleAbilityV = 0;
             int simpleAbilityWidth = 107;
             int simpleAbilityHeight = 5;
-            int simpleAbilityWidth2 = 5;
-            int simpleAbilityHeight2 = 62;
 
 
             int abilitySimpleMaxCooldown = tpData.getMAX_COOLDOWN();
@@ -95,20 +74,16 @@ public class SwiftAbility1CooldownGui {
             int abilitySimpleBarWidth = (int) (simpleAbilityWidth * ability1SimpleCooldownProgress);
 
 
-            int voidAbilityFullHeight2 = 62;
-            float voidAbilityElapsedCooldown2 = voidAbility1MaxCooldown - abilityCooldown;
-            float voidAbilityCooldownProgress2 = (float) voidAbilityElapsedCooldown2 / voidAbility1MaxCooldown;
-            int simpleBarHeight2 = (int) (voidAbilityFullHeight2 * voidAbilityCooldownProgress2);
 
             boolean areFinalsActive = isWitherActive || isEnderActive;
-            float bgAlpha = 0.5f;
+
 
 
             if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility1 == AbilityManager.AbilityOption1.SWIFT_ABILITY1 ||
                     ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.SWIFT_ABILITY1) {
 
                 if (!areFinalsActive) {
-                    simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
+                 //   simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
                 }
             }
         }

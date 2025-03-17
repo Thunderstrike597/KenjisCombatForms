@@ -105,11 +105,11 @@ public class WitherAbility1CooldownGui {
             if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility1 == AbilityManager.AbilityOption1.WITHER_ABILITY1 || ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.WITHER_ABILITY1) {
 
                 if (!areFinalsActive) {
-                    simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
+                  //  simpleAbilityBarHandler.drawAbility1Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth);
                 }
             }
             if (isWitherActive || areMinionsActive) {
-                SimpleAbilityBarHandler.drawAbility4Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
+               // SimpleAbilityBarHandler.drawAbility4Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
             }
         }
     }

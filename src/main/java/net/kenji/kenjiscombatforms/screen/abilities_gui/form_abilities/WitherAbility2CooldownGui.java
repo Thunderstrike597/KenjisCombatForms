@@ -109,11 +109,11 @@ public class WitherAbility2CooldownGui {
             if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility2 == AbilityManager.AbilityOption2.WITHER_ABILITY2 ||
                     ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.WITHER_ABILITY2) {
                 if (!areFinalsActive) {
-                    SimpleAbilityBarHandler.drawAbility2Icon(event, false, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
+              //      SimpleAbilityBarHandler.drawAbility2Icon(event, false, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
                 }
             }
             if (isWitherActive) {
-                SimpleAbilityBarHandler.drawAbility5Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
+              //  SimpleAbilityBarHandler.drawAbility5Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
             }
         }
     }

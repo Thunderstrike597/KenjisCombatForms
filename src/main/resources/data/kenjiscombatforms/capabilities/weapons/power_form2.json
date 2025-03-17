@@ -5,7 +5,6 @@
         "armor_negation": 1.0,
           "impact": 0.6,
         "max_strikes": 2,
-        "damage_bonus": 0,
         "speed_bonus": 0
       }
 

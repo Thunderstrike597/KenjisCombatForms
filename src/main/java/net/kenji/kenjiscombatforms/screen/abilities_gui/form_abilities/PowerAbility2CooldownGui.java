@@ -94,7 +94,7 @@ public class PowerAbility2CooldownGui {
                     ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.POWER_ABILITY2) {
 
                 if (!areFinalsActive) {
-                    SimpleAbilityBarHandler.drawAbility2Icon(event, true, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
+                 //   SimpleAbilityBarHandler.drawAbility2Icon(event, true, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
                 }
             }
         }

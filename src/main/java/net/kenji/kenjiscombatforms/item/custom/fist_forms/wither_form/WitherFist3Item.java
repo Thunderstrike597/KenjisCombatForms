@@ -1,12 +1,19 @@
 package net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseWitherClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,11 +30,32 @@ public class WitherFist3Item extends BaseWitherClass {
 
 
     public WitherFist3Item(Properties properties) {
-        super(properties);
-        if(INSTANCE == null){
+        super();
+        if (INSTANCE == null) {
             INSTANCE = this;
         }
     }
+
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+            builder.putAll(super.getDefaultAttributeModifiers(slot));
+
+            int baseDamage = KenjisCombatFormsCommon.WITHER_FORM_BASE_DAMAGE.get();
+            double damageMultiplier = KenjisCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
+            double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
+
+            builder.put(Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
+                            finalDamage - 1, AttributeModifier.Operation.ADDITION));
+            return builder.build();
+        }
+        return super.getDefaultAttributeModifiers(slot);
+    }
+
+
 
     public static WitherFist3Item getInstance(){
         return INSTANCE;
@@ -64,13 +92,6 @@ public class WitherFist3Item extends BaseWitherClass {
 
     public void setWitherFormMainHand(Player player, int slot){
         player.getInventory().setItem(slot, this.getDefaultInstance());
-    }
-
-
-    private boolean isValidReplaceItem(Player player){
-        ItemStack mainHandItem = player.getMainHandItem();
-        return mainHandItem.isEmpty() || mainHandItem.is(Items.AIR) || mainHandItem.getItem() instanceof BaseFistClass &&
-                !(mainHandItem.getItem() instanceof WitherFist3Item);
     }
 }
 

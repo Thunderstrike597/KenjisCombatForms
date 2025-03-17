@@ -93,11 +93,11 @@ public class VoidAbility2CooldownGui {
                     ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.VOID_ABILITY2) {
 
                 if (!areFinalsActive) {
-                    SimpleAbilityBarHandler.drawAbility2Icon(event, false, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
+                 //   SimpleAbilityBarHandler.drawAbility2Icon(event, false, abilityCooldown, abilityCooldown, emptyResource, simpleAbilityResource, emptyResource, emptyResource, emptyResource, emptyResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilitySimpleBarWidth, simpleAbilityHeight);
                 }
             }
             if (isEnderActive) {
-                SimpleAbilityBarHandler.drawAbility5Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
+               // SimpleAbilityBarHandler.drawAbility5Icon(event, simpleAbilityResource, abilityX, abilityY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth2, simpleAbilityHeight2, simpleBarHeight2);
             }
         }
     }
