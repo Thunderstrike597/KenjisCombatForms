@@ -54,7 +54,6 @@ public class SwitchItemPacket {
                     CompoundTag nbt = player.getPersistentData();
                     nbt.put("storedItem", msg.storedItem.serializeNBT());
 
-                    System.out.println("Has fired NBT to store item packet");
                     // Always place a weapon, regardless of capability state
                 }
                 else if(currentItem.isEmpty() && container.getStoredItem().isEmpty()){

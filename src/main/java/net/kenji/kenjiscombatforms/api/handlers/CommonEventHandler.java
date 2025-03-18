@@ -9,19 +9,25 @@ import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.slf4j.event.LoggingEvent;
 
 import java.util.List;
 
@@ -60,6 +66,8 @@ public class CommonEventHandler {
         Player player = event.getEntity();
         CompoundTag nbt = player.getPersistentData();
 
+
+
         if (nbt.contains("storedItem")) {
             ItemStack storedItem = ItemStack.of(nbt);
             player.getInventory().setItem(originalSlot, storedItem);
@@ -72,21 +80,31 @@ public class CommonEventHandler {
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         Player player = event.getEntity();
+        if (!player.level().isClientSide) {
 
-        int selectedSlot = player.getInventory().selected;
-        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+            int selectedSlot = player.getInventory().selected;
+            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
 
-        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-            ItemStack storedItem = container.getStoredItem();
-            if (!container.getStoredItem().isEmpty()){
-                player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
-                container.setStoredItem(ItemStack.EMPTY);
-                NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(),storedItem));
+            if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
+                player.getInventory().setItem(player.getInventory().selected, Items.AIR.getDefaultInstance());
 
-                //getInstance().setOriginalSlot(-1);
                 player.getInventory().setChanged();
             }
-        });
+
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+
+
+                if (!container.getStoredItem().isEmpty()) {
+                    player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
+                    container.setStoredItem(ItemStack.EMPTY);
+                    //NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
+                    //getInstance().setOriginalSlot(-1);
+                    player.getInventory().setChanged();
+                }
+
+            });
+        }
     }
 
 
@@ -105,7 +123,7 @@ public class CommonEventHandler {
                 if (!container.getStoredItem().isEmpty()) {
                     player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
                     container.setStoredItem(ItemStack.EMPTY);
-                    NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
+                    //NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
 
                     //getInstance().setOriginalSlot(-1);
                     player.getInventory().setChanged();

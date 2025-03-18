@@ -38,7 +38,7 @@ public class StrengthBoost implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.SWIFT_ABILITY1.name();
+        return AbilityManager.AbilityOption1.POWER_ABILITY1.name();
     }
 
 
@@ -128,15 +128,15 @@ public class StrengthBoost implements Ability {
 
 
 
-            @Override
+    @Override
     public void triggerAbility(ServerPlayer serverPlayer) {
         long currentTime = System.currentTimeMillis();
         PowerPlayerDataSets.StrengthPlayerData data = getPlayerData(serverPlayer);
-        if(data.abilityCooldown == data.getMAX_COOLDOWN()) {
+
+        if(data.abilityCooldown  <= 0) {
             activateAbility(serverPlayer);
             playSound(serverPlayer);
-        }else if(serverPlayer.hasEffect(MobEffects.DAMAGE_BOOST)){
-            data.abilityCooldown = data.getMAX_COOLDOWN();
+
         }
     }
 
@@ -155,11 +155,12 @@ public class StrengthBoost implements Ability {
 
     public void decrementCooldown(Player player) {
         PowerPlayerDataSets.StrengthPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new PowerPlayerDataSets.StrengthPlayerData());
-        if(!KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
             if (!player.hasEffect(MobEffects.DAMAGE_BOOST)) {
                 fillPerSecondCooldown(player);
                 ClientPowerData.setCooldown(data.abilityCooldown);
             }
+        if(player.hasEffect(MobEffects.DAMAGE_BOOST)){
+            data.abilityCooldown = data.getMAX_COOLDOWN();
         }
     }
 
@@ -170,6 +171,7 @@ public class StrengthBoost implements Ability {
         if(abilityData.chosenAbility1.name().equals(getName())) {
             getInstance().decrementCooldown(player);
         }
+
     }
 
     @Override

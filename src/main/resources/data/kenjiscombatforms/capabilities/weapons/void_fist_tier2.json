@@ -3,8 +3,7 @@
   "attributes": {
       "common":{
         "impact": 0.4,
-        "max_strikes": 2,
-        "speed_bonus": -2
+        "max_strikes": 2
       }
   }
 }

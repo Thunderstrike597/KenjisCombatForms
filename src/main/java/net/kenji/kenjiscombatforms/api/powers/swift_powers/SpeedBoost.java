@@ -125,7 +125,7 @@ public class SpeedBoost implements Ability {
         if(data.abilityCooldown <= 0) {
             activateAbility(serverPlayer);
             playSound(serverPlayer);
-        } else if(serverPlayer.hasEffect(MobEffects.MOVEMENT_SPEED)){
+        } if(serverPlayer.hasEffect(MobEffects.MOVEMENT_SPEED)){
             data.abilityCooldown = data.getMAX_COOLDOWN();
         }
     }
@@ -149,6 +149,9 @@ public class SpeedBoost implements Ability {
               fillPerSecondCooldown(player);
               ClientSwiftData.setCooldown(data.abilityCooldown);
           }
+        if(player.hasEffect(MobEffects.MOVEMENT_SPEED)){
+            data.abilityCooldown = data.getMAX_COOLDOWN();
+        }
     }
 
     @Override

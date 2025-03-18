@@ -258,7 +258,7 @@ public class FormChangeHandler {
         LevelHandler levelHandler = LevelHandler.getInstance();
 
             // GUI is closed, set fist form if necessary
-            System.out.println("Has Attempted To Set HandCombat!");
+
             if (basicSelected(player)) {
                 setBasicFistForm(player, slot);
             } else if (voidSelected(player)) {

@@ -80,8 +80,15 @@ public class KenjisCombatFormsCommon {
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL2_DAMAGE_MULTIPLIER;
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL3_DAMAGE_MULTIPLIER;
 
+    public static final ForgeConfigSpec.ConfigValue<Double> BASIC_FORM_BASE_SPEED;
+    public static final ForgeConfigSpec.ConfigValue<Double> SWIFT_FORM_BASE_SPEED;
+    public static final ForgeConfigSpec.ConfigValue<Double> POWER_FORM_BASE_SPEED;
+    public static final ForgeConfigSpec.ConfigValue<Double> VOID_FORM_BASE_SPEED;
+    public static final ForgeConfigSpec.ConfigValue<Double> WITHER_FORM_BASE_SPEED;
 
-
+    public static final ForgeConfigSpec.ConfigValue<Double> LEVEL1_SPEED_MULTIPLIER;
+    public static final ForgeConfigSpec.ConfigValue<Double> LEVEL2_SPEED_MULTIPLIER;
+    public static final ForgeConfigSpec.ConfigValue<Double> LEVEL3_SPEED_MULTIPLIER;
 
 
     static final String defaultItem = "kenjiscombatforms:power_form2";
@@ -221,18 +228,12 @@ public class KenjisCombatFormsCommon {
                 .define("Compat Mode Exiled Devil Health", 18);
         BUILDER.pop();
 
-        BUILDER.push("Form Damage");
+        BUILDER.push("Form Damage & Speed");
 
 
 
 
-        LEVEL1_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 1 form is multiplied by")
-                .defineInRange("Level 1 Damage Multiplier", 1.0, 1.0,1.0);
 
-        LEVEL2_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
-                .defineInRange("Level 2 Damage Multiplier", 1.4, 1.0, 6.0);
-        LEVEL3_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
-                .defineInRange("Level 3 Damage Multiplier", 1.6, 1.0, 8.0);
 
         BASIC_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Basic Form'")
                 .defineInRange("Basic Form Base Damage", 3, 1, 20);
@@ -245,6 +246,37 @@ public class KenjisCombatFormsCommon {
         WITHER_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Wither Form'")
                 .defineInRange("Wither Form Base Damage", 7, 1, 32);
 
+        LEVEL1_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 1 form is multiplied by")
+                .defineInRange("Level 1 Damage Multiplier", 1.0, 1.0,1.0);
+
+        LEVEL2_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
+                .defineInRange("Level 2 Damage Multiplier", 1.4, 1.0, 6.0);
+        LEVEL3_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
+                .defineInRange("Level 3 Damage Multiplier", 1.6, 1.0, 8.0);
+
+        BASIC_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Basic Form'")
+                .defineInRange("Basic Form Base Attack Speed", 0.6, 0.1, 15);
+
+        SWIFT_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Swift Form'")
+                .defineInRange("Swift Form Base Attack Speed", 0.9, 0.1, 15);
+
+        POWER_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Power Form'")
+                .defineInRange("Power Form Base Attack Speed", 0.5, 0.1, 15);
+
+        VOID_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Void Form'")
+                .defineInRange("Void Form Base Attack Speed", 0.68, 0.1, 15);
+
+        WITHER_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Wither Form'")
+                .defineInRange("Wither Form Base Attack Speed", 0.7, 0.1, 15);
+
+        LEVEL1_SPEED_MULTIPLIER = BUILDER.comment("This defines the amount of attack speed any Level 1 form is multiplied by")
+                .defineInRange("Level 1 Speed Multiplier", 1.18, 1,5.0);
+
+        LEVEL2_SPEED_MULTIPLIER = BUILDER.comment("This defines the amount of attack speed any Level 2 form is multiplied by")
+                .defineInRange("Level 2 Speed Multiplier", 1.25, 1,5.0);
+
+        LEVEL3_SPEED_MULTIPLIER = BUILDER.comment("This defines the amount of attack speed any Level 3 form is multiplied by")
+                .defineInRange("Level 3 Speed Multiplier", 1.3, 1,5.0);
 
         BUILDER.pop();
 

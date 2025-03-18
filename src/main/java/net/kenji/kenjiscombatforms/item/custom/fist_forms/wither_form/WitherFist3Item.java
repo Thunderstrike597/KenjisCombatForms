@@ -47,14 +47,22 @@ public class WitherFist3Item extends BaseWitherClass {
             double damageMultiplier = KenjisCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 
+            double baseSpeed = KenjisCombatFormsCommon.WITHER_FORM_BASE_SPEED.get();
+            double speedMultiplier = KenjisCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
+            double finalSpeed = baseSpeed * speedMultiplier;
+
             builder.put(Attributes.ATTACK_DAMAGE,
                     new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
                             finalDamage - 1, AttributeModifier.Operation.ADDITION));
+
+            builder.put(Attributes.ATTACK_SPEED,
+                    new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon speed modifier",
+                            finalSpeed - 4, AttributeModifier.Operation.ADDITION));
+
             return builder.build();
         }
         return super.getDefaultAttributeModifiers(slot);
     }
-
 
 
     public static WitherFist3Item getInstance(){

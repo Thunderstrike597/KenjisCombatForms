@@ -10,6 +10,7 @@ import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SyncSwiftData2Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -176,7 +177,6 @@ public class PowerEffectInflict implements Ability {
         @Override
         public void fillDamageCooldown(Player player) {
             PowerPlayerDataSets.PowerInflictPlayerData data =getInstance().getPlayerData(player);
-
             if (KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
                 if(!data.isAbilityActive()) {
                     if (data.abilityCooldown > 0) {
@@ -193,6 +193,7 @@ public class PowerEffectInflict implements Ability {
 
     public void decrementCooldown(Player player) {
         PowerPlayerDataSets.PowerInflictPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new PowerPlayerDataSets.PowerInflictPlayerData());
+        System.out.println("Cooldown: " + data.abilityCooldown);
 
         if (player instanceof ServerPlayer serverPlayer) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {

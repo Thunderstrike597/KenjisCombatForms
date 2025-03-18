@@ -2,7 +2,6 @@
   "type": "kenjiscombatforms:fist",
   "attributes": {
       "common":{
-        "speed_bonus": -2.6
       }
   }
 }

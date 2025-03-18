@@ -3,6 +3,7 @@ package net.kenji.kenjiscombatforms.event.ticking;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.*;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.*;
+import net.kenji.kenjiscombatforms.api.powers.power_powers.PowerEffectInflict;
 import net.kenji.kenjiscombatforms.api.powers.power_powers.StrengthBoost;
 import net.kenji.kenjiscombatforms.api.powers.swift_powers.SpeedBoost;
 import net.kenji.kenjiscombatforms.api.powers.swift_powers.SwiftEffectInflict;
@@ -43,6 +44,8 @@ public class GeneralLevelTicking {
                         WitherImplode.getInstance().tickServerAbilityData(serverPlayer);
                         SpeedBoost.getInstance().tickServerAbilityData(serverPlayer);
                         StrengthBoost.getInstance().tickServerAbilityData(serverPlayer);
+                        PowerEffectInflict.getInstance().tickServerAbilityData(serverPlayer);
+
                         SwiftEffectInflict.getInstance().tickServerAbilityData(serverPlayer);
                         WitherFormDashAbility.getInstance().tickServerAbilityData(serverPlayer);
                         TeleportPlayer.getInstance().tickServerAbilityData(serverPlayer);

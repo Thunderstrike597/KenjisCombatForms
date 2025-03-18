@@ -136,6 +136,10 @@ public class AbilityChangeHandler {
                 abilityData.ability1 = storedAbility;
                 form.updatePlayerData(player.getUUID(), specificFormData);
                 form.syncDataToClient(player);
+            }else {
+                abilityData.ability1 = AbilityManager.AbilityOption1.NONE;
+                form.updatePlayerData(player.getUUID(), specificFormData);
+                form.syncDataToClient(player);
             }
         }
 
@@ -153,6 +157,10 @@ public class AbilityChangeHandler {
                 abilityData.ability2 = storedAbility;
                 form.updatePlayerData(player.getUUID(), specificFormData);
                 form.syncDataToClient(player);
+            }else {
+                abilityData.ability2 = AbilityManager.AbilityOption2.NONE;
+                form.updatePlayerData(player.getUUID(), specificFormData);
+                form.syncDataToClient(player);
             }
         }
 
@@ -167,6 +175,10 @@ public class AbilityChangeHandler {
 
             if (storedAbility != null) {
                 abilityData.ability3 = storedAbility;
+                form.updatePlayerData(player.getUUID(), specificFormData);
+                form.syncDataToClient(player);
+            }else {
+                abilityData.ability3 = AbilityManager.AbilityOption3.NONE;
                 form.updatePlayerData(player.getUUID(), specificFormData);
                 form.syncDataToClient(player);
             }
@@ -246,7 +258,8 @@ public class AbilityChangeHandler {
         if(abilityData.chosenAbility1 != AbilityManager.AbilityOption1.NONE){
             GlobalFormStrategyHandler.getInstance().setChosenAbility1(player, ability1);
             GlobalFormStrategyHandler.getInstance().setPreviouslyChosenAbility1(player, ability1);
-        }
+        }syncDataToClient(player);
+
     }
     public void reValueAbility2(Player player, AbilityManager.AbilityOption2 ability2){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
@@ -256,6 +269,7 @@ public class AbilityChangeHandler {
             GlobalFormStrategyHandler.getInstance().setChosenAbility2(player, ability2);
             GlobalFormStrategyHandler.getInstance().setPreviouslyChosenAbility2(player, ability2);
         }
+        syncDataToClient(player);
     }
 
 

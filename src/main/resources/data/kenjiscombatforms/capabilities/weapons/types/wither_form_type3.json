@@ -94,8 +94,7 @@
   },
   "innate_skills":
   {
-    "one_hand": "wom:true_berserk",
-    "two_hand": "wom:true_berserk"
+    "common": "wom:true_berserk"
   },
   "livingmotion_modifier": {
     "one_hand":

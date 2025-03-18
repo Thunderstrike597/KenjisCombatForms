@@ -51,7 +51,6 @@ public class RemoveItemPacket {
 
                         CompoundTag nbt = player.getPersistentData();
                         nbt.remove("storedItem");
-                        System.out.println("Has fired remove NBT item packet");
                     // Always place a weapon, regardless of capability state
                 });
             }
