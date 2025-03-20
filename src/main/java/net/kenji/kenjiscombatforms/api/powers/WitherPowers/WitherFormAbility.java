@@ -9,6 +9,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
@@ -192,13 +193,20 @@ public class WitherFormAbility implements Ability {
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
-
+    public void jumpUp(Player player){
+        WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
+        if(ClientVoidData.getCooldown3() == 0) {
+            Vec3 velocity = player.getDeltaMovement();
+            player.setDeltaMovement(velocity.x, 0.5, velocity.z);
+        }
+    }
 
     @Override
     public void triggerAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
         if (!data.isWitherActive && data.abilityCooldown == 0) {
             activateAbility(serverPlayer);
+            jumpUp(serverPlayer);
             data.hasPlayedSound = false;
         } else {
             deactivateAbilityOptional(serverPlayer);
@@ -382,11 +390,10 @@ public class WitherFormAbility implements Ability {
     @Override
     public void tickClientAbilityData(Player player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.WitherFormPlayerData());
-         if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+         if(ClientFistData.getChosenAbility3().name().equals(getName())) {
              if (ClientWitherData.getIsWitherActive()) {
                  //preventCombatActions(player);
 
-                 //player.noPhysics = true;
              }
              if (!ClientWitherData.getIsWitherActive()) {
 

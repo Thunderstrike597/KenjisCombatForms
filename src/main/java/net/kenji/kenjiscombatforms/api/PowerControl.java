@@ -200,10 +200,8 @@ public class PowerControl {
                                 NetworkHandler.INSTANCE.sendToServer(new ToggleEnderPacket());
                                 EnderFormAbility.getInstance().spawnParticles(clientPlayer);
 
-                                Vec3 velocity = clientPlayer.getDeltaMovement();
-
-                                clientPlayer.setDeltaMovement(velocity.x, 0.5, velocity.z);
-
+                                EnderFormAbility.getInstance().jumpUp(clientPlayer);
+                                WitherFormAbility.getInstance().jumpUp(clientPlayer);
 
                                 data.lastPressTime = currentTime;
                             } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||

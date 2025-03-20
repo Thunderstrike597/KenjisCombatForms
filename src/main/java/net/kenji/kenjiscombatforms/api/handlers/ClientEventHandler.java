@@ -172,7 +172,7 @@ public class ClientEventHandler {
 
                             if (!livingEntityPatch.getEntityState().attacking()) {
                                 NetworkHandler.INSTANCE.sendToServer(new PlayerInputPacket(forward, backward, left, right, jump, sneak, mc.cameraEntity.getUUID()));
-                                EntityCameraMovements.handleEntityRotation(mc.cameraEntity);
+                               // EntityCameraMovements.handleEntityRotation(mc.cameraEntity);
                             }
                         }
                     });

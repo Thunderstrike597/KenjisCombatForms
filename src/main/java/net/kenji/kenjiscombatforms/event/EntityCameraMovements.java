@@ -58,7 +58,7 @@ public class EntityCameraMovements {
             // Send to server periodically
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastPacketSendTime > PACKET_SEND_INTERVAL) {
-                NetworkHandler.INSTANCE.sendToServer(new EntityRotationPacket(entity.getUUID(), clientYaw, clientPitch));
+               // NetworkHandler.INSTANCE.sendToServer(new EntityRotationPacket(entity.getUUID(), clientYaw, clientPitch));
                 lastPacketSendTime = currentTime;
             }
         }

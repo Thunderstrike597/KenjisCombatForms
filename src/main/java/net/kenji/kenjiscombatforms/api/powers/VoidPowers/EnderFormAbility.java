@@ -8,6 +8,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrat
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.api.distmarker.Dist;
@@ -188,6 +190,14 @@ public class EnderFormAbility implements Ability {
     }
 
 
+    public void jumpUp(Player player){
+        EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
+        if(ClientVoidData.getCooldown3() == 0) {
+            Vec3 velocity = player.getDeltaMovement();
+            player.setDeltaMovement(velocity.x, 0.5, velocity.z);
+        }
+    }
+
 
 
     @Override
@@ -195,6 +205,7 @@ public class EnderFormAbility implements Ability {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
         if (!data.isEnderActive && data.abilityCooldown == 0) {
             activateAbility(serverPlayer);
+            jumpUp(serverPlayer);
             data.hasPlayedSound = false;
         } else {
             deactivateAbilityOptional(serverPlayer);
@@ -372,7 +383,7 @@ public class EnderFormAbility implements Ability {
                 player.getAbilities().setFlyingSpeed(0.05f);
                 player.startFallFlying();
 
-                    ClientVoidData.setIsEnderActive(true);
+                syncDataToClient(player);
 
 
                     NetworkHandler.INSTANCE.send(
@@ -380,28 +391,34 @@ public class EnderFormAbility implements Ability {
                             new EndParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
                     );
                 }
-            } else {
-            player.getAbilities().mayfly = false;
-            player.getAbilities().flying = false;
-            player.stopFallFlying();
+             else if(!player.gameMode.isCreative()){
+                player.getAbilities().mayfly = false;
+                player.getAbilities().flying = false;
+                player.stopFallFlying();
+            }
         }
     }
 
     @Override
     public void tickClientAbilityData(Player player) {
         EnderPlayerDataSets.EnderFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new EnderPlayerDataSets.EnderFormPlayerData());
-        if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
+
+        if(ClientFistData.getChosenAbility3().name().equals(getName())) {
 
             getInstance().decrementCooldown(player);
+
             if (ClientVoidData.getIsEnderActive() || data.isEnderActive) {
                 //preventCombatActions(player);
                 player.getAbilities().mayfly = true;
                 player.getAbilities().flying = true;
+                player.startFallFlying();
+
                 //player.noPhysics = true;
-            }
-            if (!ClientVoidData.getIsEnderActive()) {
+            } else if (!player.isCreative()) {
                 player.getAbilities().mayfly = false;
                 player.getAbilities().flying = false;
+                player.stopFallFlying();
             }
         }
     }
