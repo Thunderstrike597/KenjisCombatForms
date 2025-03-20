@@ -357,9 +357,6 @@ public class WitherFormAbility implements Ability {
             syncDataToClient(player);
             if (data.isWitherActive) {
 
-             ;
-
-
                     player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
 
                     NetworkHandler.INSTANCE.send(
@@ -490,33 +487,31 @@ public class WitherFormAbility implements Ability {
         int currentVoidCooldown = ClientVoidData.getCooldown3();
         BlockParticleOption whiteFallingDust = new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.WHITE_WOOL.defaultBlockState());
 
-        if (player.isInvisible()) {
-            Random random = new Random();
-            int particleCount = 100;
+        Random random = new Random();
+        int particleCount = 100;
 
-            double x = player.getX();
-            double y = player.getY();
-            double z = player.getZ();
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
 
-            for (int i = 0; i < particleCount; i++) {
-                double offsetX = (random.nextDouble() - 0.5) * 2; // Spread in X direction
-                double offsetY = (random.nextDouble() - 0.5) * 2; // Spread in Y direction
-                double offsetZ = (random.nextDouble() - 0.5) * 2; // Spread in Z direction
+        for (int i = 0; i < particleCount; i++) {
+            double offsetX = (random.nextDouble() - 0.5) * 2; // Spread in X direction
+            double offsetY = (random.nextDouble() - 0.5) * 2; // Spread in Y direction
+            double offsetZ = (random.nextDouble() - 0.5) * 2; // Spread in Z direction
 
-                double velocityX = (random.nextDouble() - 0.5) * 0.5; // Random X velocity
-                double velocityY = random.nextDouble() * 0.5; // Upward Y velocity
-                double velocityZ = (random.nextDouble() - 0.5) * 0.5; // Random Z velocity
+            double velocityX = (random.nextDouble() - 0.5) * 0.5; // Random X velocity
+            double velocityY = random.nextDouble() * 0.5; // Upward Y velocity
+            double velocityZ = (random.nextDouble() - 0.5) * 0.5; // Random Z velocity
 
-                player.level().addParticle(
-                        ParticleTypes.PORTAL,
-                        x + offsetX,
-                        y + 1 + offsetY,
-                        z + offsetZ,
-                        velocityX,
-                        velocityY,
-                        velocityZ
-                );
-            }
+            player.level().addParticle(
+                    ParticleTypes.PORTAL,
+                    x + offsetX,
+                    y + 1 + offsetY,
+                    z + offsetZ,
+                    velocityX,
+                    velocityY,
+                    velocityZ
+            );
         }
     }
 }

@@ -1,29 +1,25 @@
 {
-  "category": "fist",
+  "category": "sword",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
-    "default": "one_hand",
+    "default": "common",
     "cases": [
       {
         "condition": "epicfight:offhand_category",
         "predicate": {
           "category": "sword"
         },
-        "style": "two_hand"
+        "style": "common"
       }
     ]
   },
-  "offhand_item_compatible_predicate":
-  {
-    "hit_particle": "epicfight:hit_blunt",
-    "hit_sound": "epicfight:entity.hit.blunt",
-    "livingmotion_modifier": {},
-    "offhand_item_compatible_predicate": [
-      {
-        "predicate": "epicfight:offhand_item_category",
-        "category": "dagger"
-      }
-    ]
-  },
+  "offhand_item_compatible_predicate": [
+    {
+      "predicate": "epicfight:offhand_item_category",
+      "category": "dagger"
+    }
+  ],
   "collider": {
     "number": 3,
     "size": [
@@ -39,7 +35,7 @@
   },
   "combos":
   {
-    "one_hand":
+    "common":
     [
       "wom:biped/combat/moonless_auto_1_verso",
       "wom:biped/combat/agony_auto_2",
@@ -54,24 +50,6 @@
       "wom:biped/combat/moonless_auto_3_verso",
       "wom:biped/combat/moonless_auto_3",
 
-
-      "wom:biped/combat/moonless_rewinder",
-      "wom:biped/combat/enderblaster_twohand_tishnaw"
-    ],
-    "two_hand":
-    [
-      "wom:biped/combat/moonless_auto_1_verso",
-      "wom:biped/combat/agony_auto_2",
-      "wom:biped/combat/agony_auto_1",
-      "wom:biped/combat/agony_auto_1",
-      "wom:biped/combat/enderblaster_onehand_dash",
-      "wom:biped/combat/enderblaster_onehand_auto_2",
-      "wom:biped/combat/moonless_auto_2",
-      "wom:biped/combat/enderblaster_onehand_auto_4",
-      "wom:biped/combat/enderblaster_onehand_auto_1",
-      "wom:biped/combat/agony_auto_2",
-      "wom:biped/combat/moonless_auto_3_verso",
-      "wom:biped/combat/moonless_auto_3",
 
       "wom:biped/combat/moonless_rewinder",
       "wom:biped/combat/enderblaster_twohand_tishnaw"
@@ -86,15 +64,7 @@
     "common": "wom:true_berserk"
   },
   "livingmotion_modifier": {
-    "one_hand":
-    {
-      "block": "wom:biped/skill/ruine_block",
-      "idle": "wom:biped/living/katana_idle",
-      "run" : "epicfight:biped/living/run_dual",
-      "walk": "wom:biped/living/enderblaster_onehand_walk",
-      "chase" : "epicfight:biped/living/run_dual"
-    },
-    "two_hand":
+    "common":
     {
       "block": "wom:biped/skill/ruine_block",
       "idle": "wom:biped/living/katana_idle",

@@ -57,14 +57,14 @@ public class LargeSmokeParticlesTickPacket {
     private static void handleOnClient(LargeSmokeParticlesTickPacket msg) {
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
-        if (level != null && msg.isInvisible) {
+        if (level != null) {
             spawnParticles(level, msg.x, msg.y, msg.z);
         }
     }
 
     private static void spawnParticles(Level level, double x, double y, double z) {
         Random random = new Random();
-        int particleCount = 10;
+        int particleCount = 6;
 
         for (int i = 0; i < particleCount; i++) {
             double offsetX = (random.nextDouble() - 0.5) * 2; // Spread in X direction

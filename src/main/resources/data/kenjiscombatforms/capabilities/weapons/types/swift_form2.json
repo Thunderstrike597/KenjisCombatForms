@@ -1,5 +1,7 @@
 {
-  "category": "fist",
+  "category": "sword",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
     "default": "one_hand",
     "cases": [
@@ -14,19 +16,12 @@
       }
     ]
   },
-
-  "offhand_item_compatible_predicate":
-  {
-    "hit_particle": "epicfight:hit_blunt",
-    "hit_sound": "epicfight:entity.hit.blunt",
-    "livingmotion_modifier": {},
-    "offhand_item_compatible_predicate": [
-      {
-        "predicate": "epicfight:offhand_item_category",
-        "category": "dagger"
-      }
-    ]
-  },
+  "offhand_item_compatible_predicate": [
+    {
+      "predicate": "epicfight:offhand_item_category",
+      "category": "dagger"
+    }
+  ],
   "collider": {
     "number": 3,
     "size": [

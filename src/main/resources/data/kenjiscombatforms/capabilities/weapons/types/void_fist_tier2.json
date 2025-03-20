@@ -1,29 +1,25 @@
 {
-  "category": "fist",
+  "category": "sword",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
-    "default": "one_hand",
+    "default": "common",
     "cases": [
       {
         "condition": "epicfight:offhand_category",
         "predicate": {
           "category": "sword"
         },
-        "style": "two_hand"
+        "style": "common"
       }
     ]
   },
-  "offhand_item_compatible_predicate":
-  {
-    "hit_particle": "epicfight:hit_blunt",
-    "hit_sound": "epicfight:entity.hit.blunt",
-    "livingmotion_modifier": {},
-    "offhand_item_compatible_predicate": [
-      {
-        "predicate": "epicfight:offhand_item_category",
-        "category": "dagger"
-      }
-    ]
-  },
+  "offhand_item_compatible_predicate": [
+    {
+      "predicate": "epicfight:offhand_item_category",
+      "category": "dagger"
+    }
+  ],
   "collider": {
     "number": 3,
     "size": [
@@ -39,7 +35,7 @@
   },
   "combos":
   {
-    "one_hand":
+    "common":
     [
       "wom:biped/combat/agony_auto_1",
       "wom:biped/combat/agony_auto_2",
@@ -58,25 +54,6 @@
       "wom:biped/skill/enderblaster_twohand_shoot_dash",
       "wom:biped/skill/enderblaster_twohand_airshoot"
 
-    ],
-    "two_hand":
-    [
-      "wom:biped/combat/agony_auto_1",
-      "wom:biped/combat/agony_auto_2",
-      "wom:biped/combat/enderblaster_onehand_auto_1",
-      "wom:biped/combat/enderblaster_onehand_auto_1",
-      "wom:biped/combat/enderblaster_onehand_dash",
-      "wom:biped/combat/staff_auto_2",
-      "wom:biped/combat/agony_auto_2",
-      "wom:biped/combat/moonless_rewinder",
-      "wom:biped/combat/moonless_auto_2",
-      "wom:biped/combat/moonless_auto_3",
-      "wom:biped/combat/moonless_auto_3_verso",
-      "wom:biped/combat/moonless_rewinder",
-      "wom:biped/skill/enderblaster_onehand_shoot_3",
-
-      "wom:biped/skill/enderblaster_twohand_shoot_dash",
-      "wom:biped/skill/enderblaster_twohand_airshoot"
     ],
     "mount":
     [
@@ -88,15 +65,7 @@
     "common": "wom:ender_fusion"
   },
   "livingmotion_modifier": {
-    "one_hand":
-    {
-      "block": "wom:biped/skill/moonless_guard",
-      "idle": "wom:biped/living/agony_idle",
-      "run" : "wom:biped/living/agony_run",
-      "walk": "wom:biped/living/agony_walk",
-      "chase" : "wom:biped/living/agony_run"
-    },
-    "two_hand":
+    "common":
     {
       "block": "wom:biped/skill/moonless_guard",
       "idle": "wom:biped/living/agony_idle",

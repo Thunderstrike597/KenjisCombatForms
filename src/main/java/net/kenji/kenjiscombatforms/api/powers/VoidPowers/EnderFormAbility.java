@@ -501,7 +501,7 @@ public class EnderFormAbility implements Ability {
         int currentVoidCooldown = ClientVoidData.getCooldown3();
         BlockParticleOption whiteFallingDust = new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.WHITE_WOOL.defaultBlockState());
 
-        if (player.isInvisible()) {
+
             Random random = new Random();
             int particleCount = 100;
 
@@ -529,5 +529,4 @@ public class EnderFormAbility implements Ability {
                 );
             }
         }
-    }
 }

@@ -57,7 +57,7 @@ public class EndParticlesTickPacket {
     private static void handleOnClient(EndParticlesTickPacket msg) {
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
-        if (level != null && msg.isInvisible) {
+        if (level != null) {
             spawnParticles(level, msg.x, msg.y, msg.z);
         }
     }

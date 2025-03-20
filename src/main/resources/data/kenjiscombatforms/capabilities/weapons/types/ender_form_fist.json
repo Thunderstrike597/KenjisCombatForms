@@ -1,22 +1,21 @@
 {
   "category": "fist",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
-    "default": "one_hand",
+    "default": "common",
     "cases": [
       {
         "condition": "epicfight:offhand_category",
         "predicate": {
           "category": "sword"
         },
-        "style": "two_hand"
+        "style": "common"
       }
     ]
   },
   "offhand_item_compatible_predicate":
   {
-    "hit_particle": "epicfight:hit_blunt",
-    "hit_sound": "epicfight:entity.hit.blunt",
-    "livingmotion_modifier": {},
     "offhand_item_compatible_predicate": [
       {
         "predicate": "epicfight:offhand_item_category",
@@ -55,7 +54,7 @@
   },
   "innate_skills":
   {
-    "common": "epicfight:biped/skill/blade_rush_combo1"
+    "common": "wom:ender_fusion"
   },
   "livingmotion_modifier": {
     "one_hand":

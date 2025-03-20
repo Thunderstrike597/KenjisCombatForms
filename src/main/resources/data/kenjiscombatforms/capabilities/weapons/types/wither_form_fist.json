@@ -1,29 +1,25 @@
 {
-  "category": "fist",
+  "category": "sword",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
-    "default": "one_hand",
+    "default": "common",
     "cases": [
       {
         "condition": "epicfight:offhand_category",
         "predicate": {
           "category": "sword"
         },
-        "style": "two_hand"
+        "style": "common"
       }
     ]
   },
-  "offhand_item_compatible_predicate":
-  {
-    "hit_particle": "epicfight:hit_blunt",
-    "hit_sound": "epicfight:entity.hit.blunt",
-    "livingmotion_modifier": {},
-    "offhand_item_compatible_predicate": [
-      {
-        "predicate": "epicfight:offhand_item_category",
-        "category": "dagger"
-      }
-    ]
-  },
+  "offhand_item_compatible_predicate": [
+    {
+      "predicate": "epicfight:offhand_item_category",
+      "category": "dagger"
+    }
+  ],
   "collider": {
     "number": 3,
     "size": [
@@ -61,14 +57,7 @@
     "common": "wom:true_berserk"
   },
   "livingmotion_modifier": {
-    "one_hand":
-    {
-      "aim": "wom:biped/skill/antitheus_aiming",
-      "idle": "wom:biped/living/antitheus_ascended_idle",
-      "run": "wom:biped/living/antitheus_ascended_run",
-      "walk": "wom:biped/living/antitheus_ascended_walk"
-    },
-    "two_hand":
+    "common":
     {
       "aim": "wom:biped/skill/antitheus_aiming",
       "idle": "wom:biped/living/antitheus_ascended_idle",

@@ -39,6 +39,7 @@ import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.S
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -198,10 +199,21 @@ public class PowerControl {
                                     ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.VOID_FINAL) {
                                 NetworkHandler.INSTANCE.sendToServer(new ToggleEnderPacket());
                                 EnderFormAbility.getInstance().spawnParticles(clientPlayer);
+
+                                Vec3 velocity = clientPlayer.getDeltaMovement();
+
+                                clientPlayer.setDeltaMovement(velocity.x, 0.5, velocity.z);
+
+
                                 data.lastPressTime = currentTime;
                             } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||
                                     ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.WITHER_FINAL) {
                                 NetworkHandler.INSTANCE.sendToServer(new ToggleWitherFormPacket());
+
+                                Vec3 velocity = clientPlayer.getDeltaMovement();
+
+                                clientPlayer.setDeltaMovement(velocity.x, 0.5, velocity.z);
+
                                 WitherFormAbility.getInstance().spawnParticles(clientPlayer);
                                 data.lastPressTime = currentTime;
                             }
