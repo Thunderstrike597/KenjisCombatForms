@@ -1,6 +1,8 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
+import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
@@ -13,10 +15,17 @@ import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.particle_packets.LargeSmokeParticlesTickPacket;
+import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
+import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.ability3.SyncWitherData3Packet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,8 +37,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -116,6 +132,7 @@ public class WitherFormAbility implements Ability {
             if (event.getOriginal() instanceof ServerPlayer originalPlayer &&
                     event.getEntity() instanceof ServerPlayer newPlayer) {
 
+
                 WitherPlayerDataSets.WitherFormPlayerData originalData = getInstance().getPlayerData(originalPlayer);
                 WitherPlayerDataSets.WitherFormPlayerData newData = getInstance().getPlayerData(newPlayer);
 
@@ -146,6 +163,10 @@ public class WitherFormAbility implements Ability {
 
     public int getAbilityCooldown(ServerPlayer player) {
         return getPlayerData(player).abilityCooldown;
+    }
+
+    public Map<UUID, WitherPlayerDataSets.WitherFormPlayerData> getPlayerDataMap() {
+        return playerDataMap;
     }
 
     public void setAbilityCooldown(ServerPlayer player, int cooldown) {
@@ -181,6 +202,7 @@ public class WitherFormAbility implements Ability {
             data.hasPlayedSound = false;
         } else {
             deactivateAbilityOptional(serverPlayer);
+            restoreItem(serverPlayer);
         }
     }
 
@@ -188,24 +210,75 @@ public class WitherFormAbility implements Ability {
     public void activateAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
         data.isWitherActive = true;
-        activateWitherSummon(serverPlayer);
         playSound(serverPlayer);
+        setWitherFormItem(serverPlayer);
         syncDataToClient(serverPlayer);
+    }
+
+    private static int originalSlot = CommonEventHandler.getInstance().getOriginalSlot();
+
+
+    private void setWitherFormItem(Player player){
+            int selectedSlot = player.getInventory().selected;
+            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+                if (storedItem.isEmpty()) {
+                    if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                        container.setStoredItem(currentItem.copy());
+                    }
+                    player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                    player.getInventory().setItem(selectedSlot, WitherFormItem.getInstance().getDefaultInstance());
+                    originalSlot = selectedSlot; // Save the original slot
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                            new SwitchItemPacket(originalSlot, storedItem)
+                    );                player.getInventory().setChanged();
+
+                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                }
+            });
+        }
+        private void restoreItem(Player player){
+            int selectedSlot = player.getInventory().selected;
+            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+                if (!storedItem.isEmpty()) {
+                    player.getInventory().setItem(originalSlot, container.getStoredItem());
+                    container.setStoredItem(ItemStack.EMPTY);
+
+                }else {
+                    player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                }
+                originalSlot = -1;
+
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                        new SwitchItemPacket(originalSlot, storedItem)
+                );
+                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+            });
+        }
+
+    public boolean getWitherFormActive(Player player){
+        WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
+        return data.isWitherActive;
     }
 
     @Override
     public void deactivateAbilityOptional(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
-        serverPlayer.noPhysics = false;
+        data.isWitherActive = false;
+
         serverPlayer.removeEffect(MobEffects.INVISIBILITY);
         serverPlayer.removeEffect(MobEffects.LEVITATION);
-        data.isWitherActive = false;
-        serverPlayer.setCamera(serverPlayer);
-        serverPlayer.stopRiding();
-        serverPlayer.setInvulnerable(false);
+
+
 
         Entity existingWither = data.playerWitherMap.remove(serverPlayer.getUUID());
-        data.witherEntity = existingWither;
+        //data.witherEntity = existingWither;
         if (existingWither != null) {
             existingWither.remove(Entity.RemovalReason.DISCARDED);
         }
@@ -271,62 +344,66 @@ public class WitherFormAbility implements Ability {
     }
 
 
+
     @Override
     public void tickServerAbilityData(ServerPlayer player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
+        if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
 
-        if(abilityData.chosenFinal.name().equals(getName())) {
-            getInstance().decrementCooldown(player);
-        }
-        syncDataToClient(player);
-        if(witherEntity instanceof WitherPlayerEntity entity){
+            if (abilityData.chosenFinal.name().equals(getName())) {
+                getInstance().decrementCooldown(player);
+            }
+            syncDataToClient(player);
             if (data.isWitherActive) {
-                preventCombatActions(player);
-                player.setCamera(witherEntity);
-                player.setPose(Pose.FALL_FLYING);
-                player.setShiftKeyDown(false);
-                player.setInvulnerable(true);
-                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 2, false, false));
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
 
-                NetworkHandler.INSTANCE.send(
-                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                        new LargeSmokeParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
-                );
-                if (entity.isDeadOrDying()) {
-                    data.isWitherActive = false;
-                    deactivateAbilityOptional(player);
-                }
+             ;
+
+
+                    player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
+
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                            new LargeSmokeParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
+                    );
             }
         }
     }
 
+    public void upDown(Player player, boolean sneak, boolean jump){
+        Vec3 velocity = player.getDeltaMovement(); // Get current velocity
+
+        if (jump) {
+            player.setDeltaMovement(velocity.x, 0.2, velocity.z); // Move up
+        }
+        if (sneak) {
+            player.setDeltaMovement(velocity.x, -0.2, velocity.z); // Move down
+        }
+    }
+
+
     @Override
     public void tickClientAbilityData(Player player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.WitherFormPlayerData());
-        if (net.kenji.kenjiscombatforms.network.witherform.ClientWitherData.getIsWitherActive()) {
-            preventCombatActions(player);
-            player.noPhysics = true;
-        }
+         if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+             if (ClientWitherData.getIsWitherActive()) {
+                 //preventCombatActions(player);
+
+                 //player.noPhysics = true;
+             }
+             if (!ClientWitherData.getIsWitherActive()) {
+
+             }
+         }
     }
 
     @Override
     public void syncDataToClient(ServerPlayer player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
-        if (data.witherEntity != null) {
-            if (isAbilityChosenOrEquipped(player)) {
-                NetworkHandler.INSTANCE.send(
-                        PacketDistributor.PLAYER.with(() -> player),
-                        new SyncWitherData3Packet(data.abilityCooldown, data.isWitherActive, data.witherEntity.getUUID())
-                );
-            }
-        } else {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new SyncWitherData3Packet(data.abilityCooldown, data.isWitherActive, player.getUUID())
             );
-        }
     }
 
 
@@ -336,7 +413,7 @@ public class WitherFormAbility implements Ability {
     }
 
 
-
+/*
     public void activateWitherSummon(ServerPlayer player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         data.hasPlayedSound = false;
@@ -354,9 +431,10 @@ public class WitherFormAbility implements Ability {
             }
         }
     }
+*/
 
 
-    public void preventCombatActions(Player player) {
+    /*public void preventCombatActions(Player player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
 
         player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
@@ -368,7 +446,7 @@ public class WitherFormAbility implements Ability {
 
             }
         });
-    }
+    }*/
 
     private Entity getNearestEntity(Player player) {
         double searchRadius = 10.0; // Adjust this value as needed

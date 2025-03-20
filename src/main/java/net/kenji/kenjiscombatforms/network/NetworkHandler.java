@@ -17,6 +17,7 @@ import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form3SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
 import net.kenji.kenjiscombatforms.network.movers.EntityRotationPacket;
 import net.kenji.kenjiscombatforms.network.movers.PlayerInputPacket;
+import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.EnderEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.WitherEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.*;
@@ -506,6 +507,13 @@ public class NetworkHandler {
                 .decoder(RemoveItemPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     RemoveItemPacket.handle(msg, ctx.get());
+                }).add();
+
+        INSTANCE.messageBuilder(WitherInputPacket.class, packetId++)
+                .encoder(WitherInputPacket::encode)
+                .decoder(WitherInputPacket::decode)
+                .consumerMainThread((msg, ctx) -> {
+                    WitherInputPacket.handle(msg, ctx.get());
                 }).add();
     }
 }

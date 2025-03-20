@@ -6,6 +6,7 @@ import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.event.EntityCameraMovements;
@@ -14,6 +15,7 @@ import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.UpdateInventoryOpenPacket;
 import net.kenji.kenjiscombatforms.network.movers.PlayerInputPacket;
+import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.EnderEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.WitherEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
@@ -28,6 +30,8 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -36,6 +40,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.events.engine.ControllEngine;
@@ -75,45 +80,47 @@ public class ClientEventHandler {
         FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
 
 
-
         if (player == null) return;
+
         if (ModKeybinds.TOGGLE_HAND_COMBAT_KEY.consumeClick()) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastPressTime > PRESS_COOLDOWN) {
-                    lastPressTime = currentTime;
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastPressTime > PRESS_COOLDOWN) {
+                lastPressTime = currentTime;
 
                 int selectedSlot = player.getInventory().selected;
                 ItemStack currentItem = player.getInventory().getItem(selectedSlot);
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
                     ItemStack storedItem = container.getStoredItem();
-                    if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
-                        if (!(currentItem.getItem() instanceof BaseFistClass)) {
-                            container.setStoredItem(currentItem.copy());
+                    if(!ClientVoidData.getIsEnderActive()) {
+                        if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
+                            if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                                container.setStoredItem(currentItem.copy());
+                            }
+                            player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                            originalSlot = selectedSlot; // Save the original slot
+                            NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
+                            player.getInventory().setChanged();
+
+                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+                        } else if (!container.getStoredItem().isEmpty()) {
+                            player.getInventory().setItem(originalSlot, storedItem);
+                            container.setStoredItem(ItemStack.EMPTY);
+                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+
+                            originalSlot = -1;
+                            player.getInventory().setChanged();
+
+                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
                         }
-                        player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
-                        originalSlot = selectedSlot; // Save the original slot
-                        NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
-                        player.getInventory().setChanged();
+                        if (currentItem.getItem() instanceof BaseFistClass) {
+                            player.getInventory().setItem(originalSlot, storedItem);
+                            container.setStoredItem(ItemStack.EMPTY);
+                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
 
-                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 
-                    } else if (!container.getStoredItem().isEmpty()) {
-                        player.getInventory().setItem(originalSlot, storedItem);
-                        container.setStoredItem(ItemStack.EMPTY);
-                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-
-                        originalSlot = -1;
-                        player.getInventory().setChanged();
-
-                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-                    }
-                    if (currentItem.getItem() instanceof BaseFistClass) {
-                        player.getInventory().setItem(originalSlot, storedItem);
-                        container.setStoredItem(ItemStack.EMPTY);
-                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-
-                        player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-
+                        }
                     }
                 });
             }
@@ -133,6 +140,24 @@ public class ClientEventHandler {
             if (clientPlayer != null) {
                 if (controllEngine != null) {
                     onClickInput();
+                }
+                if(ClientWitherData.getIsWitherActive()) {
+                    boolean jump = mc.options.keyJump.isDown();
+                    boolean sneak = ControlHandler.controlRelatedEvents.getInstance().getShiftDown(clientPlayer);
+
+
+                    NetworkHandler.INSTANCE.sendToServer(new WitherInputPacket(jump, sneak));
+                    Vec3 velocity = clientPlayer.getDeltaMovement(); // Get current velocity
+                    if (!clientPlayer.level().getBlockState(clientPlayer.blockPosition().below(2)).isAir() ||
+                            !clientPlayer.level().getBlockState(clientPlayer.blockPosition()).isAir()){
+                        if (jump) {
+                            clientPlayer.setDeltaMovement(velocity.x, 0.2, velocity.z); // Move up
+                        }
+                    }
+                    if (sneak) {
+                        clientPlayer.setDeltaMovement(velocity.x, -0.2, velocity.z); // Move down
+                    }
+
                 }
                 if (mc.cameraEntity instanceof EnderEntity || mc.cameraEntity instanceof WitherPlayerEntity) {
                     boolean forward = mc.options.keyUp.isDown();
@@ -276,6 +301,28 @@ public class ClientEventHandler {
         if (lastScreenWasContainer) {
             NetworkHandler.INSTANCE.sendToServer(new UpdateInventoryOpenPacket(false));
             lastScreenWasContainer = false;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHotbarScroll(InputEvent.MouseScrollingEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            if(ClientVoidData.getIsEnderActive() || ClientWitherData.getIsWitherActive()) {
+                event.setCanceled(true); // Stops the scroll wheel from changing the slot
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHotbarKey(InputEvent.Key event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            if(ClientVoidData.getIsEnderActive() || ClientWitherData.getIsWitherActive()) {
+                if (event.getAction() == GLFW.GLFW_PRESS && event.getKey() >= GLFW.GLFW_KEY_1 && event.getKey() <= GLFW.GLFW_KEY_9) {
+                    event.setCanceled(true); // Stops the hotbar from changing via number keys
+                }
+            }
         }
     }
 }

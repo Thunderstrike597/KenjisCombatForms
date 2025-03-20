@@ -37,12 +37,22 @@ public class RemoveItemPacket {
             ServerPlayer player = ctx.getSender();
 
             if (player != null) {
-
-                FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
-                int selectedSlot = player.getInventory().selected;
-                ItemStack currentItem = player.getInventory().getItem(selectedSlot);
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                    // Store the current item if there’s something to store
+                    if (ctx.getDirection().getReceptionSide().isClient()) {
+                        if (!msg.storedItem.isEmpty()) {
+                            player.getInventory().setItem(msg.originalSlot, container.getStoredItem());
+                            container.setStoredItem(ItemStack.EMPTY);
+                        }else {
+                            player.getInventory().setItem(msg.originalSlot, ItemStack.EMPTY);
+                        }
+                    }
+
+                    if (ctx.getDirection().getReceptionSide().isServer()) {
+
+                        FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
+                        int selectedSlot = player.getInventory().selected;
+                        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+                        // Store the current item if there’s something to store
 
                         formChangeHandler.removeCurrentFormItem(player, selectedSlot);
                         player.getInventory().setItem(msg.originalSlot, msg.storedItem);
@@ -51,7 +61,9 @@ public class RemoveItemPacket {
 
                         CompoundTag nbt = player.getPersistentData();
                         nbt.remove("storedItem");
-                    // Always place a weapon, regardless of capability state
+                        // Always place a weapon, regardless of capability state
+
+                    }
                 });
             }
         });

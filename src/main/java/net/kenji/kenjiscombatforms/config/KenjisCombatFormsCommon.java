@@ -226,6 +226,9 @@ public class KenjisCombatFormsCommon {
                 .define("Compat Mode Undead Sensei Health", 12);
         COMPAT_MODE_EXILED_DEVIL_HEALTH = BUILDER.comment("How much health the \"Exiled Devil\" should start with if dynamic difficulty combat is enabled")
                 .define("Compat Mode Exiled Devil Health", 18);
+
+
+
         BUILDER.pop();
 
         BUILDER.push("Form Damage & Speed");

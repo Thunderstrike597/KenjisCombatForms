@@ -29,4 +29,7 @@ public class ModModelLayers {
 
     public static final ModelLayerLocation ABILITY_TRADER_LAYER = new ModelLayerLocation(
             new ResourceLocation(KenjisCombatForms.MOD_ID, "scroll_trader_layer"), "main");
+
+    public static final ModelLayerLocation CUSTOM_PLAYER_LAYER = new ModelLayerLocation(
+            new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/entity/purple_player_texture.png"), "main");
 }

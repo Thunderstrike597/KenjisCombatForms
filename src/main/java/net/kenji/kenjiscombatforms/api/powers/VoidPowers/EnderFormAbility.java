@@ -1,6 +1,8 @@
 package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
+import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
@@ -12,10 +14,17 @@ import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
+import net.kenji.kenjiscombatforms.item.custom.forms.VoidFormItem;
 import net.kenji.kenjiscombatforms.network.particle_packets.EndParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
+import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.voidform.ability3.SyncVoidData3Packet;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,10 +35,14 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -56,6 +69,7 @@ public class EnderFormAbility implements Ability {
     private final Map<UUID, EnderPlayerDataSets.EnderFormPlayerData> playerDataMap = dataSets.A3playerDataMap;
     private final CommonFunctions dataHandlers = CommonFunctions.getInstance();
     private Entity enderEntity;
+    public String teamName = "enderEntityTeam";
 
     private EnderPlayerDataSets.TeleportPlayerData getOrCreateTeleportPlayerData(Player player) {
         return dataSets.getOrCreateTeleportPlayerData(player);
@@ -184,6 +198,7 @@ public class EnderFormAbility implements Ability {
             data.hasPlayedSound = false;
         } else {
             deactivateAbilityOptional(serverPlayer);
+            restoreItem(serverPlayer);
         }
     }
 
@@ -191,25 +206,98 @@ public class EnderFormAbility implements Ability {
     public void activateAbility(ServerPlayer serverPlayer) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
         data.isEnderActive = true;
-        activateEnderSummon(serverPlayer);
+        setEnderFormItem(serverPlayer);
         playSound(serverPlayer);
         syncDataToClient(serverPlayer);
+    }
+    private static int originalSlot = CommonEventHandler.getInstance().getOriginalSlot();
+
+    private void setEnderFormItem(Player player){
+        int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            if (storedItem.isEmpty()) {
+                if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                    container.setStoredItem(currentItem.copy());
+                }
+                player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                player.getInventory().setItem(selectedSlot, EnderFormItem.getInstance().getDefaultInstance());
+                originalSlot = selectedSlot; // Save the original slot
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                        new SwitchItemPacket(originalSlot, storedItem)
+                );                player.getInventory().setChanged();
+
+                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+            }
+        });
+    }
+    private void restoreItem(Player player){
+        int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            if (!storedItem.isEmpty()) {
+                player.getInventory().setItem(originalSlot, container.getStoredItem());
+                container.setStoredItem(ItemStack.EMPTY);
+
+            }else {
+                player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+            }
+                originalSlot = -1;
+
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                    new SwitchItemPacket(originalSlot, storedItem)
+            );
+            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+        });
+    }
+
+    public boolean getEnderFormActive(Player player){
+        EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
+        return data.isEnderActive;
+    }
+
+    void addEnderEntityToTeam(Player currentPlayer, EnderEntity enderEntity){
+        Scoreboard scoreboard = currentPlayer.level().getScoreboard();
+        UUID playerUUID = currentPlayer.getUUID();
+
+        PlayerTeam team = scoreboard.getPlayerTeam(teamName);
+        if (team == null) {
+            team = scoreboard.addPlayerTeam(teamName);
+            team.setColor(ChatFormatting.DARK_PURPLE);
+            team.setAllowFriendlyFire(false);
+        }
+        if (currentPlayer.getTeam() != scoreboard.getPlayerTeam(teamName)) {
+            enderEntity.setOwnerUUID(playerUUID);
+            scoreboard.addPlayerToTeam(playerUUID.toString(), team);
+            scoreboard.addPlayerToTeam(enderEntity.getUUID().toString(), team);
+
+        System.out.println("Is adding enderEntity To Team");
+        }
     }
 
     @Override
     public void deactivateAbilityOptional(ServerPlayer serverPlayer) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
-        serverPlayer.noPhysics = false;
-        double radius = 2.0;
-        serverPlayer.removeEffect(MobEffects.INVISIBILITY);
-        serverPlayer.removeEffect(MobEffects.LEVITATION);
         data.isEnderActive = false;
+        serverPlayer.getAbilities().flying = false;
+        serverPlayer.getAbilities().mayfly = false;
+
+        /* serverPlayer.noPhysics = false;
+        double radius = 2.0;
+       serverPlayer.removeEffect(MobEffects.INVISIBILITY);
+        serverPlayer.removeEffect(MobEffects.LEVITATION);
+
         serverPlayer.setCamera(serverPlayer);
         serverPlayer.stopRiding();
-        serverPlayer.setInvulnerable(false);
-
+       serverPlayer.setInvulnerable(false);
+       */
         Entity existingEnder = data.playerEnderMap.remove(serverPlayer.getUUID());
-        data.enderEntity = existingEnder;
+        //data.enderEntity = existingEnder;
         if (existingEnder != null) {
             existingEnder.remove(Entity.RemovalReason.DISCARDED);
         }
@@ -269,7 +357,6 @@ public class EnderFormAbility implements Ability {
         }
     }
 
-
     @Override
     public void tickServerAbilityData(ServerPlayer player) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
@@ -277,39 +364,45 @@ public class EnderFormAbility implements Ability {
 
         if(abilityData.chosenFinal.name().equals(getName())) {
             getInstance().decrementCooldown(player);
-        }
-        syncDataToClient(player);
-        if(enderEntity instanceof EnderEntity entity){
-            if (data.isEnderActive) {
-                preventCombatActions(player);
-                player.setCamera(enderEntity);
-                player.setPose(Pose.FALL_FLYING);
-                player.setShiftKeyDown(false);
-                player.setInvulnerable(true);
-                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 2, false, false));
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
-                ClientVoidData.setIsEnderActive(true);
 
-                NetworkHandler.INSTANCE.send(
-                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                        new EndParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
-                );
+            syncDataToClient(player);
+            if (data.isEnderActive || ClientVoidData.getIsEnderActive()) {
+                player.getAbilities().mayfly = true;
+                player.getAbilities().flying = true;
+                player.getAbilities().setFlyingSpeed(0.05f);
+                player.startFallFlying();
 
-                if (entity.isDeadOrDying()) {
-                    data.isEnderActive = false;
-                    deactivateAbilityOptional(player);
+                    ClientVoidData.setIsEnderActive(true);
+
+
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                            new EndParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
+                    );
                 }
-            }
+            } else {
+            player.getAbilities().mayfly = false;
+            player.getAbilities().flying = false;
+            player.stopFallFlying();
         }
     }
 
     @Override
     public void tickClientAbilityData(Player player) {
         EnderPlayerDataSets.EnderFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new EnderPlayerDataSets.EnderFormPlayerData());
-        getInstance().decrementCooldown(player);
-        if (ClientVoidData.getIsEnderActive()) {
-            preventCombatActions(player);
-            player.noPhysics = true;
+        if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+
+            getInstance().decrementCooldown(player);
+            if (ClientVoidData.getIsEnderActive() || data.isEnderActive) {
+                //preventCombatActions(player);
+                player.getAbilities().mayfly = true;
+                player.getAbilities().flying = true;
+                //player.noPhysics = true;
+            }
+            if (!ClientVoidData.getIsEnderActive()) {
+                player.getAbilities().mayfly = false;
+                player.getAbilities().flying = false;
+            }
         }
     }
 
@@ -332,6 +425,7 @@ public class EnderFormAbility implements Ability {
 
 
 
+    /*
     public void activateEnderSummon(ServerPlayer player) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
         data.hasPlayedSound = false;
@@ -347,10 +441,12 @@ public class EnderFormAbility implements Ability {
 
             if (enderEntity != null) {
                 data.playerEnderMap.put(player.getUUID(), enderEntity);
+                if(enderEntity instanceof EnderEntity trueEnderEntity)
+                    addEnderEntityToTeam(player, trueEnderEntity);
             }
         }
     }
-
+*/
 
     public void preventCombatActions(Player player) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
@@ -361,7 +457,7 @@ public class EnderFormAbility implements Ability {
                 playerPatch.getAnimator().playAnimation(Animations.BIPED_WALK, 0.0F);
                 playerPatch.getEntityState().setState(EntityState.INACTION, true);
                 playerPatch.setLastAttackSuccess(false);
-                playerPatch.getOriginal().skipAttackInteraction(data.enderEntity);
+              //  playerPatch.getOriginal().skipAttackInteraction(data.enderEntity);
 
             }
         });

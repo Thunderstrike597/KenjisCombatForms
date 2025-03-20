@@ -8,6 +8,7 @@ import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
+import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 import org.slf4j.event.LoggingEvent;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public class CommonEventHandler {
 
     int originalSlot = -1;
 
-    int getOriginalSlot(){
+    public int getOriginalSlot(){
         return originalSlot;
     }
 
@@ -70,7 +72,12 @@ public class CommonEventHandler {
 
         if (nbt.contains("storedItem")) {
             ItemStack storedItem = ItemStack.of(nbt);
+
             player.getInventory().setItem(originalSlot, storedItem);
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                    new RemoveItemPacket(originalSlot, storedItem)
+            );
             nbt.remove("storedItem");
         }
     }
@@ -97,9 +104,12 @@ public class CommonEventHandler {
 
                 if (!container.getStoredItem().isEmpty()) {
                     player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
+
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                            new SwitchItemPacket(getInstance().getOriginalSlot(), storedItem)
+                    );
                     container.setStoredItem(ItemStack.EMPTY);
-                    //NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
-                    //getInstance().setOriginalSlot(-1);
                     player.getInventory().setChanged();
                 }
 

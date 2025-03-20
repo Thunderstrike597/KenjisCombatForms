@@ -1,0 +1,79 @@
+{
+  "category": "fist",
+  "styles": {
+    "default": "one_hand",
+    "cases": [
+      {
+        "condition": "epicfight:offhand_category",
+        "predicate": {
+          "category": "sword"
+        },
+        "style": "two_hand"
+      }
+    ]
+  },
+  "offhand_item_compatible_predicate":
+  {
+    "hit_particle": "epicfight:hit_blunt",
+    "hit_sound": "epicfight:entity.hit.blunt",
+    "livingmotion_modifier": {},
+    "offhand_item_compatible_predicate": [
+      {
+        "predicate": "epicfight:offhand_item_category",
+        "category": "dagger"
+      }
+    ]
+  },
+  "collider": {
+    "number": 3,
+    "size": [
+      0.4,
+      0.5,
+      0.6
+    ],
+    "center": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "combos":
+  {
+    "common":
+    [
+      "wom:biped/skill/antitheus_ascended_auto_2",
+      "wom:biped/skill/antitheus_ascended_auto_3",
+      "wom:biped/skill/antitheus_ascended_auto_2",
+      "wom:biped/skill/antitheus_ascended_auto_3",
+      "wom:biped/skill/antitheus_ascended_auto_2",
+      "wom:biped/skill/antitheus_shoot",
+      "wom:biped/skill/antitheus_shoot",
+      "wom:biped/skill/antitheus_ascended_blink",
+      "wom:biped/combat/agony_airslash"
+    ],
+    "mount":
+    [
+      "epicfight:biped/combat/sword_mount_attack"
+    ]
+  },
+  "innate_skills":
+  {
+    "common": "wom:true_berserk"
+  },
+  "livingmotion_modifier": {
+    "one_hand":
+    {
+      "aim": "wom:biped/skill/antitheus_aiming",
+      "idle": "wom:biped/living/antitheus_ascended_idle",
+      "run": "wom:biped/living/antitheus_ascended_run",
+      "walk": "wom:biped/living/antitheus_ascended_walk"
+    },
+    "two_hand":
+    {
+      "aim": "wom:biped/skill/antitheus_aiming",
+      "idle": "wom:biped/living/antitheus_ascended_idle",
+      "run": "wom:biped/living/antitheus_ascended_run",
+      "walk": "wom:biped/living/antitheus_ascended_walk"
+    }
+  }
+}

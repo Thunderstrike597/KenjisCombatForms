@@ -7,6 +7,8 @@ import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility2Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.VoidAbility1Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.VoidAbility2Component;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
@@ -170,8 +172,12 @@ public class ModItems {
     public static final RegistryObject<Item> POWER_FIST2_ITEM = ITEMS.register("power_fist_tier2", () -> new PowerFist2Item(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> POWER_FIST3_ITEM = ITEMS.register("power_fist_tier3", () -> new PowerFist3Item(new Item.Properties().stacksTo(1)));
 
+    public static final RegistryObject<Item> VOID_FORM_ITEM = ITEMS.register("ender_form_fist", () -> new EnderFormItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> WITHER_FORM_ITEM = ITEMS.register("wither_form_fist", () -> new WitherFormItem(new Item.Properties().stacksTo(1)));
 
- public static void register(IEventBus eventBus) {
+
+
+    public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }
 

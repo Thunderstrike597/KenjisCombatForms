@@ -96,11 +96,10 @@ public class ControlHandler {
 
                 if (event.getKey() == mc.options.keyShift.getKey().getValue()) {
                     if (event.getAction() == GLFW.GLFW_PRESS) {
-                        if (Minecraft.getInstance().cameraEntity instanceof EnderEntity || Minecraft.getInstance().cameraEntity instanceof WitherPlayerEntity) {
                             mc.options.keyShift.setDown(false);
                             getInstance().setShiftDown(clientPlayer, true);
                         }
-                    } else if (event.getAction() == GLFW.GLFW_RELEASE) {
+                    else if (event.getAction() == GLFW.GLFW_RELEASE) {
                         getInstance().setShiftDown(clientPlayer, false);
                     }
                 } else data.isShiftDown = false;

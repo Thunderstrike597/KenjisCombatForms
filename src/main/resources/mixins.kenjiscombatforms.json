@@ -1,0 +1,14 @@
+{
+  "minVersion": "0.8",
+  "refmap": "mixins.kenjiscombatforms.refmap.json",
+  "required": true,
+  "package": "net.kenji.kenjiscombatforms.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": ["MixinBlockCollision"],
+  "client": [
+    "MixinEntityRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

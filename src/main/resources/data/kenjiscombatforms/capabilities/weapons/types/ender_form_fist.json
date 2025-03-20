@@ -39,25 +39,14 @@
   },
   "combos":
   {
-    "one_hand":
+    "common":
     [
-      "epicfight:biped/combat/dagger_dual_auto1",
-      "epicfight:biped/combat/dagger_dual_auto1",
-      "epicfight:biped/combat/dagger_dual_auto2",
-      "wom:biped/combat/staff_auto_2",
-      "wom:biped/combat/enderblaster_onehand_auto_2",
-      "epicfight:biped/combat/spear_dash",
-      "wom:biped/combat/staff_kingkong"
-    ],
-    "two_hand":
-    [
-      "epicfight:biped/combat/dagger_dual_auto1",
-      "epicfight:biped/combat/dagger_dual_auto1",
-      "epicfight:biped/combat/dagger_dual_auto2",
-      "wom:biped/combat/staff_auto_2",
-      "wom:biped/combat/enderblaster_onehand_auto_2",
-      "epicfight:biped/combat/spear_dash",
-      "wom:biped/combat/staff_kingkong"
+      "wom:biped/skill/enderblaster_onehand_airshoot",
+      "wom:biped/skill/enderblaster_twohand_shoot_2",
+      "wom:biped/skill/enderblaster_onehand_shoot_3",
+      "wom:biped/skill/enderblaster_twohand_airshoot",
+      "wom:biped/skill/enderblaster_twohand_shoot_dash",
+      "wom:biped/combat/enderblaster_onehand_jumpkick"
     ],
     "mount":
     [

@@ -3,7 +3,13 @@ package net.kenji.kenjiscombatforms.network.slots;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
+import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderFormAbility;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
+import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
+import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,28 +45,48 @@ public class SwitchItemPacket {
 
             ServerPlayer player = ctx.getSender();
 
+
             if (player != null) {
                 FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
-                int selectedSlot = player.getInventory().selected;
-                ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() && !(currentItem.getItem() instanceof BaseFistClass)) {
-                    container.setStoredItem(currentItem.copy());
-                    player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
-                    CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
-                    formChangeHandler.setSelectedFormChanged(player, selectedSlot);
-                    player.getInventory().setChanged();
+                    int selectedSlot = player.getInventory().selected;
+                    if (ctx.getDirection().getReceptionSide().isClient()) {
+                        container.setStoredItem(msg.storedItem);
+                        if(ClientWitherData.getIsWitherActive()) {
+                            player.getInventory().setItem(selectedSlot, WitherFormItem.getInstance().getDefaultInstance());
+                        }
+                        if(ClientVoidData.getIsEnderActive()) {
+                            player.getInventory().setItem(selectedSlot, EnderFormItem.getInstance().getDefaultInstance());
+                        }
+                        else if(player.getInventory().getItem(msg.originalSlot).isEmpty()){
+                            formChangeHandler.setSelectedFormChanged(player, selectedSlot);
+                            player.getInventory().setChanged();
+                        }
+                    }
+                    if (ctx.getDirection().getReceptionSide().isServer()) {
+                        if (!EnderFormAbility.getInstance().getEnderFormActive(player) && !WitherFormAbility.getInstance().getWitherFormActive(player)) {
 
-                    CompoundTag nbt = player.getPersistentData();
-                    nbt.put("storedItem", msg.storedItem.serializeNBT());
+                            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+                            if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() && !(currentItem.getItem() instanceof BaseFistClass)) {
+                                container.setStoredItem(currentItem.copy());
+                                player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                                CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
+                                formChangeHandler.setSelectedFormChanged(player, selectedSlot);
+                                player.getInventory().setChanged();
 
-                    // Always place a weapon, regardless of capability state
-                }
-                else if(currentItem.isEmpty() && container.getStoredItem().isEmpty()){
-                    CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
+                                CompoundTag nbt = player.getPersistentData();
+                                nbt.put("storedItem", msg.storedItem.serializeNBT());
 
-                    formChangeHandler.setSelectedFormChanged(player, selectedSlot);
-                    player.getInventory().setChanged();
+                                // Always place a weapon, regardless of capability state
+                            } else if (currentItem.isEmpty() && container.getStoredItem().isEmpty()) {
+                                CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
+
+                                formChangeHandler.setSelectedFormChanged(player, selectedSlot);
+                                player.getInventory().setChanged();
+                            }
+
+                        }
                     }
                 });
             }

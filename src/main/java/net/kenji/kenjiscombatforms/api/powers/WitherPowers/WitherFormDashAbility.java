@@ -218,15 +218,15 @@ public class WitherFormDashAbility implements Ability {
         WitherPlayerDataSets.WitherFormPlayerData wData = getOrCreateWitherFormPlayerData(player);
 
         data.isDashActive = true;
-        data.initialPosition = wData.witherEntity.position();
+        data.initialPosition = player.position();
         data.distanceTraveled = 0.0;
         data.dashTicksRemaining = data.MAX_DASH_TICKS;
         data.dashDirection = dashDirection.normalize();
         data.currentSpeed = Math.min(dashSpeed, data.MAX_SPEED);
 
         // Apply initial dash motion
-        wData.witherEntity.setDeltaMovement(data.dashDirection.scale(data.currentSpeed));
-        wData.witherEntity.hasImpulse = true;
+        player.setDeltaMovement(data.dashDirection.scale(data.currentSpeed));
+        player.hasImpulse = true;
 
     }
 
@@ -234,19 +234,19 @@ public class WitherFormDashAbility implements Ability {
         WitherPlayerDataSets.WitherFormPlayerData wData = getOrCreateWitherFormPlayerData(player);
 
 
-        double newX = wData.witherEntity.getX() + motion.x;
-        double newY = wData.witherEntity.getY() + motion.y;
-        double newZ = wData.witherEntity.getZ() + motion.z;
+        double newX = player.getX() + motion.x;
+        double newY = player.getY() + motion.y;
+        double newZ = player.getZ() + motion.z;
 
         // Check if the new position is inside a block
         BlockPos newBlockPos = new BlockPos((int)newX, (int)newY, (int)newZ);
-        BlockState blockState =  wData.witherEntity.level().getBlockState(newBlockPos);
+        BlockState blockState =  player.level().getBlockState(newBlockPos);
 
         if (!blockState.isAir()) {
             // If inside a block, move the player to the nearest non-solid position
             newY = Math.ceil(newY);
         }
-        wData.witherEntity.setPos(newX, newY, newZ);
+        player.setPos(newX, newY, newZ);
     }
 
 
@@ -270,11 +270,11 @@ public class WitherFormDashAbility implements Ability {
             moveWitherEntityThroughBlocks(player, motion);
 
             // Apply motion
-            wData.witherEntity.setDeltaMovement(motion);
-            wData.witherEntity.move(MoverType.SELF, motion);
+            player.setDeltaMovement(motion);
+            player.move(MoverType.SELF, motion);
 
             // Update distance traveled
-            Vec3 newPosition = wData.witherEntity.position();
+            Vec3 newPosition = player.position();
             data.distanceTraveled = data.initialPosition.distanceTo(newPosition);
 
             data.dashTicksRemaining--;
@@ -300,28 +300,28 @@ public class WitherFormDashAbility implements Ability {
     private void ensureWitherStopped(Player player) {
         WitherPlayerDataSets.WitherFormPlayerData wData = getOrCreateWitherFormPlayerData(player);
 
-        wData.witherEntity.setDeltaMovement(Vec3.ZERO);
-        wData.witherEntity.fallDistance = 0f;
+        player.setDeltaMovement(Vec3.ZERO);
+        player.fallDistance = 0f;
 
         // Ensure player is not inside a block
-        BlockPos witherPos = wData.witherEntity.blockPosition();
-        BlockState blockState = wData.witherEntity.level().getBlockState(witherPos);
+        BlockPos witherPos = player.blockPosition();
+        BlockState blockState = player.level().getBlockState(witherPos);
         if (!blockState.isAir()) {
-            double newY = Math.ceil(wData.witherEntity.getY());
-            wData.witherEntity.setPos(wData.witherEntity.getX(), newY, wData.witherEntity.getZ());
+            double newY = Math.ceil(player.getY());
+            player.setPos(player.getX(), newY, player.getZ());
         }
 
-        if (wData.witherEntity instanceof WitherPlayerEntity) {
-            ServerLevel targetLevel = (ServerLevel) wData.witherEntity.level();
 
-            double newX = wData.witherEntity.getX();
-            double newY = wData.witherEntity.getY();
-            double newZ = wData.witherEntity.getZ();
+            ServerLevel targetLevel = (ServerLevel) player.level();
+
+            double newX = player.getX();
+            double newY = player.getY();
+            double newZ = player.getZ();
             Set<RelativeMovement> relativeMovements = Set.of();
 
-            float newYaw = wData.witherEntity.getYRot();  // or your desired yaw
-            float newPitch = wData.witherEntity.getXRot();  // or your desired pitch
-            wData.witherEntity.teleportTo(
+            float newYaw = player.getYRot();  // or your desired yaw
+            float newPitch = player.getXRot();  // or your desired pitch
+        player.teleportTo(
                     targetLevel,
                     newX,
                     newY,
@@ -330,6 +330,5 @@ public class WitherFormDashAbility implements Ability {
                     newYaw,
                     newPitch
             );
-        }
     }
 }

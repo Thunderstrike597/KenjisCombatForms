@@ -237,9 +237,9 @@ public class EnderLevitation implements Ability {
         EnderPlayerDataSets.EnderLevitationPlayerData data = getPlayerData(player);
         EnderPlayerDataSets.EnderFormPlayerData eData = getInstance().getOrCreateEnderFormPlayerData(player);
 
-        if (eData.enderEntity != null) {
+        if (eData.isEnderActive) {
             double radius = 10.0;
-            AABB searchArea = new AABB(eData.enderEntity.getOnPos()).inflate(radius);
+            AABB searchArea = new AABB(player.getOnPos()).inflate(radius);
 
             if (data.isActive) {
 

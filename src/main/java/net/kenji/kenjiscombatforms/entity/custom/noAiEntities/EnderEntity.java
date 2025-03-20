@@ -1,8 +1,11 @@
 package net.kenji.kenjiscombatforms.entity.custom.noAiEntities;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,11 +14,18 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.Team;
 import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.gameasset.Animations;
@@ -24,16 +34,19 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.List;
+import java.util.UUID;
 
-public class EnderEntity extends PathfinderMob {
+public class EnderEntity extends AbstractHorse {
     private static EnderEntity INSTANCE;
 
-    public EnderEntity(EntityType<? extends PathfinderMob> pathfinderMob, Level level) {
-        super(pathfinderMob, level);
+    public EnderEntity(EntityType<? extends AbstractHorse> p_30531_, Level p_30532_) {
+        super(p_30531_, p_30532_);
         if (INSTANCE == null) {
             INSTANCE = this;
         }
     }
+
+
 
     @Override
     public void onAddedToWorld() {
@@ -43,11 +56,18 @@ public class EnderEntity extends PathfinderMob {
 
 
 
+
     public static EnderEntity getInstance(){
         return INSTANCE;
     }
 
     private static final EntityDataAccessor<Float> DATA_OPACITY = SynchedEntityData.defineId(EnderEntity.class, EntityDataSerializers.FLOAT);
+
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+        return null;
+    }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -137,7 +157,7 @@ public class EnderEntity extends PathfinderMob {
     private static final double VERTICAL_ACCELERATION = 0.05;
     private static final double VERTICAL_DECELERATION = 0.03;
 
-    private static final double START_WALKING_THRESHOLD = 0.08;
+    private static final double START_WALKING_THRESHOLD = 0.1;
     private static final double STOP_WALKING_THRESHOLD = 0.1;
     private boolean isWalking = false;
 
@@ -215,6 +235,21 @@ public class EnderEntity extends PathfinderMob {
         });
     }
 
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (source.getEntity() instanceof Player player) {
+            Scoreboard scoreboard = player.getScoreboard();
+            Team playerTeam = player.getTeam();
+            Team entityTeam = this.getTeam();
+
+            // Block damage if both are on the same team
+            if (playerTeam != null && entityTeam != null && playerTeam.equals(entityTeam)) {
+                return true; // Entity is invulnerable to attacks from teammates
+            }
+        }
+        return super.isInvulnerableTo(source);
+    }
+
 
 
     private void handleMovementAnimations() {
@@ -257,15 +292,44 @@ public class EnderEntity extends PathfinderMob {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.is(DamageTypes.MOB_ATTACK)||
-                source.is(DamageTypes.PLAYER_ATTACK)||
+        if (source.getEntity() instanceof Player player) {
+            Scoreboard scoreboard = player.getScoreboard();
+            Team playerTeam = player.getTeam();
+            Team entityTeam = this.getTeam();
+
+            if (playerTeam != null && entityTeam != null && playerTeam.equals(entityTeam)) {
+                return false; // Cancel the damage before actuallyHurt() is called
+            }
+        }
+        else if (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK)||
                 source.is(DamageTypes.PLAYER_EXPLOSION)) {
             float reducedDamage = amount * 0.65f;
             float finalDamage = Math.min(reducedDamage, 10f);
             return super.hurt(source, finalDamage);
-            }
+        }
         return false;
     }
+
+    @Override
+    public boolean canRiderInteract() {
+        return true;
+    }
+
+    @Override
+    protected boolean canRide(Entity entity) {
+        return true;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+    }
+
+    @Override
+    public boolean isNoAi() {
+        return false;
+    }
+
 
     @Override
     public boolean canBeAffected(MobEffectInstance effectInstance) {

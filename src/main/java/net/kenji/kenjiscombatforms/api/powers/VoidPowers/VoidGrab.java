@@ -264,7 +264,7 @@ public class VoidGrab implements Ability {
                     entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 2, 0, false, false));
                 } else if (!state.hasThrown) {
                     // Throw the entity
-                    Vec3 lookVec = eData.enderEntity.getLookAngle();
+                    Vec3 lookVec = player.getLookAngle();
                     double throwStrength = 4.0;
                     Vec3 throwVec = lookVec.scale(throwStrength);
 

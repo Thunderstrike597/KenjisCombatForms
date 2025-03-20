@@ -50,5 +50,4 @@ public class ModEventBusClientEvents {
         event.register(ModKeybinds.TOGGLE_HAND_COMBAT_KEY);
     }
 
-
 }

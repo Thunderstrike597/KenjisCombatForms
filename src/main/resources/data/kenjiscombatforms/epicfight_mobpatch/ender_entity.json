@@ -28,8 +28,8 @@
       "livingmotions": {
         "block": "epicfight:biped/skill/guard_spear",
         "idle": "epicfight:biped/living/creative_idle",
-        "run": "wom:biped/living/antitheus_ascended_run",
-        "walk": "wom:biped/living/antitheus_ascended_run",
+        "run": "epicfight:biped/living/creative_fly",
+        "walk": "epicfight:biped/living/creative_fly",
         "fall": "wom:biped/living/antitheus_ascended_walk",
         "chase": "wom:biped/living/antitheus_ascended_run"
       }

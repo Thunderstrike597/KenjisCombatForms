@@ -151,11 +151,11 @@ public class EnderWarpAbility implements Ability {
         EnderPlayerDataSets.EnderWarpPlayerData data = getPlayerData(serverPlayer);
         EnderPlayerDataSets.EnderFormPlayerData eData = getOrCreateEnderFormPlayerData(serverPlayer);
         int maxDistance = 8;
-        Vec3 eyePos = eData.enderEntity.getEyePosition();
-        Vec3 getViewVec = eData.enderEntity.getViewVector(1.0f);
+        Vec3 eyePos = serverPlayer.getEyePosition();
+        Vec3 getViewVec = serverPlayer.getViewVector(1.0f);
         Vec3 endVec = eyePos.add(getViewVec.scale(maxDistance));
 
-        eData.enderEntity.teleportTo(endVec.x, endVec.y, endVec.z);
+        serverPlayer.teleportTo(endVec.x, endVec.y, endVec.z);
     }
 
     @Override
