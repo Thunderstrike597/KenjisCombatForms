@@ -42,6 +42,7 @@
   "key.kenjiscombatforms.open_form_menu": "Open Forms Menu",
   "key.kenjiscombatforms.quick_form_change": "Quick Change Form",
   "key.kenjiscombatforms.toggle_hand_combat": "Toggle Hand Combat",
+  "key.kenjiscombatforms.set_offhand_combat": "Set Offhand Combat",
 
   "entity.kenjiscombatforms.exiled_devil": "Exiled Devil",
   "entity.kenjiscombatforms.exiled_sensei": "Exiled Sensei",

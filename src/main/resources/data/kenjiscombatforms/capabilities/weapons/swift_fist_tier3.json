@@ -1,7 +1,12 @@
 {
   "type": "kenjiscombatforms:swift_form3",
   "attributes": {
-    "common":{
+    "one_hand":{
+      "armor_negation": 1.0,
+      "impact": 1,
+      "max_strikes": 4
+    },
+    "two_hand":{
       "armor_negation": 1.0,
       "impact": 1,
       "max_strikes": 4

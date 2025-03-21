@@ -6,11 +6,12 @@
     "default": "one_hand",
     "cases": [
       {
-        "style": "ochs",
+        "style": "two_hand",
         "conditions": [
           {
-            "predicate": "epicfight:skill_active",
-            "skill": "epicfight:liechtenauer"
+            "predicate": "epicfight:health",
+            "comparator": "less_ratio",
+            "health": 0.5
           }
         ]
       }
@@ -56,7 +57,7 @@
       "wom:biped/combat/enderblaster_onehand_dash",
       "wom:biped/combat/enderblaster_onehand_auto_4"
     ],
-    "ochs":
+    "two_hand":
     [
       "epicfight:biped/combat/dagger_auto1",
       "epicfight:biped/combat/dagger_auto1",
@@ -83,7 +84,8 @@
     ]
   },
   "innate_skills": {
-    "common": "epicfight:liechtenauer"
+    "one_hand": "epicfight:blade_rush",
+    "two_hand": "epicfight:blade_rush"
   },
   "livingmotion_modifier": {
     "one_hand":
@@ -94,14 +96,13 @@
       "walk": "wom:biped/living/moonless_walk",
       "chase": "wom:biped/living/moonless_run"
     },
-    "ochs":
+    "two_hand":
     {
       "block": "epicfight:biped/skill/guard_uchigatana",
       "idle": "wom:biped/living/herrscher_idle",
       "run" : "wom:biped/living/katana_run",
       "walk": "wom:biped/living/moonless_walk",
       "chase": "wom:biped/living/moonless_run"
-
     }
   }
 }

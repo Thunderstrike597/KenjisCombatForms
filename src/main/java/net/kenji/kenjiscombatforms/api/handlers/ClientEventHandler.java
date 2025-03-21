@@ -18,6 +18,7 @@ import net.kenji.kenjiscombatforms.network.movers.PlayerInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.EnderEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.movers.attacking.WitherEntityAttackPacket;
+import net.kenji.kenjiscombatforms.network.slots.PutItemInSlotPacket;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
@@ -67,18 +68,17 @@ public class ClientEventHandler {
     }
 
 
+
     private static int originalSlot = -1; // -1 means no item is stored yet
 
     public int getOriginalSlot() {
         return originalSlot;
     }
-
     // Handle key press to store the item
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         Player player = Minecraft.getInstance().player;
         FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
-
 
         if (player == null) return;
 

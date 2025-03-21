@@ -25,6 +25,7 @@ import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPack
 import net.kenji.kenjiscombatforms.network.power_form.ability1.SyncPowerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
+import net.kenji.kenjiscombatforms.network.slots.PutItemInSlotPacket;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
@@ -514,6 +515,13 @@ public class NetworkHandler {
                 .decoder(WitherInputPacket::decode)
                 .consumerMainThread((msg, ctx) -> {
                     WitherInputPacket.handle(msg, ctx.get());
+                }).add();
+
+        INSTANCE.messageBuilder(PutItemInSlotPacket.class, packetId++)
+                .encoder(PutItemInSlotPacket::encode)
+                .decoder(PutItemInSlotPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    PutItemInSlotPacket.handle(msg, ctx.get());
                 }).add();
     }
 }

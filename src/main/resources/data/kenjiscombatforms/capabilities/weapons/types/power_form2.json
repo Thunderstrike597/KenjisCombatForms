@@ -6,11 +6,11 @@
     "default": "one_hand",
     "cases": [
       {
-        "style": "ochs",
+        "style": "two_hand",
         "conditions": [
           {
             "predicate": "epicfight:skill_active",
-            "skill": "epicfight:liechtenauer"
+            "skill": "wom:true_berserk"
           }
         ]
       }
@@ -49,7 +49,7 @@
       "wom:biped/combat/moonless_auto_1",
       "wom:biped/combat/moonless_crescent"
     ],
-    "ochs":
+    "two_hand":
     [
       "wom:biped/combat/agony_auto_1",
       "wom:biped/combat/agony_clawstrike",
@@ -70,7 +70,8 @@
     ]
   },
   "innate_skills": {
-    "common": "epicfight:liechtenauer"
+    "one_hand": "wom:true_berserk",
+    "two_hand": "wom:true_berserk"
   },
   "livingmotion_modifier": {
     "one_hand":
@@ -81,7 +82,7 @@
       "walk": "wom:biped/living/enderblaster_onehand_walk",
       "chase": "wom:biped/living/staff_run"
     },
-    "ochs":
+    "two_hand":
     {
       "block": "wom:biped/skill/ruine_block",
       "idle": "wom:biped/living/staff_idle",
