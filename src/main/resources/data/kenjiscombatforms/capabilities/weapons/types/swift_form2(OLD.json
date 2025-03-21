@@ -1,0 +1,93 @@
+{
+  "category": "sword",
+  "hit_particle": "epicfight:hit_blunt",
+  "hit_sound": "epicfight:entity.hit.blunt",
+  "styles": {
+    "default": "one_hand",
+    "cases": [
+      {
+        "style": "ochs",
+        "conditions": [
+          {
+            "predicate": "epicfight:skill_active",
+            "skill": "epicfight:liechtenauer"
+          }
+        ]
+      }
+    ]
+  },
+  "offhand_item_compatible_predicate": [
+    {
+      "predicate": "epicfight:offhand_item_category",
+      "category": "dagger"
+    }
+  ],
+  "collider": {
+    "number": 3,
+    "size": [
+      0.4,
+      0.5,
+      0.6
+    ],
+    "center": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "combos":
+  {
+    "one_hand":
+    [
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "epicfight:biped/combat/dagger_auto1",
+      "wom:biped/combat/enderblaster_onehand_auto_4",
+      "wom:biped/combat/agony_auto_2",
+      "wom:biped/combat/moonless_auto_2",
+      "wom:biped/combat/enderblaster_onehand_auto_3",
+      "wom:biped/combat/enderblaster_onehand_auto_3",
+      "wom:biped/combat/enderblaster_onehand_dash",
+      "wom:biped/combat/enderblaster_onehand_auto_4"
+    ],
+    "ochs":
+    [
+      "epicfight:biped/combat/dagger_auto1",
+      "epicfight:biped/combat/dagger_auto1",
+      "wom:biped/combat/agony_auto_2",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_3",
+      "wom:biped/combat/moonless_auto_2",
+      "wom:biped/combat/enderblaster_onehand_auto_4",
+      "wom:biped/combat/enderblaster_onehand_dash",
+      "wom:biped/combat/enderblaster_onehand_auto_4"
+    ],
+    "mount":
+    [
+      "epicfight:biped/combat/sword_mount_attack"
+    ]
+  },
+  "innate_skills": {
+    "common": "epicfight:liechtenauer"
+  },
+  "livingmotion_modifier": {
+    "one_hand":
+    {
+      "block": "epicfight:biped/skill/guard_spear",
+      "idle": "wom:biped/living/herrscher_idle",
+      "run" : "wom:biped/living/moonless_run",
+      "walk": "wom:biped/living/moonless_walk",
+      "chase": "wom:biped/living/moonless_run"
+    },
+    "ochs":
+    {
+      "block": "epicfight:biped/skill/guard_uchigatana",
+      "idle": "wom:biped/living/herrscher_idle",
+      "run" : "wom:biped/living/katana_run",
+      "walk": "wom:biped/living/moonless_walk",
+      "chase": "wom:biped/living/moonless_run"
+
+    }
+  }
+}
