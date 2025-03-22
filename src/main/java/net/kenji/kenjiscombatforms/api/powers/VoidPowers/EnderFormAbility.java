@@ -28,6 +28,7 @@ import net.kenji.kenjiscombatforms.network.voidform.ability3.SyncVoidData3Packet
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -44,6 +45,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,11 +53,14 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.PacketDistributor;
+import reascer.wom.gameasset.WOMSkills;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.events.PlayerEvents;
 import yesman.epicfight.gameasset.Animations;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.damagesource.StunType;
@@ -143,6 +148,30 @@ public class EnderFormAbility implements Ability {
                 getInstance().syncDataToClient(newPlayer);
             }
         }
+        @SubscribeEvent
+        public static void onPlayerDeath(LivingDeathEvent event){
+            if(event.getEntity() instanceof Player player) {
+                player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+
+                    if (cap instanceof PlayerPatch<?> playerPatch){
+                        getInstance().setSkill(playerPatch, getInstance().getCurrentDodgeSkill());
+                    }
+                });
+            }
+        }
+        @SubscribeEvent
+        public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event){
+            if(event.getEntity() instanceof ServerPlayer player) {
+                EnderPlayerDataSets.EnderFormPlayerData data = getInstance().getPlayerData(player);
+                player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                    if (cap instanceof PlayerPatch<?> playerPatch){
+                        if(data.isEnderActive) {
+                            getInstance().setSkill(playerPatch, getInstance().getCurrentDodgeSkill());
+                        }
+                    }
+                });
+            }
+        }
     }
 
 
@@ -198,19 +227,47 @@ public class EnderFormAbility implements Ability {
         }
     }
 
+    Skill currentDodgeSkill;
 
+    private void setCurrentDodgeSkill(Skill skill){
+        currentDodgeSkill = skill;
+    }
+
+    private Skill getCurrentDodgeSkill(){
+        return currentDodgeSkill;
+    }
 
     @Override
     public void triggerAbility(ServerPlayer serverPlayer) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
-        if (!data.isEnderActive && data.abilityCooldown == 0) {
-            activateAbility(serverPlayer);
-            jumpUp(serverPlayer);
-            data.hasPlayedSound = false;
-        } else {
-            deactivateAbilityOptional(serverPlayer);
-            restoreItem(serverPlayer);
-        }
+        serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+            if (cap instanceof PlayerPatch<?> playerPatch) {
+                Skill currentSkill = playerPatch.getSkill(SkillSlots.DODGE).getSkill();
+                Skill skillToSet = WOMSkills.ENDERSTEP;
+                CompoundTag nbt = serverPlayer.getPersistentData();
+
+
+                if (!data.isEnderActive && data.abilityCooldown == 0) {
+                    nbt.putString("storedDodgeSkill", currentSkill.getRegistryName().toString());
+
+
+                    setCurrentDodgeSkill(currentSkill);
+                    activateAbility(serverPlayer);
+                    jumpUp(serverPlayer);
+                    setSkill(playerPatch, skillToSet);
+                    data.hasPlayedSound = false;
+                } else {
+                    deactivateAbilityOptional(serverPlayer);
+                    restoreItem(serverPlayer);
+                    setSkill(playerPatch, getCurrentDodgeSkill());
+                    nbt.remove("storedDodgeSkill");
+                }
+            }
+        });
+    }
+
+    private void setSkill(PlayerPatch playerPatch, Skill skillToSet){
+        playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
     }
 
     @Override
@@ -218,7 +275,8 @@ public class EnderFormAbility implements Ability {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
         data.isEnderActive = true;
         setEnderFormItem(serverPlayer);
-        playSound(serverPlayer);
+
+            playSound(serverPlayer);
         syncDataToClient(serverPlayer);
     }
     private static int originalSlot = CommonEventHandler.getInstance().getOriginalSlot();
@@ -298,17 +356,8 @@ public class EnderFormAbility implements Ability {
         serverPlayer.getAbilities().flying = false;
         serverPlayer.getAbilities().mayfly = false;
 
-        /* serverPlayer.noPhysics = false;
-        double radius = 2.0;
-       serverPlayer.removeEffect(MobEffects.INVISIBILITY);
-        serverPlayer.removeEffect(MobEffects.LEVITATION);
-
-        serverPlayer.setCamera(serverPlayer);
-        serverPlayer.stopRiding();
-       serverPlayer.setInvulnerable(false);
-       */
         Entity existingEnder = data.playerEnderMap.remove(serverPlayer.getUUID());
-        //data.enderEntity = existingEnder;
+
         if (existingEnder != null) {
             existingEnder.remove(Entity.RemovalReason.DISCARDED);
         }
@@ -381,7 +430,7 @@ public class EnderFormAbility implements Ability {
                 player.getAbilities().mayfly = true;
                 player.getAbilities().flying = true;
                 player.getAbilities().setFlyingSpeed(0.05f);
-                player.startFallFlying();
+
 
                 syncDataToClient(player);
 
@@ -394,7 +443,7 @@ public class EnderFormAbility implements Ability {
              else if(!player.gameMode.isCreative()){
                 player.getAbilities().mayfly = false;
                 player.getAbilities().flying = false;
-                player.stopFallFlying();
+
             }
         }
     }
@@ -412,13 +461,11 @@ public class EnderFormAbility implements Ability {
                 //preventCombatActions(player);
                 player.getAbilities().mayfly = true;
                 player.getAbilities().flying = true;
-                player.startFallFlying();
 
                 //player.noPhysics = true;
             } else if (!player.isCreative()) {
                 player.getAbilities().mayfly = false;
                 player.getAbilities().flying = false;
-                player.stopFallFlying();
             }
         }
     }
@@ -442,43 +489,8 @@ public class EnderFormAbility implements Ability {
 
 
 
-    /*
-    public void activateEnderSummon(ServerPlayer player) {
-        EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
-        data.hasPlayedSound = false;
-        data.isEnderActive = true;
 
-        getNearestEntity(player);
 
-        enderEntity = ModEntities.ENDER_PLAYER.get().spawn(player.serverLevel(), player.blockPosition(), MobSpawnType.TRIGGERED);
-        data.enderEntity = enderEntity;
-        if(data.enderEntity != null) {
-            data.enderEntity.setYRot(player.getYRot());
-            data.enderEntity.setXRot(player.getXRot());
-
-            if (enderEntity != null) {
-                data.playerEnderMap.put(player.getUUID(), enderEntity);
-                if(enderEntity instanceof EnderEntity trueEnderEntity)
-                    addEnderEntityToTeam(player, trueEnderEntity);
-            }
-        }
-    }
-*/
-
-    public void preventCombatActions(Player player) {
-        EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
-
-        player.setPose(Pose.SITTING);
-        player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
-            if (cap instanceof PlayerPatch playerPatch) {
-                playerPatch.getAnimator().playAnimation(Animations.BIPED_WALK, 0.0F);
-                playerPatch.getEntityState().setState(EntityState.INACTION, true);
-                playerPatch.setLastAttackSuccess(false);
-              //  playerPatch.getOriginal().skipAttackInteraction(data.enderEntity);
-
-            }
-        });
-    }
 
 
     private Entity getNearestEntity(Player player) {

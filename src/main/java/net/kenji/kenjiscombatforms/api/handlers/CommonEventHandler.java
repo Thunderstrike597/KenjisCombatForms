@@ -1,15 +1,21 @@
 package net.kenji.kenjiscombatforms.api.handlers;
 
+import com.google.common.base.Optional;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
+import net.kenji.kenjiscombatforms.api.utils.SkillUtils;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFinalFormClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +36,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.slf4j.event.LoggingEvent;
+import reascer.wom.gameasset.WOMSkills;
+import yesman.epicfight.gameasset.EpicFightSkills;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillSlots;
+import yesman.epicfight.skill.dodge.DodgeSkill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 import java.util.List;
 
@@ -64,23 +77,49 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         CompoundTag nbt = player.getPersistentData();
 
-
-
+        if(player.getMainHandItem().getItem() instanceof BaseFinalFormClass){
+            if (!nbt.contains("storedItem")) {
+                player.getInventory().setItem(getInstance().originalSlot, ItemStack.EMPTY);
+            }
+        }
         if (nbt.contains("storedItem")) {
             ItemStack storedItem = ItemStack.of(nbt);
 
-            player.getInventory().setItem(originalSlot, storedItem);
+            player.getInventory().setItem(getInstance().originalSlot, storedItem);
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                    new RemoveItemPacket(originalSlot, storedItem)
+                    new RemoveItemPacket(getInstance().originalSlot, storedItem)
             );
             nbt.remove("storedItem");
         }
+        if (nbt.contains("storedDodgeSkill")) {
+            String skillName = nbt.getString("storedDodgeSkill");
+
+            Skill skillToSet = SkillUtils.getSkillByName(skillName);
+            if (skillToSet != null) {
+                event.getEntity().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                    if (cap instanceof PlayerPatch<?> playerPatch) {
+                        if(getInstance().getSkillValid(playerPatch)) {
+                            playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
+                            nbt.remove("storedDodgeSkill");
+                            System.out.println("storeDodgeSkill" + skillName);
+                        }
+                    }
+                });
+            }
+        }
     }
+    boolean getSkillValid(PlayerPatch<?> playerPatch){
+        return playerPatch.getSkill(SkillSlots.DODGE).getSkill() == WOMSkills.SHADOWSTEP ||
+                playerPatch.getSkill(SkillSlots.DODGE).getSkill() == WOMSkills.ENDERSTEP ||
+                playerPatch.getSkill(SkillSlots.DODGE).getSkill() == null;
+    }
+
+
 
 
 

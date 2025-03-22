@@ -3,7 +3,6 @@ package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
@@ -11,13 +10,9 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.particle_packets.LargeSmokeParticlesTickPacket;
@@ -25,28 +20,20 @@ import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.ability3.SyncWitherData3Packet;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -55,20 +42,19 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.PacketDistributor;
-import yesman.epicfight.api.animation.types.EntityState;
-import yesman.epicfight.gameasset.Animations;
+import reascer.wom.gameasset.WOMSkills;
+import yesman.epicfight.gameasset.EpicFightSkills;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class WitherFormAbility implements Ability {
 
 
-
+    private static final Map<UUID, Skill> skillCache = new HashMap<>();
     private final WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
     private final Map<UUID, WitherPlayerDataSets.WitherFormPlayerData> playerDataMap = dataSets.A3playerDataMap;
     private final CommonFunctions dataHandlers = CommonFunctions.getInstance();
@@ -98,8 +84,11 @@ public class WitherFormAbility implements Ability {
 
     @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ServerForgeEvents {
+
         @SubscribeEvent
         public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+            System.out.println("Player Joined");
+
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 getInstance().getPlayerData(serverPlayer);
                 getInstance().syncDataToClient(serverPlayer);
@@ -201,17 +190,58 @@ public class WitherFormAbility implements Ability {
         }
     }
 
+
+
+    public void setSavedSkillCap(PlayerPatch<?> playerPatch){
+        skillCache.put(playerPatch.getOriginal().getUUID(), playerPatch.getSkill(SkillSlots.DODGE).getSkill());
+        System.out.println("Stored Skill Set: " + getStoredSkill(playerPatch.getOriginal()));
+
+    }
+    public static Skill getStoredSkill(Player player) {
+        return skillCache.getOrDefault(player.getUUID(), EpicFightSkills.STEP);
+    }
+
+    Skill currentDodgeSkill;
+
+    private void setCurrentDodgeSkill(Skill skill){
+        currentDodgeSkill = skill;
+    }
+
+
+    private Skill getCurrentDodgeSkill(){
+        return currentDodgeSkill;
+    }
+
     @Override
     public void triggerAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
-        if (!data.isWitherActive && data.abilityCooldown == 0) {
-            activateAbility(serverPlayer);
-            jumpUp(serverPlayer);
-            data.hasPlayedSound = false;
-        } else {
-            deactivateAbilityOptional(serverPlayer);
-            restoreItem(serverPlayer);
-        }
+        serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+            if (cap instanceof PlayerPatch<?> playerPatch) {
+                Skill currentSkill = playerPatch.getSkill(SkillSlots.DODGE).getSkill();
+                Skill skillToSet = WOMSkills.SHADOWSTEP;
+                CompoundTag nbt = serverPlayer.getPersistentData();
+
+                if (!data.isWitherActive && data.abilityCooldown == 0) {
+                    nbt.putString("storedDodgeSkill", currentSkill.getRegistryName().toString());
+
+
+                    setCurrentDodgeSkill(currentSkill);
+                    activateAbility(serverPlayer);
+                    jumpUp(serverPlayer);
+                    setSkill(playerPatch, skillToSet);
+                    data.hasPlayedSound = false;
+                } else {
+                    deactivateAbilityOptional(serverPlayer);
+                    restoreItem(serverPlayer);
+                    setSkill(playerPatch, getCurrentDodgeSkill());
+                    nbt.remove("storedDodgeSkill");
+                }
+            }
+        });
+    }
+
+    private void setSkill(PlayerPatch playerPatch, Skill skillToSet){
+        playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
     }
 
     @Override

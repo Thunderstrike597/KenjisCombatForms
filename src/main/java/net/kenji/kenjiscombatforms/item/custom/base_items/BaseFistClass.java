@@ -25,8 +25,8 @@ public class BaseFistClass extends WeaponItem {
 
     @Override
     public boolean onDroppedByPlayer(ItemStack item, Player player) {
-        player.setForcedPose(Pose.STANDING);
-        player.setPose(Pose.STANDING);
+       // player.setForcedPose(Pose.STANDING);
+        //player.setPose(Pose.STANDING);
         player.calculateEntityAnimation(false);
 
         return false;

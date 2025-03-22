@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.api;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
@@ -200,9 +201,10 @@ public class PowerControl {
                                 NetworkHandler.INSTANCE.sendToServer(new ToggleEnderPacket());
                                 EnderFormAbility.getInstance().spawnParticles(clientPlayer);
 
-                                EnderFormAbility.getInstance().jumpUp(clientPlayer);
-                                WitherFormAbility.getInstance().jumpUp(clientPlayer);
-
+                                if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+                                    EnderFormAbility.getInstance().jumpUp(clientPlayer);
+                                    WitherFormAbility.getInstance().jumpUp(clientPlayer);
+                                }
                                 data.lastPressTime = currentTime;
                             } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||
                                     ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.WITHER_FINAL) {

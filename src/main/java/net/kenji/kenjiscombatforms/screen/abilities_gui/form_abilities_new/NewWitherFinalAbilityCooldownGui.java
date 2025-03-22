@@ -1,7 +1,7 @@
 package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
@@ -59,8 +59,7 @@ public class NewWitherFinalAbilityCooldownGui {
 
 
             int abilityCooldown = ClientWitherData.getCooldown3();
-            boolean isWitherActive = ClientWitherData.getIsWitherActive();
-            boolean isEnderActive = ClientVoidData.getIsEnderActive();
+
 
             int ability1FullHeight = 44;  // Maximum cooldown bar height
             int ability1MaxCooldown = abilityData.getMAX_COOLDOWN();  // Total cooldown time
@@ -79,7 +78,8 @@ public class NewWitherFinalAbilityCooldownGui {
             int iconX = abilityX + 74;
             int iconY = abilityY + 42;
 
-            boolean areFinalsActive = isWitherActive || isEnderActive;
+            boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
+
 
 
 

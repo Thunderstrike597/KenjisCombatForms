@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFinalFormClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EnderFormItem extends BaseBasicClass {
+public class EnderFormItem extends BaseFinalFormClass {
    private static EnderFormItem INSTANCE;
 
     public EnderFormItem(Properties properties) {

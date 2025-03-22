@@ -3,14 +3,16 @@
   "hit_particle": "epicfight:hit_blunt",
   "hit_sound": "epicfight:entity.hit.blunt",
   "styles": {
-    "default": "common",
+    "default": "one_hand",
     "cases": [
       {
-        "condition": "epicfight:offhand_category",
-        "predicate": {
-          "category": "sword"
-        },
-        "style": "common"
+        "style": "two_hand",
+        "conditions": [
+          {
+            "predicate": "epicfight:skill_active",
+            "skill": "wom:true_berserk"
+          }
+        ]
       }
     ]
   },
@@ -35,7 +37,7 @@
   },
   "combos":
   {
-    "common":
+    "one_hand":
     [
       "wom:biped/combat/moonless_auto_1_verso",
       "wom:biped/combat/agony_auto_2",
@@ -54,6 +56,23 @@
       "wom:biped/combat/moonless_rewinder",
       "wom:biped/combat/enderblaster_twohand_tishnaw"
     ],
+    "two_hand": [
+      "wom:biped/combat/agony_auto_1",
+      "wom:biped/combat/enderblaster_onehand_auto_1",
+      "wom:biped/combat/moonless_auto_1",
+      "wom:biped/combat/moonless_auto_3",
+      "wom:biped/combat/moonless_auto_2_verso",
+      "wom:biped/combat/moonless_rewinder",
+      "wom:biped/combat/agony_clawstrike",
+      "wom:biped/combat/staff_auto_2",
+      "wom:biped/combat/agony_auto_1",
+      "wom:biped/combat/staff_auto_2",
+      "wom:biped/combat/moonless_auto_2",
+      "wom:biped/combat/agony_airslash",
+
+      "wom:biped/combat/moonless_rewinder",
+      "wom:biped/combat/enderblaster_twohand_tishnaw"
+    ],
     "mount":
     [
       "epicfight:biped/combat/sword_mount_attack"
@@ -61,16 +80,23 @@
   },
   "innate_skills":
   {
-    "common": "wom:true_berserk"
+    "one_hand": "wom:true_berserk",
+    "two_hand": "wom:true_berserk"
   },
   "livingmotion_modifier": {
-    "common":
+    "one_hand":
     {
       "block": "wom:biped/skill/ruine_block",
       "idle": "wom:biped/living/katana_idle",
       "run" : "epicfight:biped/living/run_dual",
       "walk": "wom:biped/living/enderblaster_onehand_walk",
       "chase" : "epicfight:biped/living/run_dual"
+    },
+    "two_hand": {
+      "idle": "wom:biped/living/solar_obscuridad_idle",
+      "run": "wom:biped/living/torment_berserk_run",
+      "block": "wom:biped/skill/herrscher_guard",
+      "walk": "wom:biped/living/antitheus_walk"
     }
   }
 }

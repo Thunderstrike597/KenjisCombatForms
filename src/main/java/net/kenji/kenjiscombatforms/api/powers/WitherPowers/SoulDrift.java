@@ -195,12 +195,12 @@ public class SoulDrift implements Ability {
     public void triggerAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.SoulDriftPlayerData data = getPlayerData(serverPlayer);
         if (!data.isSoulDriftActive && data.abilityCooldown <= 0) {
-            activateAbility(serverPlayer);
+            //activateAbility(serverPlayer);
             data.hasPlayedSound = false;
 
         }
         else if (data.isSoulDriftActive) {
-            deactivateAbilityOptional(serverPlayer);
+           // deactivateAbilityOptional(serverPlayer);
         }
     }
 

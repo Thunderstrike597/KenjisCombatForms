@@ -4,34 +4,27 @@ import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsClient;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.UpdateHandCombatPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_choose.BasicFormChoosePacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_choose.Form1ChoosePacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_choose.Form2ChoosePacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_choose.Form3ChoosePacket;
-import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.screen.form_menu.FormChooseMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
-import yesman.epicfight.client.events.engine.ControllEngine;
-import yesman.epicfight.client.input.EpicFightKeyMappings;
 
 import java.util.Map;
 import java.util.UUID;
@@ -89,20 +82,23 @@ public class ControlHandler {
         public static void onKeyInput(InputEvent.Key event) {
             Minecraft mc = Minecraft.getInstance();
             Player clientPlayer = Minecraft.getInstance().player;
+            ClientEventHandler clientEventHandler = ClientEventHandler.getInstance();
 
             if (clientPlayer != null) {
                 PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
 
 
                 if (event.getKey() == mc.options.keyShift.getKey().getValue()) {
-                    if (event.getAction() == GLFW.GLFW_PRESS) {
+                    if (clientEventHandler.getIsWitherActive()) {
+                        if (event.getAction() == GLFW.GLFW_PRESS || event.getAction() == GLFW.GLFW_REPEAT) {
                             mc.options.keyShift.setDown(false);
                             getInstance().setShiftDown(clientPlayer, true);
                         }
-                    else if (event.getAction() == GLFW.GLFW_RELEASE) {
-                        getInstance().setShiftDown(clientPlayer, false);
+                        else if (event.getAction() == GLFW.GLFW_RELEASE) {
+                            getInstance().setShiftDown(clientPlayer, false);
+                        }
                     }
-                } else data.isShiftDown = false;
+                }else data.isShiftDown = false;
                 if (clientPlayer.getMainHandItem().getItem() instanceof BaseFistClass) {
                     if (event.getKey() == mc.options.keyDrop.getKey().getValue()) {
                         clientPlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -129,7 +125,8 @@ public class ControlHandler {
                     FormManager.FormSelectionOption currentForm2 = ClientFistData.getForm2Option();
                     FormManager.FormSelectionOption currentForm3 = ClientFistData.getForm3Option();
 
-                    boolean isFinalActive = ClientVoidData.getIsEnderActive() || ClientWitherData.getIsWitherActive();
+                    boolean isFinalActive = ClientEventHandler.getInstance().getAreFinalsActive();
+
 
                     long currentTime = System.currentTimeMillis();
                     if (!isFinalActive) {

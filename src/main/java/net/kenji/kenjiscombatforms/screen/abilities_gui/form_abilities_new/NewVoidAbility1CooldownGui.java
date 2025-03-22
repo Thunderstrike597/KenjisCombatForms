@@ -1,14 +1,11 @@
 package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
-import net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities.SimpleAbilityBarHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -69,7 +66,6 @@ public class NewVoidAbility1CooldownGui {
 
             int abilityCooldown = ClientVoidData.getCooldown();
             int ability4Cooldown = ClientVoidData.getLevitationCooldown();
-            boolean isWitherActive = ClientWitherData.getIsWitherActive();
             boolean isEnderActive = ClientVoidData.getIsEnderActive();
 
             int abilityFullHeight = 32;  // Maximum cooldown bar height
@@ -96,7 +92,8 @@ public class NewVoidAbility1CooldownGui {
             int iconX = abilityX + 30;
             int iconY = abilityY + 50;
 
-            boolean areFinalsActive = isWitherActive || isEnderActive;
+            boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
+
 
 
 

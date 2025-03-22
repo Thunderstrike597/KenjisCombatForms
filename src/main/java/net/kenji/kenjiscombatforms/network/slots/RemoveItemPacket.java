@@ -2,11 +2,15 @@ package net.kenji.kenjiscombatforms.network.slots;
 
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import yesman.epicfight.skill.SkillSlots;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 public class RemoveItemPacket {
     private int originalSlot;
@@ -45,14 +49,13 @@ public class RemoveItemPacket {
                         }else {
                             player.getInventory().setItem(msg.originalSlot, ItemStack.EMPTY);
                         }
+
                     }
 
                     if (ctx.getDirection().getReceptionSide().isServer()) {
-
                         FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
                         int selectedSlot = player.getInventory().selected;
                         ItemStack currentItem = player.getInventory().getItem(selectedSlot);
-                        // Store the current item if there’s something to store
 
                         formChangeHandler.removeCurrentFormItem(player, selectedSlot);
                         player.getInventory().setItem(msg.originalSlot, msg.storedItem);

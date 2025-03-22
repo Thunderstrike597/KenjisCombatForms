@@ -136,10 +136,10 @@ public class EnderWarpAbility implements Ability {
             if (cap instanceof PlayerPatch playerPatch) {
                 if (playerPatch.getStamina() >= playerPatch.getMaxStamina()) {
                     if(getPlayerData(serverPlayer).abilityCooldown <= getPlayerData(serverPlayer).getMAX_COOLDOWN()) {
-                        activateAbility(serverPlayer);
-                        playSound(serverPlayer);
-                        playerPatch.setStamina(playerPatch.getStamina() - playerPatch.getMaxStamina());
-                        getPlayerData(serverPlayer).setAbilityCooldown(getPlayerData(serverPlayer).getMAX_COOLDOWN());
+                       // activateAbility(serverPlayer);
+                     //   playSound(serverPlayer);
+                       // playerPatch.setStamina(playerPatch.getStamina() - playerPatch.getMaxStamina());
+                       // getPlayerData(serverPlayer).setAbilityCooldown(getPlayerData(serverPlayer).getMAX_COOLDOWN());
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.network.slots;
 
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderFormAbility;
@@ -13,7 +14,6 @@ import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -49,6 +49,7 @@ public class SwitchItemPacket {
             if (player != null) {
                 FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
 
+
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
                     int selectedSlot = player.getInventory().selected;
                     if (ctx.getDirection().getReceptionSide().isClient()) {
@@ -78,14 +79,13 @@ public class SwitchItemPacket {
                                 CompoundTag nbt = player.getPersistentData();
                                 nbt.put("storedItem", msg.storedItem.serializeNBT());
 
-                                // Always place a weapon, regardless of capability state
+
                             } else if (currentItem.isEmpty() && container.getStoredItem().isEmpty()) {
                                 CommonEventHandler.getInstance().setOriginalSlot(msg.originalSlot);
 
                                 formChangeHandler.setSelectedFormChanged(player, selectedSlot);
                                 player.getInventory().setChanged();
                             }
-
                         }
                     }
                 });

@@ -15,12 +15,9 @@ import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form1SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form2SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form3SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
-import net.kenji.kenjiscombatforms.network.movers.EntityRotationPacket;
-import net.kenji.kenjiscombatforms.network.movers.PlayerInputPacket;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
-import net.kenji.kenjiscombatforms.network.movers.attacking.EnderEntityAttackPacket;
-import net.kenji.kenjiscombatforms.network.movers.attacking.WitherEntityAttackPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.*;
+import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability1.SyncPowerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
@@ -335,31 +332,8 @@ public class NetworkHandler {
                 .consumerMainThread((msg, ctx) -> {
                     BlinkPacket.handle(msg, ctx.get());
                 }).add();
-        INSTANCE.messageBuilder(PlayerInputPacket.class, packetId++)
-                .encoder(PlayerInputPacket::encode)
-                .decoder(PlayerInputPacket::decode)
-                .consumerMainThread((msg, ctx) -> {
-                    PlayerInputPacket.handle(msg, ctx.get());
-                }).add();
 
-        INSTANCE.messageBuilder(EntityRotationPacket.class, packetId++)
-                .encoder(EntityRotationPacket::encode)
-                .decoder(EntityRotationPacket::decode)
-                .consumerMainThread((msg, ctx) -> {
-                    EntityRotationPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(EnderEntityAttackPacket.class, packetId++)
-                .encoder(EnderEntityAttackPacket::encode)
-                .decoder(EnderEntityAttackPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    EnderEntityAttackPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(WitherEntityAttackPacket.class, packetId++)
-                .encoder(WitherEntityAttackPacket::encode)
-                .decoder(WitherEntityAttackPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    WitherEntityAttackPacket.handle(msg, ctx.get());
-                }).add();
+
 
 
 
@@ -522,6 +496,12 @@ public class NetworkHandler {
                 .decoder(PutItemInSlotPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     PutItemInSlotPacket.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SkillPlayerDataPacket.class, packetId++)
+                .encoder(SkillPlayerDataPacket::encode)
+                .decoder(SkillPlayerDataPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SkillPlayerDataPacket.handle(msg, ctx.get());
                 }).add();
     }
 }
