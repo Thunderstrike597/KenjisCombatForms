@@ -12,23 +12,28 @@ import java.util.UUID;
 public class SyncWitherData3Packet {
     private final int cooldown;
     private final boolean isWitherActive;
+    private final boolean isWitherDashActive;
     private final UUID witherEntityUUID;
 
-    public SyncWitherData3Packet(int cooldown, boolean isWitherActive, UUID witherEntityUUID) {
+
+    public SyncWitherData3Packet(int cooldown, boolean isWitherActive, boolean isWitherDashActive,UUID witherEntityUUID) {
         this.cooldown = cooldown;
         this.isWitherActive = isWitherActive;
         this.witherEntityUUID = witherEntityUUID;
+        this.isWitherDashActive = isWitherDashActive;
     }
 
     public SyncWitherData3Packet(FriendlyByteBuf buf) {
         this.cooldown = buf.readInt();
         this.isWitherActive = buf.readBoolean();
+        this.isWitherDashActive = buf.readBoolean();
         this.witherEntityUUID = buf.readUUID();
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(cooldown);
         buf.writeBoolean(isWitherActive);
+        buf.writeBoolean(isWitherDashActive);
         buf.writeUUID(witherEntityUUID);
     }
 
@@ -49,6 +54,7 @@ public class SyncWitherData3Packet {
 
         ClientWitherData.setCooldown3(msg.cooldown);
         ClientWitherData.setIsWitherActive(msg.isWitherActive);
+        ClientWitherData.setIsWitherDashActive(msg.isWitherDashActive);
         if(msg.witherEntityUUID != null) {
             ClientWitherData.setWitherUUID(msg.witherEntityUUID);
         }

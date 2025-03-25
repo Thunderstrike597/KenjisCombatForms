@@ -5,7 +5,10 @@ import com.google.common.collect.Multimap;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseSwiftClass;
+import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -16,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +73,7 @@ public class SwiftFist2Item extends BaseSwiftClass {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tooltip.kenjiscombatforms.void_fist2.tooltip"));
+        pTooltipComponents.add(Component.translatable("tooltip.kenjiscombatforms.swift_fist2.tooltip"));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
@@ -81,6 +85,11 @@ public class SwiftFist2Item extends BaseSwiftClass {
 
     public void setFormMainHand(Player player, int slot){
         player.getInventory().setItem(slot, this.getDefaultInstance());
+        if(player instanceof ServerPlayer serverPlayer){
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> serverPlayer),
+                    new SyncNBTPacket(this.getDefaultInstance(), slot));
+        }
     }
 }
 

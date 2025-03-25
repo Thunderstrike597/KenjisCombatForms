@@ -46,7 +46,6 @@ public class GlobalAbilityStrategyHandler {
                     default -> new NoOpDamageGainStrategy();
                 };
                 ability2Strategy.fillDamageCooldown(player);
-
                 AbilityDamageGainStrategy ability3Strategy = switch (abilityData.chosenFinal) {
                     case VOID_FINAL -> new EnderFormAbility.CurrentDamageGainStrategy();
                     case WITHER_FINAL -> new WitherFormAbility.CurrentDamageGainStrategy();

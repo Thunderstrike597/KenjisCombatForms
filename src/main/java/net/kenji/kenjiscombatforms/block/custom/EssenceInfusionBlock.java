@@ -62,7 +62,7 @@ public class EssenceInfusionBlock extends BaseEntityBlock {
         if (!plevel.isClientSide()) {
             BlockEntity entity = plevel.getBlockEntity(blockPos);
             if(entity instanceof EssenceInfusionBlockEntity) {
-                NetworkHooks.openScreen(((ServerPlayer)player_), (EssenceInfusionBlockEntity)entity, blockPos);
+             //   NetworkHooks.openScreen(((ServerPlayer)player_), (EssenceInfusionBlockEntity)entity, blockPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

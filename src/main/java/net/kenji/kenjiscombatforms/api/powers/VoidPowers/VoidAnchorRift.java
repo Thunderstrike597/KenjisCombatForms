@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
@@ -16,6 +17,7 @@ import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.particle_packets.RiftSummonParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ability2.SyncVoidData2Packet;
+import net.kenji.kenjiscombatforms.network.voidform.ability2.VoidRiftPacket;
 import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -184,6 +186,17 @@ public class VoidAnchorRift implements Ability {
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+            NetworkHandler.INSTANCE.sendToServer(new VoidRiftPacket());
+        }
+    }
 
 
     public static class CurrentDamageGainStrategy implements AbilityDamageGainStrategy {

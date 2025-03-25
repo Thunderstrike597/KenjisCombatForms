@@ -10,8 +10,10 @@ public interface Ability {
     AbstractAbilityData getAbilityData(Player player);
     void fillPerSecondCooldown(Player player);
     void drainPerSecondCooldown(Player player);
+    boolean getAbilityActive(Player player);
 
 
+    void sendPacketToServer(Player player);
     void triggerAbility(ServerPlayer serverPlayer);
     void activateAbility(ServerPlayer serverPlayer);
     void deactivateAbilityOptional(ServerPlayer serverPlayer);

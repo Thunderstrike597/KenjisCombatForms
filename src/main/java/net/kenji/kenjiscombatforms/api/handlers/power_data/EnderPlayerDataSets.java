@@ -26,14 +26,20 @@ public class EnderPlayerDataSets {
         return INSTANCE;
     }
 
+    private static final long PRESS_COOLDOWN = 4;
+
 
     public static class TeleportPlayerData extends AbstractAbilityData {
+        public final int INITIAL_PRESS_COUNTER = 90;
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
         public boolean isTpHoldActive = false;
         public Entity holdEntity;
         public int holdTickCounter = 0;
         public final int maxDist = KenjisCombatFormsCommon.TELEPORT_DIST.get();
+        public long pressCounter = INITIAL_PRESS_COUNTER;
+        public long tpPressCounter = INITIAL_PRESS_COUNTER;
+
 
         public TeleportPlayerData() {
             super(KenjisCombatFormsCommon.ABILITY1_COOLDOWN.get());
@@ -89,6 +95,7 @@ public class EnderPlayerDataSets {
         public void resetAbility() {
 
         }
+
 
         @Override
         public boolean isAbilityActive() {

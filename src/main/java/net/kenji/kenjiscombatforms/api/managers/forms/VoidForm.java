@@ -227,12 +227,14 @@ public class VoidForm implements Form {
 
             abilityData.chosenAbility1 = ability;
 
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
+                    abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
 
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
@@ -243,12 +245,13 @@ public class VoidForm implements Form {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
 
             abilityData.chosenAbility2 = ability;
-
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
+                    abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
@@ -259,12 +262,13 @@ public class VoidForm implements Form {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
 
             abilityData.chosenFinal = ability;
-
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
-                abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
+                    abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
@@ -275,12 +279,14 @@ public class VoidForm implements Form {
 
             formData.setPreviousAbility1(ability);
 
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
-                formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
+                    formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
 
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
@@ -292,12 +298,13 @@ public class VoidForm implements Form {
 
 
             formData.setPreviousAbility2(ability);
-
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                formData.setPreviousAbility1(AbilityManager.AbilityOption1.NONE);
-                formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    formData.setPreviousAbility1(AbilityManager.AbilityOption1.NONE);
+                    formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
@@ -308,12 +315,13 @@ public class VoidForm implements Form {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
 
             formData.setPreviousAbility3(ability);
-
-            if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                formData.setPreviousAbility1(AbilityManager.AbilityOption1.NONE);
-                formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
-            } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
+            if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                    formData.setPreviousAbility1(AbilityManager.AbilityOption1.NONE);
+                    formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
+                } else if (formData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
+                    formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
+                }
             }
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));

@@ -45,9 +45,9 @@ public class GeneralLevelTicking {
                         SpeedBoost.getInstance().tickServerAbilityData(serverPlayer);
                         StrengthBoost.getInstance().tickServerAbilityData(serverPlayer);
                         PowerEffectInflict.getInstance().tickServerAbilityData(serverPlayer);
-
                         SwiftEffectInflict.getInstance().tickServerAbilityData(serverPlayer);
                         WitherFormDashAbility.getInstance().tickServerAbilityData(serverPlayer);
+                        WitherDash.getInstance().tickServerAbilityData(serverPlayer);
                         TeleportPlayer.getInstance().tickServerAbilityData(serverPlayer);
                         WitherDash.getInstance().tickServerAbilityData(serverPlayer);
                         TeleportPlayerBackstab.getInstance().tickServerAbilityData(serverPlayer);
@@ -58,6 +58,7 @@ public class GeneralLevelTicking {
             for (Player player : level.players()) {
                 if (player.level().isClientSide) {
                     EnderFormAbility.getInstance().tickClientAbilityData(player);
+                    TeleportPlayer.getInstance().tickClientAbilityData(player);
                     WitherFormAbility.getInstance().tickClientAbilityData(player);
                     WitherDash.getInstance().tickClientAbilityData(player);
                     TeleportPlayer.getInstance().tickClientAbilityData(player);

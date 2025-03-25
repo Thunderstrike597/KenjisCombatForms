@@ -1,33 +1,21 @@
 package net.kenji.kenjiscombatforms.api.handlers;
 
-import com.google.common.base.Optional;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.kenji.kenjiscombatforms.api.utils.SkillUtils;
-import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFinalFormClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
-import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
-import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
@@ -35,12 +23,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-import org.slf4j.event.LoggingEvent;
 import reascer.wom.gameasset.WOMSkills;
-import yesman.epicfight.gameasset.EpicFightSkills;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.skill.dodge.DodgeSkill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
@@ -51,13 +36,25 @@ public class CommonEventHandler {
 
     int originalSlot = -1;
 
-    public int getOriginalSlot(){
-        return originalSlot;
+    public int getOriginalSlot(Player player){
+        CompoundTag nbt = player.getPersistentData();
+        return nbt.getInt("originalSlot");
     }
 
-    public void setOriginalSlot(int slotIndex){
-        originalSlot = slotIndex;
+    public void setOriginalSlot(Player player, int slotIndex){
+        CompoundTag nbt = player.getPersistentData();
+        nbt.putInt("originalSlot", slotIndex);
     }
+    public void setStoredItemNBT(Player player, ItemStack storedItem){
+        CompoundTag nbt = player.getPersistentData();
+        nbt.put(ExtraContainerCapability.storedItem, storedItem.copy().serializeNBT());
+    }
+
+    public ItemStack getStoredItem(Player player){
+        CompoundTag nbt = player.getPersistentData();
+        return ItemStack.of(nbt.getCompound(ExtraContainerCapability.storedItem));
+    }
+
 
     private FormLevelManager.PlayerFormLevelData getOrCreateLevelData(ServerPlayer player){
         return LevelHandler.getInstance().getOrCreatePlayerLevelData(player);
@@ -77,33 +74,72 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
+    public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Player player = event.getEntity();
+        if (player == null) return;
+
+        // Retrieve the stored item from the capability before the dimension change
+        if(getInstance().getOriginalSlot(player) != -1) {
+            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+                ItemStack storedItem = container.getStoredItem();
+                int originalSlot = container.getOriginalSlot();
+
+                System.out.println("Stored Item before dimension change: " + storedItem);
+                System.out.println("slot before dimension change: " + originalSlot);
+                CompoundTag nbt = player.getPersistentData();
+                getInstance().setStoredItemNBT(player, storedItem);
+                getInstance().setOriginalSlot(player, originalSlot);
+                System.out.println("Stored Item after dimension change: " + getInstance().getStoredItem(player));
+                System.out.println("slot after dimension change: " + getInstance().getOriginalSlot(player));
+                player.getInventory().setItem(getInstance().getOriginalSlot(player), ItemStack.EMPTY);
+                player.getInventory().setItem(getInstance().getOriginalSlot(player), getInstance().getStoredItem(player));
+
+                player.inventoryMenu.broadcastChanges();
+                if (player instanceof ServerPlayer serverPlayer) {
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> serverPlayer),
+                            new SyncRemovedNBTPacket(storedItem, originalSlot)
+                    );
+                }
+            });
+        }
+    }
+    @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         CompoundTag nbt = player.getPersistentData();
+        int offHandSlot = 40;
+        ItemStack storedItem = getInstance().getStoredItem(player);
+        int originalSlot = getInstance().getOriginalSlot(player);
 
-        if(player.getMainHandItem().getItem() instanceof BaseFinalFormClass){
-            if (!nbt.contains("storedItem")) {
-                player.getInventory().setItem(getInstance().originalSlot, ItemStack.EMPTY);
+
+        if(player instanceof ServerPlayer serverPlayer) {
+
+            AbilityChangeHandler abilityChangeHandler = AbilityChangeHandler.getInstance();
+            abilityChangeHandler.deactivateCurrentAbilities(player);
+
+            if (getInstance().getOriginalSlot(player) != -1) {
+                if(!storedItem.isEmpty()){
+                    if(player.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass){
+                        player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                    }
+                    player.getInventory().setItem(originalSlot, storedItem);
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> serverPlayer),
+                            new SyncRemovedNBTPacket(storedItem, originalSlot)
+                    );
+                    getInstance().setStoredItemNBT(player, ItemStack.EMPTY);
+                }
             }
-        }
-        if (nbt.contains("storedItem")) {
-            ItemStack storedItem = ItemStack.of(nbt);
-
-            player.getInventory().setItem(getInstance().originalSlot, storedItem);
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                    new RemoveItemPacket(getInstance().originalSlot, storedItem)
-            );
-            nbt.remove("storedItem");
         }
         if (nbt.contains("storedDodgeSkill")) {
             String skillName = nbt.getString("storedDodgeSkill");
-
             Skill skillToSet = SkillUtils.getSkillByName(skillName);
+
             if (skillToSet != null) {
                 event.getEntity().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                     if (cap instanceof PlayerPatch<?> playerPatch) {
-                        if(getInstance().getSkillValid(playerPatch)) {
+                        if (getInstance().getSkillValid(playerPatch)) {
                             playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
                             nbt.remove("storedDodgeSkill");
                             System.out.println("storeDodgeSkill" + skillName);
@@ -127,32 +163,32 @@ public class CommonEventHandler {
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         Player player = event.getEntity();
         if (!player.level().isClientSide) {
+            AbilityChangeHandler abilityChangeHandler = AbilityChangeHandler.getInstance();
+            abilityChangeHandler.deactivateCurrentAbilities(player);
 
-            int selectedSlot = player.getInventory().selected;
-            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
-
-            if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
-                player.getInventory().setItem(player.getInventory().selected, Items.AIR.getDefaultInstance());
-
-                player.getInventory().setChanged();
-            }
-
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-
-
-                if (!container.getStoredItem().isEmpty()) {
-                    player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
-
-                    NetworkHandler.INSTANCE.send(
-                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                            new SwitchItemPacket(getInstance().getOriginalSlot(), storedItem)
-                    );
-                    container.setStoredItem(ItemStack.EMPTY);
-                    player.getInventory().setChanged();
+            if (player instanceof ServerPlayer serverPlayer) {
+                ItemStack storedItem = getInstance().getStoredItem(player);
+                int originalSlot = getInstance().getOriginalSlot(player);
+                int selectedSlot = player.getInventory().selected;
+                ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+                if (originalSlot != -1) {
+                    if (player.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass) {
+                        player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                    }
+                    if (!storedItem.isEmpty()) {
+                        player.getInventory().setItem(originalSlot, storedItem);
+                        getInstance().setStoredItemNBT(player, ItemStack.EMPTY);
+                    }
+                } else {
+                    if (player.getInventory().getItem(selectedSlot).getItem() instanceof BaseFistClass) {
+                        player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                    }
                 }
-
-            });
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new SyncNBTPacket(storedItem, originalSlot)
+                );
+            }
         }
     }
 
@@ -162,22 +198,34 @@ public class CommonEventHandler {
         LivingEntity entity = event.getEntity();
 
         if(entity instanceof Player player) {
+            AbilityChangeHandler abilityChangeHandler = AbilityChangeHandler.getInstance();
+            abilityChangeHandler.deactivateCurrentAbilities(player);
 
+
+            ItemStack storedItem = getInstance().getStoredItem(player);
+            int originalSlot = getInstance().getOriginalSlot(player);
             int selectedSlot = player.getInventory().selected;
-        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
 
+            if (player instanceof ServerPlayer serverPlayer) {
 
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-                if (!container.getStoredItem().isEmpty()) {
-                    player.getInventory().setItem(getInstance().getOriginalSlot(), storedItem);
-                    container.setStoredItem(ItemStack.EMPTY);
-                    //NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(getInstance().getOriginalSlot(), storedItem));
-
-                    //getInstance().setOriginalSlot(-1);
-                    player.getInventory().setChanged();
+                if (originalSlot != -1) {
+                    if (player.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass) {
+                        player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                    }
+                    if (!storedItem.isEmpty()) {
+                        player.getInventory().setItem(originalSlot, storedItem);
+                        getInstance().setStoredItemNBT(player, ItemStack.EMPTY);
+                    }
+                } else {
+                    if (player.getInventory().getItem(selectedSlot).getItem() instanceof BaseFistClass) {
+                        player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                    }
                 }
-            });
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new SyncNBTPacket(storedItem, originalSlot)
+                );
+            }
         }
     }
 

@@ -17,6 +17,8 @@ public class ModKeybinds {
     public static String KEY_FORM_MENU_OPEN = "key.kenjiscombatforms.open_form_menu";
     public static String KEY_QUICK_FORM_CHANGE = "key.kenjiscombatforms.quick_form_change";
 
+    public static String SWITCH_CURRENT_ABILITY = "key.kenjiscombatforms.switch_current_ability";
+    public static String ACTIVATE_CURRENT_ABILITY = "key.kenjiscombatforms.activate_current_ability";
 
    public static KeyMapping ABILITY1_KEY = new KeyMapping(KEY_ABILITY1, KeyConflictContext.IN_GAME,
            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KEY_CATEGORY);
@@ -29,5 +31,9 @@ public class ModKeybinds {
     public static KeyMapping QUICK_FORM_CHANGE_KEY = new KeyMapping(KEY_QUICK_FORM_CHANGE, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
     public static KeyMapping TOGGLE_HAND_COMBAT_KEY = new KeyMapping(TOGGLE_HAND_COMBAT, KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
+    public static KeyMapping ACTIVATE_CURRENT_ABILITY_KEY = new KeyMapping(ACTIVATE_CURRENT_ABILITY, KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
+    public static KeyMapping SWITCH_CURRENT_ABILITY_KEY = new KeyMapping(SWITCH_CURRENT_ABILITY, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, MISC_KEY_CATEGORY);
 }

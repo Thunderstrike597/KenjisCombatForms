@@ -47,22 +47,12 @@ public class WitherDashPacket {
 
     public static void handle(WitherDashPacket packet, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            if (ctx.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-                handleClient(packet);
-            } else {
-                handleServer(packet, ctx.getSender());
-            }
+            ServerPlayer player = ctx.getSender();
+            WitherDash.getInstance().triggerAbility(player);
         });
         ctx.setPacketHandled(true);
     }
 
-    private static void handleClient(WitherDashPacket packet) {
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.level.getPlayerByUUID(packet.playerId);
-        if (player != null) {
-            applyDashEffect(player, packet.dashDirection, packet.dashSpeed);
-        }
-    }
 
     private static void handleServer(WitherDashPacket packet, ServerPlayer sender) {
         if (sender != null && sender.getUUID().equals(packet.playerId)) {

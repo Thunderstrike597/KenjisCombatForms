@@ -201,6 +201,18 @@
   "tooltip.kenjiscombatforms.slot_liner.tooltip": "Wird verwendet, um \"Leerer Slot\" herzustellen",
   "tooltip.kenjiscombatforms.empty_slot.tooltip": "Wird in der \"Essenz-Infusionsstation\" verwendet",
 
+  "tooltip.kenjiscombatforms.basic_fist1.tooltip": "Grundfaust",
+  "tooltip.kenjiscombatforms.basic_fist2.tooltip": "Grundfaust: 2",
+  "tooltip.kenjiscombatforms.basic_fist3.tooltip": "Grundfaust: 3",
+
+  "tooltip.kenjiscombatforms.swift_fist1.tooltip": "Schnelle Faust",
+  "tooltip.kenjiscombatforms.swift_fist2.tooltip": "Schnelle Faust: 2",
+  "tooltip.kenjiscombatforms.swift_fist3.tooltip": "Schnelle Faust: 3",
+
+  "tooltip.kenjiscombatforms.power_fist1.tooltip": "Kraftfaust",
+  "tooltip.kenjiscombatforms.power_fist2.tooltip": "Kraftfaust: 2",
+  "tooltip.kenjiscombatforms.power_fist3.tooltip": "Kraftfaust: 3",
+
   "tooltip.kenjiscombatforms.void_fist1.tooltip": "Leere-Faust",
   "tooltip.kenjiscombatforms.void_fist2.tooltip": "Leere-Faust: 2",
   "tooltip.kenjiscombatforms.void_fist3.tooltip": "Leere-Faust: 3",

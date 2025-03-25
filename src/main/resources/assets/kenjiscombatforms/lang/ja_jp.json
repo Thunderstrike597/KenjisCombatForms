@@ -199,6 +199,18 @@
   "tooltip.kenjiscombatforms.slot_liner.tooltip":"「空きスロット」の作成に使用",
   "tooltip.kenjiscombatforms.empty_slot.tooltip":"「エッセンス注入ステーション」で使用",
 
+  "tooltip.kenjiscombatforms.basic_fist1.tooltip": "基本の拳",
+  "tooltip.kenjiscombatforms.basic_fist2.tooltip": "基本の拳: 2",
+  "tooltip.kenjiscombatforms.basic_fist3.tooltip": "基本の拳: 3",
+
+  "tooltip.kenjiscombatforms.swift_fist1.tooltip": "迅速の拳",
+  "tooltip.kenjiscombatforms.swift_fist2.tooltip": "迅速の拳: 2",
+  "tooltip.kenjiscombatforms.swift_fist3.tooltip": "迅速の拳: 3",
+
+  "tooltip.kenjiscombatforms.power_fist1.tooltip": "強力の拳",
+  "tooltip.kenjiscombatforms.power_fist2.tooltip": "強力の拳: 2",
+  "tooltip.kenjiscombatforms.power_fist3.tooltip": "強力の拳: 3",
+
   "tooltip.kenjiscombatforms.void_fist1.tooltip": "虚無の拳",
   "tooltip.kenjiscombatforms.void_fist2.tooltip": "虚無の拳：2",
   "tooltip.kenjiscombatforms.void_fist3.tooltip": "虚無の拳：3",

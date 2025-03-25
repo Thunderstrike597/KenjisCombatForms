@@ -37,11 +37,14 @@ public class WitherPlayerDataSets {
         public final double DECELERATION_DISTANCE = 5.0;
         public boolean isPauseActive = false;
         public boolean isDashActive = false;
+        public boolean canIgnoreCollide = false;
+        public final int MAX_BLOCKS = 5;
         public double distanceTraveled = 0.0;
         public Vec3 initialPosition = null;
         public  int dashTicksRemaining = 0;
         public Vec3 dashDirection = null;
         public double currentSpeed = 0.0;
+
 
         public WitherDashPlayerData() {
             super(KenjisCombatFormsCommon.ABILITY1_COOLDOWN.get());
@@ -83,6 +86,7 @@ public class WitherPlayerDataSets {
         public boolean isWitherActive = false;
         public boolean isDelayPause = false;
         public boolean hasPlayedSound = true;
+        public boolean isDashActive = false;
         public int abilityCooldown = MAX_COOLDOWN;
         public final Map<UUID, Entity> playerWitherMap = new ConcurrentHashMap<>();
         public Entity witherEntity;

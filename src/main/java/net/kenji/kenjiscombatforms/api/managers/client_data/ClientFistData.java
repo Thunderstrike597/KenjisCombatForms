@@ -24,6 +24,14 @@ public class ClientFistData {
     public static AbilityManager.AbilityOption3 getCurrentAbility3() {
         return clientAbilityData.ability3;
     }
+    public static AbilityManager.AbilityOption4 getCurrentAbility4() {
+        return clientAbilityData.ability4;
+    }
+    public static AbilityManager.AbilityOption5 getCurrentAbility5() {
+        return clientAbilityData.ability5;
+    }
+
+
     public static FormManager.FormSelectionOption getSelectedForm() {
         return clientFormData.selectedForm;
     }
@@ -68,6 +76,13 @@ public class ClientFistData {
     }
     public static void setSelectedForm(FormManager.FormSelectionOption selectedForm) {
         clientFormData.selectedForm = selectedForm;
+    }
+
+    public static void setAbility4(AbilityManager.AbilityOption4 abilityOption4) {
+        clientAbilityData.ability4 = abilityOption4;
+    }
+    public static void setAbility5(AbilityManager.AbilityOption5 abilityOption5) {
+        clientAbilityData.ability5 = abilityOption5;
     }
     public static void setForm1Option(FormManager.FormSelectionOption value){
         clientFormData.form1 = value;

@@ -1,6 +1,5 @@
 package net.kenji.kenjiscombatforms.item.custom.forms;
 
-import net.kenji.kenjiscombatforms.enchantments.ModEnchantments;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.*;

@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.api.powers.swift_powers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.PowerPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
@@ -12,7 +13,9 @@ import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
+import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
+import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SyncSwiftData2Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -143,6 +146,18 @@ public class SwiftEffectInflict implements Ability {
         SwiftPlayerDataSets.SwiftInflictPlayerData data = getPlayerData(player);
         data.tickCount = dataHandlers.getTickCount(data.tickCount);
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()){
+            NetworkHandler.INSTANCE.sendToServer(new SwiftEffectInflictPacket());
+        }
     }
 
 

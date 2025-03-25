@@ -13,7 +13,6 @@ import net.kenji.kenjiscombatforms.block.entity.ModBlockEntities;
 import net.kenji.kenjiscombatforms.commands.*;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsClient;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.enchantments.ModEnchantments;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
@@ -21,7 +20,6 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.item.ModItems;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.particles.ModParticles;
 import net.kenji.kenjiscombatforms.recipe.ModRecipes;
@@ -67,6 +65,7 @@ public class KenjisCombatForms
         event.getDispatcher().register(ResetCurrentFormLevel.register());
         event.getDispatcher().register(RefreshAllAbilityCooldowns.register());
         event.getDispatcher().register(RefillAllAbilityCooldowns.register());
+        event.getDispatcher().register(DebugCrashCommand.register());
 
     }
 
@@ -91,7 +90,6 @@ public class KenjisCombatForms
 
         ModSounds.register(modEventBus);
 
-        ModEnchantments.register(modEventBus);
 
         ModParticles.register(modEventBus);
 
@@ -172,16 +170,16 @@ public class KenjisCombatForms
         abilityManager.registerAbility(TeleportPlayerBackstab.getInstance());
         abilityManager.registerAbility(VoidAnchorRift.getInstance());
         abilityManager.registerAbility(EnderFormAbility.getInstance());
-        abilityManager.registerAbility(EnderLevitation.getInstance());
-        abilityManager.registerAbility(VoidGrab.getInstance());
-        abilityManager.registerAbility(EnderWarpAbility.getInstance());
+        abilityManager.registerFinalAbility(EnderLevitation.getInstance());
+        abilityManager.registerFinalAbility(VoidGrab.getInstance());
+        abilityManager.registerFinalAbility(EnderWarpAbility.getInstance());
 
         abilityManager.registerAbility(WitherDash.getInstance());
         abilityManager.registerAbility(SoulDrift.getInstance());
         abilityManager.registerAbility(WitherFormAbility.getInstance());
-        abilityManager.registerAbility(WitherMinions.getInstance());
-        abilityManager.registerAbility(WitherImplode.getInstance());
-        abilityManager.registerAbility(WitherFormDashAbility.getInstance());
+        abilityManager.registerFinalAbility(WitherMinions.getInstance());
+        abilityManager.registerFinalAbility(WitherImplode.getInstance());
+        abilityManager.registerFinalAbility(WitherFormDashAbility.getInstance());
 
 
         abilityManager.registerAbility(SpeedBoost.getInstance());

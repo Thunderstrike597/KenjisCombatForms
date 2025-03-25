@@ -14,18 +14,19 @@ public class ClientWitherData {
     private static int minionCooldown = 0;
     private static int implodeCooldown = 0;
     private static boolean isWitherActive = false;
+    private static boolean isWitherDashActive = false;
     private static boolean areMinionsActive = false;
+    private static boolean isDashActive = false;
+    private static boolean canIgnoreCollide = false;
     private static UUID witherEntityUUID;
 
 
     public static void setCooldown(int value) {
         cooldown = value;
     }
-
     public static void setCooldown2(int value) {
         cooldown2 = value;
     }
-
     public static void setCooldown3(int value) {
         cooldown3 = value;
     }
@@ -38,9 +39,19 @@ public class ClientWitherData {
     public static void setIsWitherActive(boolean value) {
         isWitherActive = value;
     }
+    public static void setIsWitherDashActive(boolean value) {
+        isWitherDashActive = value;
+    }
     public static void setAreMinionsActive(boolean value) {
         areMinionsActive = value;
     }
+    public static void setIsDashActive(boolean value) {
+        isDashActive = value;
+    }
+    public static void setCanIgnoreCollide(boolean value) {
+        canIgnoreCollide = value;
+    }
+
 
 
     public static int getCooldown() {
@@ -64,6 +75,15 @@ public class ClientWitherData {
     }
     public static boolean getIsWitherActive(){
         return isWitherActive;
+    }
+    public static boolean getIsDashActive(){
+        return isDashActive;
+    }
+    public static boolean isCanIgnoreCollide(){
+        return canIgnoreCollide;
+    }
+    public static boolean getIsWitherDashActive(){
+        return isWitherDashActive;
     }
     public static void setWitherUUID(UUID value){
          witherEntityUUID = value;

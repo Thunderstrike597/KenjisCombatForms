@@ -8,9 +8,9 @@ import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.UpdateInventoryOpenPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
-import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
-import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import org.lwjgl.glfw.GLFW;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.events.engine.ControllEngine;
 
@@ -37,6 +36,8 @@ public class ClientEventHandler {
 
     private static long lastPressTime = 0;
     private static final long PRESS_COOLDOWN = 100;
+    private boolean canCrash = false;
+
 
     private static final ClientEventHandler INSTANCE = new ClientEventHandler();
     public Player currentPlayer;
@@ -63,16 +64,28 @@ public class ClientEventHandler {
         return ClientWitherData.getIsWitherActive();
     }
 
-    private static int originalSlot = -1; // -1 means no item is stored yet
+    public void setCanCrash(boolean canCrash){
+        this.canCrash = canCrash;
+    }
+    public boolean getCanCrash(){
+        return this.canCrash;
+    }
 
-    public int getOriginalSlot() {
-        return originalSlot;
+    public void crash(){
+        throw new RuntimeException("Intentional debug crash!");
+    }
+
+
+
+    public int getOriginalSlot(Player player) {
+        return CommonEventHandler.getInstance().getOriginalSlot(player);
     }
     // Handle key press to store the item
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         Player player = Minecraft.getInstance().player;
         FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
+        CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
 
         if (player == null) return;
 
@@ -80,42 +93,48 @@ public class ClientEventHandler {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastPressTime > PRESS_COOLDOWN) {
                 lastPressTime = currentTime;
+                int originalSlot = getInstance().getOriginalSlot(player);
 
                 int selectedSlot = player.getInventory().selected;
                 ItemStack currentItem = player.getInventory().getItem(selectedSlot);
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                    ItemStack storedItem = container.getStoredItem();
+                    ItemStack storedItem = commonEventHandler.getStoredItem(player);
                     if(!getInstance().getAreFinalsActive()) {
-                        if (!currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.isEmpty() && container.getStoredItem().isEmpty() || currentItem.getItem() instanceof BaseFistClass) {
+                        System.out.println("storedItem: " + storedItem);
+                        if (storedItem.isEmpty()) {
                             if (!(currentItem.getItem() instanceof BaseFistClass)) {
-                                container.setStoredItem(currentItem.copy());
+                                commonEventHandler.setStoredItemNBT(player, currentItem);
+                                container.setStoredItem(currentItem);
                             }
-                            player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
-                            originalSlot = selectedSlot; // Save the original slot
-                            NetworkHandler.INSTANCE.sendToServer(new SwitchItemPacket(originalSlot, storedItem));
-                            player.getInventory().setChanged();
+                            commonEventHandler.setOriginalSlot(player, selectedSlot);
+                            container.setOriginalSlot(selectedSlot);
 
+                            NetworkHandler.INSTANCE.sendToServer(new SyncNBTPacket(currentItem, selectedSlot));
+                                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 
-                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                        } else if (!storedItem.isEmpty()) {
+                            if(originalSlot != -1) {
+                                if (currentItem.getItem() instanceof BaseFistClass) {
+                                    player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                                }
+                                player.getInventory().setItem(originalSlot, storedItem);
 
-                        } else if (!container.getStoredItem().isEmpty()) {
-                            player.getInventory().setItem(originalSlot, storedItem);
+                                NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
+                                container.setStoredItem(ItemStack.EMPTY);
+                                commonEventHandler.setStoredItemNBT(player, ItemStack.EMPTY);
+                                commonEventHandler.setOriginalSlot(player, -1);
+                                container.setOriginalSlot(-1);
 
+                                NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
 
-                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-                            container.setStoredItem(ItemStack.EMPTY);
-                            originalSlot = -1;
-                            player.getInventory().setChanged();
-
-                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                            }
                         }
-                        if (currentItem.getItem() instanceof BaseFistClass) {
-                            player.getInventory().setItem(originalSlot, storedItem);
-                            container.setStoredItem(ItemStack.EMPTY);
-                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
-
-                            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-
+                        if(storedItem.isEmpty()){
+                            if (currentItem.getItem() instanceof BaseFistClass) {
+                                player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                                NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, selectedSlot));
+                            }
                         }
                     }
                 });
@@ -126,6 +145,7 @@ public class ClientEventHandler {
     public int getSelectedExtraSlot(Player player) {
         return player.getInventory().selected;
     }
+    static boolean hasSelected = false;
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -134,6 +154,9 @@ public class ClientEventHandler {
             Player clientPlayer = mc.player;
             ControllEngine controllEngine = ClientEngine.getInstance().controllEngine;
             if (clientPlayer != null) {
+                CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
+                int originalSlot = getInstance().getOriginalSlot(clientPlayer);
+
                 if (ClientWitherData.getIsWitherActive()) {
                     boolean jump = mc.options.keyJump.isDown();
                     boolean sneak = ControlHandler.controlRelatedEvents.getInstance().getShiftDown(clientPlayer);
@@ -152,21 +175,41 @@ public class ClientEventHandler {
                     }
 
                 }
+                    if(getInstance().getAreFinalsActive()) {
+                        if(!hasSelected) {
+                            CommonEventHandler.getInstance().setOriginalSlot(clientPlayer, clientPlayer.getInventory().selected);
+                            hasSelected = true;
+                        }
+                        clientPlayer.getInventory().selected = CommonEventHandler.getInstance().getOriginalSlot(clientPlayer);
+                    }if (!getInstance().getAreFinalsActive()) {
+                        if (hasSelected) {
+                            hasSelected = false;
+                        }
+                    }
 
                 if (originalSlot != -1 && clientPlayer.getInventory().selected != originalSlot) {
                     clientPlayer.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                        ItemStack storedItem = container.getStoredItem();
-                        if (!storedItem.isEmpty() || clientPlayer.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass) {
-                            // Check if the original slot is empty before restoring
+                        ItemStack storedItem = commonEventHandler.getStoredItem(clientPlayer);
+                        if (!storedItem.isEmpty()) {
                             clientPlayer.getInventory().setItem(originalSlot, storedItem);
-                            container.setStoredItem(ItemStack.EMPTY);
-                            NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+                            NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
+                            commonEventHandler.setStoredItemNBT(clientPlayer, ItemStack.EMPTY);
+                            commonEventHandler.setOriginalSlot(clientPlayer, -1);
 
-                            originalSlot = -1;
+                            NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
+
                             clientPlayer.getInventory().setChanged();
                         }
+                            if(clientPlayer.getInventory().getItem(originalSlot).getItem() instanceof BaseFistClass){
+                                clientPlayer.getInventory().setItem(originalSlot, ItemStack.EMPTY);
+                                NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
+
+                            }
                     });
                 }
+            }
+            if(getInstance().getCanCrash()){
+                getInstance().crash();
             }
         }
     }
@@ -214,7 +257,16 @@ public class ClientEventHandler {
 
                 if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
                     if (event.getScreen() instanceof InventoryScreen) {
-                        NetworkHandler.INSTANCE.sendToServer(new RemoveItemPacket(originalSlot, storedItem));
+                        if(!storedItem.isEmpty()) {
+                            player.getInventory().setItem(getInstance().getOriginalSlot(player), storedItem);
+                            NetworkHandler.INSTANCE.sendToServer(new SyncNBTPacket(storedItem, getInstance().getOriginalSlot(player)));
+
+                        }
+                        CommonEventHandler.getInstance().setStoredItemNBT(player, ItemStack.EMPTY);
+                        CommonEventHandler.getInstance().setOriginalSlot(player, -1);
+
+                        NetworkHandler.INSTANCE.sendToServer(new SyncNBTPacket(storedItem, getInstance().getOriginalSlot(player)));
+
                     }
                 }
             });
@@ -250,18 +302,6 @@ public class ClientEventHandler {
         if (mc.player != null) {
             if(getInstance().getAreFinalsActive()) {
                 event.setCanceled(true); // Stops the scroll wheel from changing the slot
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onHotbarKey(InputEvent.Key event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player != null) {
-            if(getInstance().getAreFinalsActive()) {
-                if (event.getAction() == GLFW.GLFW_PRESS && event.getKey() >= GLFW.GLFW_KEY_1 && event.getKey() <= GLFW.GLFW_KEY_9) {
-                    event.setCanceled(true); // Stops the hotbar from changing via number keys
-                }
             }
         }
     }

@@ -90,6 +90,7 @@ public class KenjisCombatFormsCommon {
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL2_SPEED_MULTIPLIER;
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL3_SPEED_MULTIPLIER;
 
+    public static final ForgeConfigSpec.ConfigValue<Boolean> ABILITY_SELECTION_MODE;
 
     static final String defaultItem = "kenjiscombatforms:power_form2";
     static final List<String> validItemNames = Arrays.asList("kenjiscombatforms:power_form1", "kenjiscombatforms:power_form2","kenjiscombatforms:power_form3", "kenjiscombatforms:swift_form1", "kenjiscombatforms:swift_form2","kenjiscombatforms:swift_form3");
@@ -215,6 +216,9 @@ public class KenjisCombatFormsCommon {
 
         CAN_USE_ABILITIES_NO_FORM = BUILDER.comment("if true, you are able to use your current chosen abilities regardless whether you are \"holding\" a combat form or not")
                 .define("Can Use Abilities Without Form", true);
+
+        ABILITY_SELECTION_MODE = BUILDER.comment("This allows you to use one key to activate a chosen ability, without using several keys")
+                .define("Ability Selection Mode", true);
         BUILDER.pop();
 
         BUILDER.push("Compatibility");
@@ -232,11 +236,6 @@ public class KenjisCombatFormsCommon {
         BUILDER.pop();
 
         BUILDER.push("Form Damage & Speed");
-
-
-
-
-
 
         BASIC_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Basic Form'")
                 .defineInRange("Basic Form Base Damage", 3, 1, 20);

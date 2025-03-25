@@ -1,26 +1,33 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.PowerControl;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
+import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.SyncWitherDataPacket;
+import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -28,6 +35,13 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import reascer.wom.gameasset.WOMAnimations;
+import reascer.wom.gameasset.WOMSkills;
+import yesman.epicfight.gameasset.Animations;
+import yesman.epicfight.main.EpicFightMod;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 import java.util.Map;
 import java.util.Set;
@@ -136,15 +150,76 @@ public class WitherDash implements Ability {
 
     }
 
-
     @Override
-    public void triggerAbility(ServerPlayer serverPlayer) {
-
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
     }
 
     @Override
-    public void activateAbility(ServerPlayer serverPlayer) {
+    public void sendPacketToServer(Player player) {
+        WitherPlayerDataSets.WitherDashPlayerData wData = getInstance().dataSets.getOrCreateDashPlayerData(player);
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+            if (!ClientWitherData.getMinionsActive()) {
+                if (ClientWitherData.getCooldown() <= wData.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+                    NetworkHandler.INSTANCE.sendToServer(new WitherDashPacket(player.getUUID(), player.getLookAngle(), wData.MAX_SPEED));
 
+                    WitherDash.getInstance().activateClientAbility(player);
+
+                    SoundManager.playDashSound(player);
+                }
+            }
+        }
+    }
+
+    public boolean getDashActive(Player player){
+        WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(player);
+        return data.isDashActive;
+    }
+    public boolean getIgnoreCollide(Player player){
+        WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(player);
+        return data.canIgnoreCollide;
+    }
+
+
+    @Override
+    public void triggerAbility(ServerPlayer serverPlayer) {
+        activateAbility(serverPlayer);
+    }
+
+
+    @Override
+    public void activateAbility(ServerPlayer serverPlayer) {
+        WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(serverPlayer);
+        if(data.abilityCooldown <= data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+            serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                if (cap instanceof PlayerPatch<?> playerPatch) {
+                    playerPatch.getAnimator().playAnimation(WOMAnimations.SHADOWSTEP_FORWARD.get(), 0);
+                    data.abilityCooldown = data.abilityCooldown + data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
+                    data.isDashActive = true;
+                }
+            });
+
+            Direction dashDirection = serverPlayer.getMotionDirection(); // Uses movement direction
+            BlockPos playerPos = serverPlayer.blockPosition();
+            BlockGetter world = serverPlayer.level();
+
+            if(serverPlayer.level().getBlockState(playerPos.relative(dashDirection, 10)).isAir()){
+                data.canIgnoreCollide = true;
+            }
+            else  data.canIgnoreCollide = false;
+        }
+    }
+
+    public void activateClientAbility(Player player) {
+        WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(player);
+        if(ClientWitherData.getCooldown() <= data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+
+            player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                if (cap instanceof PlayerPatch<?> playerPatch) {
+                    playerPatch.getAnimator().playAnimationInstantly(WOMAnimations.SHADOWSTEP_FORWARD.get());
+                }
+            });
+        }
     }
 
     @Override
@@ -168,15 +243,29 @@ public class WitherDash implements Ability {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
         if (abilityData.chosenAbility1.name().equals(getName())) {
             getInstance().decrementCooldown(player);
-            updateDash(player);
-            tickPause(player);
+
+            player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                if(cap instanceof LivingEntityPatch<?> livingEntityPatch) {
+                    if (livingEntityPatch instanceof PlayerPatch<?> playerPatch) {
+                        if (data.isDashActive) {
+                            if (playerPatch.getServerAnimator().animationPlayer.getAnimation().getRealAnimation() != WOMAnimations.SHADOWSTEP_FORWARD){
+                                data.isDashActive = false;
+                               data.canIgnoreCollide = false;
+                            }
+                        }
+                    }
+                }
+            });
+            // updateDash(player);
+          //  tickPause(player);
             syncDataToClient(player);
         }
     }
 
     @Override
     public void tickClientAbilityData(Player player) {
-        updateDash(player);
+
+
     }
 
     @Override
@@ -185,7 +274,7 @@ public class WitherDash implements Ability {
         if (isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherDataPacket(data.abilityCooldown)
+                    new SyncWitherDataPacket(data.abilityCooldown, data.isDashActive, data.canIgnoreCollide)
             );
         }
     }

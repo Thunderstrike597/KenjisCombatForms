@@ -1,5 +1,6 @@
 package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
+import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsClient;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
@@ -17,6 +18,21 @@ public class SimpleAbilityHandler {
     SimpleAbilityHandler(){
 
     }
+
+    public int getSelectionModeX(){
+        return 49;
+    }
+    public int getSelectionModeY(){
+        return 79;
+    }
+
+    int getIconSize(int value){
+        if(isSelectionMode()){
+            return 42;
+        }
+        return value;
+    }
+
 
     private static boolean getHideAbilityBars() {
         return KenjisCombatFormsClient.HIDE_ABILITY_BARS.get();
@@ -41,11 +57,27 @@ public class SimpleAbilityHandler {
         return true;
     }
 
+    boolean isSelectionMode(){
+        return KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get();
+    }
 
-    public void drawAbility1Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconWidth, int iconHeight, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
+    int abilityIndex(Player player){
+        PowerControl.controlRelatedEvents.PlayerData playerData = PowerControl.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+            return playerData.currentAbilityIndex;
+    }
+
+
+
+
+    public void drawAbility1Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
+            if(isSelectionMode()){
+                if(abilityIndex(player) != 1)
+                    return;
+            }
+
 
             ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
             if (getCanUseAbilitiesWithoutForms(player)) {
@@ -56,99 +88,62 @@ public class SimpleAbilityHandler {
                         event.getGuiGraphics().blit(abilityBackgroundResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                32, 32,
-                                32, 32
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
 
                         event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (32 - cooldownHeight),  // ✅ Moves drawing position up
-                                iconU, iconV + (32 - cooldownHeight),  // ✅ Moves texture source up
-                                iconWidth, cooldownHeight, // ✅ Uses positive height
-                                32, 32);
+                                iconX, iconY + (iconSize - cooldownHeight),
+                                iconU, iconV + (iconSize - cooldownHeight),
+                                iconSize, cooldownHeight, // ✅ Uses positive height
+                                iconSize, iconSize);
                     }
                     if(abilityCooldown == 0){
 
                         event.getGuiGraphics().blit(abilityOverlayResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                32, 32,
-                                32, 32
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
                     }
                 }
             }
         }
     }
-    public void drawAbility4Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconWidth, int iconHeight, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
+    public void drawAbility4Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
-
-                        // ✅ Draw the FULL Background Texture (without clipping)
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                32, 32,
-                                32, 32
-                        );
-
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (32 - cooldownHeight),  // ✅ Moves drawing position up
-                                iconU, iconV + (32 - cooldownHeight),  // ✅ Moves texture source up
-                                iconWidth, cooldownHeight, // ✅ Uses positive height
-                                32, 32);
-                    }
-                    if(abilityCooldown == 0){
-
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                32, 32,
-                                32, 32
-                        );
-                    }
-                }
+            if(isSelectionMode()){
+                if(abilityIndex(player) != 1)
+                    return;
             }
-        }
-    }
-
-
-    public void drawAbility5Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconWidth, int iconHeight, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
-        Minecraft mcInstance = Minecraft.getInstance();
-        Player player = mcInstance.player;
-        if (player != null && player.level().isClientSide) {
-
             ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
             if (getCanUseAbilitiesWithoutForms(player)) {
                 if (getHideAbilityBarsFirstPerson(player)) {
                     if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        // ✅ Draw the FULL Background Texture (without clipping)
                         event.getGuiGraphics().blit(abilityBackgroundResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                38, 38,
-                                38, 38
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
 
                         event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (38 - cooldownHeight),  // ✅ Moves drawing position up
-                                iconU, iconV + (38 - cooldownHeight),  // ✅ Moves texture source up
-                                iconWidth, cooldownHeight, // ✅ Uses positive height
-                                38, 38);
+                                iconX, iconY + (iconSize - cooldownHeight),
+                                iconU, iconV + (iconSize - cooldownHeight),
+                                iconSize, cooldownHeight,
+                                iconSize, iconSize);
                     }
                     if(abilityCooldown == 0){
 
                         event.getGuiGraphics().blit(abilityOverlayResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                38, 38,
-                                38, 38
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
                     }
                 }
@@ -157,74 +152,122 @@ public class SimpleAbilityHandler {
     }
 
 
-    public void drawAbility2Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconWidth, int iconHeight, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
+    public void drawAbility5Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-
+            if(isSelectionMode()){
+                if(abilityIndex(player) != 2)
+                    return;
+            }
             ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
             if (getCanUseAbilitiesWithoutForms(player)) {
                 if (getHideAbilityBarsFirstPerson(player)) {
                     if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        // ✅ Draw the FULL Background Texture (without clipping)
                         event.getGuiGraphics().blit(abilityBackgroundResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                38, 38,
-                                38, 38
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
 
                         event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (38 - cooldownHeight),  // ✅ Moves drawing position up
-                                iconU, iconV + (38 - cooldownHeight),  // ✅ Moves texture source up
-                                iconWidth, cooldownHeight, // ✅ Uses positive height
-                                38, 38);
+                                iconX, iconY + (iconSize - cooldownHeight),
+                                iconU, iconV + (iconSize - cooldownHeight),
+                                iconSize, cooldownHeight,
+                                iconSize, iconSize);
                     }
                     if(abilityCooldown == 0){
 
                         event.getGuiGraphics().blit(abilityOverlayResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                38, 38,
-                                38, 38
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
                     }
                 }
             }
         }
     }
-    public void drawAbility3Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconWidth, int iconHeight, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
+
+
+    public void drawAbility2Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
+            if(isSelectionMode()){
+                if(abilityIndex(player) != 2)
+                    return;
+            }
 
             ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
             if (getCanUseAbilitiesWithoutForms(player)) {
                 if (getHideAbilityBarsFirstPerson(player)) {
                     if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        // ✅ Draw the FULL Background Texture (without clipping)
                         event.getGuiGraphics().blit(abilityBackgroundResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                44, 44,
-                                44, 44
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
 
                         event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (44 - cooldownHeight),  // ✅ Moves drawing position up
-                                iconU, iconV + (44 - cooldownHeight),  // ✅ Moves texture source up
-                                iconWidth, cooldownHeight, // ✅ Uses positive height
-                                44, 44);
+                                iconX, iconY + (iconSize - cooldownHeight),
+                                iconU, iconV + (iconSize - cooldownHeight),
+                                iconSize, cooldownHeight,
+                                iconSize, iconSize);
                     }
                     if(abilityCooldown == 0){
 
                         event.getGuiGraphics().blit(abilityOverlayResource,
                                 iconX, iconY,
                                 iconU, iconV,
-                                44, 44,
-                                44, 44
+                                iconSize, iconSize,
+                                iconSize, iconSize
+                        );
+                    }
+                }
+            }
+        }
+    }
+    public void drawAbility3Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
+        Minecraft mcInstance = Minecraft.getInstance();
+        Player player = mcInstance.player;
+        if (player != null && player.level().isClientSide) {
+            if(isSelectionMode()){
+                if(abilityIndex(player) != 3)
+                    return;
+            }
+
+            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+            if (getCanUseAbilitiesWithoutForms(player)) {
+                if (getHideAbilityBarsFirstPerson(player)) {
+                    if (data.isHandCombat || !getHideAbilityBars()) {
+
+
+                        event.getGuiGraphics().blit(abilityBackgroundResource,
+                                iconX, iconY,
+                                iconU, iconV,
+                                iconSize, iconSize,
+                                iconSize, iconSize
+                        );
+
+                        event.getGuiGraphics().blit(abilityResource,
+                                iconX, iconY + (iconSize - cooldownHeight),
+                                iconU, iconV + (iconSize - cooldownHeight),
+                                iconSize, cooldownHeight,
+                                iconSize, iconSize);
+                    }
+                    if(abilityCooldown == 0){
+
+                        event.getGuiGraphics().blit(abilityOverlayResource,
+                                iconX, iconY,
+                                iconU, iconV,
+                                iconSize, iconSize,
+                                iconSize, iconSize
                         );
                     }
                 }

@@ -1,6 +1,8 @@
 package net.kenji.kenjiscombatforms.network;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.ability_choose.Ability1ChoosePacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.ability_choose.Ability2ChoosePacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.ability_choose.Ability3ChoosePacket;
@@ -447,6 +449,13 @@ public class NetworkHandler {
                     SyncServerWitherFormLevelPacket.handle(msg, ctx.get());
                 }).add();
 
+        INSTANCE.messageBuilder(SyncClientFinalAbilitesPacket.class, packetId++)
+                .encoder(SyncClientFinalAbilitesPacket::encode)
+                .decoder(SyncClientFinalAbilitesPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncClientFinalAbilitesPacket.handle(msg, ctx.get());
+                }).add();
+
 
         INSTANCE.messageBuilder(UpdateInventoryOpenPacket.class, packetId++)
                 .encoder(UpdateInventoryOpenPacket::encode)
@@ -502,6 +511,18 @@ public class NetworkHandler {
                 .decoder(SkillPlayerDataPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     SkillPlayerDataPacket.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncNBTPacket.class, packetId++)
+                .encoder(SyncNBTPacket::encode)
+                .decoder(SyncNBTPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncNBTPacket.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncRemovedNBTPacket.class, packetId++)
+                .encoder(SyncRemovedNBTPacket::encode)
+                .decoder(SyncRemovedNBTPacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncRemovedNBTPacket.handle(msg, ctx.get());
                 }).add();
     }
 }

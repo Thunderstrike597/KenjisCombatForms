@@ -2,11 +2,11 @@ package net.kenji.kenjiscombatforms.api;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderFormAbility;
-import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderLevitation;
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.TeleportPlayer;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
@@ -15,7 +15,6 @@ import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
@@ -32,13 +31,13 @@ import net.kenji.kenjiscombatforms.network.voidform.ability3.ToggleEnderPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.EnderLevitationPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.VoidGrabPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
-import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherPausePacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability2.SoulDriftPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability3.ToggleWitherFormPacket;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SummonWitherMinionsPacket;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,6 +46,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -66,6 +66,8 @@ public class PowerControl {
         }
 
         public static class PlayerData {
+            public int currentAbilityIndex = 1;
+
             public boolean isShiftDown = false;
             public  long lastPressTime = 0;
             public long currentDashState = 0;
@@ -76,7 +78,7 @@ public class PowerControl {
 
 
 
-        private controlRelatedEvents.PlayerData getOrCreatePlayerData(Player player) {
+        public controlRelatedEvents.PlayerData getOrCreatePlayerData(Player player) {
             return getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new controlRelatedEvents.PlayerData());
         }
 
@@ -96,6 +98,20 @@ public class PowerControl {
             return true;
         }
 
+        boolean getAbilitiesNotActive(Player player, AbilityManager.PlayerAbilityData abilityData) {
+            Ability[] abilities = {
+                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility1.name()),
+                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility2.name()),
+                  //  AbilityManager.getInstance().getAbility(abilityData.chosenFinal.name())
+            };
+
+            for (Ability ability : abilities) {
+                if (ability != null && ability.getAbilityData(player).isAbilityActive()) {
+                    return false; // If any ability is active, return false
+                }
+            }
+            return true; // If no ability is active, return true
+        }
 
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {
@@ -108,134 +124,125 @@ public class PowerControl {
             if (clientPlayer != null) {
                 WitherPlayerDataSets.WitherDashPlayerData wData = getInstance().dataSets.getOrCreateDashPlayerData(clientPlayer);
                 EnderPlayerDataSets.TeleportPlayerData tpData = EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(clientPlayer);
+                AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(clientPlayer);
+
+               Ability ability1 = AbilityManager.getInstance().getCurrentAbilities(clientPlayer).get(0);
+                Ability ability2 = AbilityManager.getInstance().getCurrentAbilities(clientPlayer).get(1);
+                Ability ability3 = AbilityManager.getInstance().getCurrentAbilities(clientPlayer).get(2);
+                FinalAbility ability4 = AbilityManager.getInstance().getCurrentFinalAbilities(clientPlayer).get(0);
+                FinalAbility ability5 = AbilityManager.getInstance().getCurrentFinalAbilities(clientPlayer).get(1);
 
 
-                if (getCanUseAbilitiesWithoutForms(clientPlayer)) {
+                if(ModKeybinds.SWITCH_CURRENT_ABILITY_KEY.isDown()){
+                    PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
 
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
+                     //   if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+                            if(getInstance().getAbilitiesNotActive(clientPlayer, abilityData)) {
+                                if (data.currentAbilityIndex <= 2) {
+                                    data.currentAbilityIndex++;
+                                }
+                                else data.currentAbilityIndex = 1;
+                            }
+                    //    }
+                    }
+                    clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                    System.out.println("CurrentAbilityIndex: " + data.currentAbilityIndex);
+                }
+
+                if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                    if (getCanUseAbilitiesWithoutForms(clientPlayer)) {
+
+                        PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
+                        WitherPlayerDataSets.WitherFormPlayerData wPlayerData = getInstance().getOrCreateWitherFormPlayerData(clientPlayer);
+                        WitherPlayerDataSets.WitherMinionPlayerData wmPlayerData = getInstance().getOrCreateMinionPlayerData(clientPlayer);
+                        ClientEventHandler clientEventHandler = ClientEventHandler.getInstance();
+
+                        boolean areFinalActive = clientEventHandler.getAreFinalsActive();
+                        if (ModKeybinds.ABILITY1_KEY.consumeClick()) {
+                            long currentTime = System.currentTimeMillis();
+                            if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
+                                if (ability1 != null && !areFinalActive){
+                                    if(ability4 != null && !ability4.getAbilityActive(clientPlayer)) {
+                                        ability1.sendPacketToServer(clientPlayer);
+                                    }else if(ability4 == null){
+                                        ability1.sendPacketToServer(clientPlayer);
+                                    }
+                                    if(ability4 != null && ability4.getFinalAbilityActive(clientPlayer) | ability4.getAbilityActive(clientPlayer)){
+                                        ability4.sendPacketToServer(clientPlayer);
+                                    }
+                                }
+                            }
+                        }
+                        if (ModKeybinds.ABILITY2_KEY.consumeClick()) {
+                            long currentTime = System.currentTimeMillis();
+                            if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
+                                    if (ability2 != null && !areFinalActive) {
+                                        if (ability5 != null && !ability5.getAbilityActive(clientPlayer)) {
+                                            ability2.sendPacketToServer(clientPlayer);
+                                        } else if (ability5 == null) {
+                                            ability2.sendPacketToServer(clientPlayer);
+                                        }
+                                    }
+                                    if (ability5 != null && ability5.getFinalAbilityActive(clientPlayer) | ability5.getAbilityActive(clientPlayer)) {
+                                        ability5.sendPacketToServer(clientPlayer);
+                                    }
+                                    data.lastPressTime = currentTime;
+                            }
+                        }
+                        if (ModKeybinds.ABILITY3_KEY.consumeClick()) {
+                            long currentTime = System.currentTimeMillis();
+                            if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
+                                if (ability3 != null) {
+                                    ability3.sendPacketToServer(clientPlayer);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else if (ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY.consumeClick()) {
                     PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
                     WitherPlayerDataSets.WitherFormPlayerData wPlayerData = getInstance().getOrCreateWitherFormPlayerData(clientPlayer);
                     WitherPlayerDataSets.WitherMinionPlayerData wmPlayerData = getInstance().getOrCreateMinionPlayerData(clientPlayer);
-                    if (ModKeybinds.ABILITY1_KEY.consumeClick()) {
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
-                            if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1 == AbilityManager.AbilityOption1.VOID_ABILITY1 ||
-                                    ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.VOID_ABILITY1 || AbilityChangeHandler.getInstance().getVoid1Selected(clientPlayer)) {
-                                if (!ClientVoidData.getIsEnderActive() && ClientVoidData.getCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(clientPlayer).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
-                                    data.tpPressCounter--;
-                                        NetworkHandler.INSTANCE.sendToServer(new TeleportPlayerBehindPacket());
+                   ClientEventHandler clientEventHandler = ClientEventHandler.getInstance();
+                   boolean areFinalActive = clientEventHandler.getAreFinalsActive();
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
+                        if (data.currentAbilityIndex == 1) {
+
+                            if (ability1 != null && !areFinalActive){
+                                if(ability4 != null && !ability4.getAbilityActive(clientPlayer)) {
+                                    ability1.sendPacketToServer(clientPlayer);
+
+                                }else if(ability4 == null){
+                                    ability1.sendPacketToServer(clientPlayer);
                                 }
                             }
-                            if (ClientVoidData.getIsEnderActive()) {
-                                NetworkHandler.INSTANCE.sendToServer(new EnderLevitationPacket());
-                            } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1 == AbilityManager.AbilityOption1.WITHER_ABILITY1 ||
-                                    ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.WITHER_ABILITY1) {
-                                if (!net.kenji.kenjiscombatforms.network.witherform.ClientWitherData.getIsWitherActive() && !net.kenji.kenjiscombatforms.network.witherform.ClientWitherData.getMinionsActive()) {
-
-                                  if(ClientWitherData.getCooldown() <= wData.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get())
-                                    if (data.currentDashState == 0) {
-                                        NetworkHandler.INSTANCE.sendToServer(new WitherPausePacket(clientPlayer.getUUID()));
-                                        // Apply temporary client-side effect
-                                        WitherDash.getInstance().activatePause(clientPlayer);
-                                        data.currentDashState = 1;
-                                        data.lastPressTime = currentTime;
-                                    } else if (data.currentDashState >= 1) {
-                                        NetworkHandler.INSTANCE.sendToServer(new WitherDashPacket(clientPlayer.getUUID(), clientPlayer.getLookAngle(), wData.MAX_SPEED));
-                                        // Apply temporary client-side effect
-                                        WitherDash.getInstance().activateDash(clientPlayer, clientPlayer.getLookAngle(), wData.MAX_SPEED);
-                                        data.currentDashState = 0;
-                                        SoundManager.playDashSound(clientPlayer);
-                                        WitherDash.getInstance().setAbilityCooldown(clientPlayer);
-                                        data.lastPressTime = currentTime;
-                                    }
-
+                            if(ability4 != null && ability4.getFinalAbilityActive(clientPlayer) | ability4.getAbilityActive(clientPlayer)){
+                                ability4.sendPacketToServer(clientPlayer);
+                            }
+                        } else if (data.currentAbilityIndex == 2) {
+                            System.out.println("CURRENT ABILITY2: " + ability2);
+                            if (ability2 != null && !areFinalActive) {
+                                if(ability5 != null && !ability5.getAbilityActive(clientPlayer)) {
+                                    ability2.sendPacketToServer(clientPlayer);
+                                }else if(ability5 == null){
+                                    ability2.sendPacketToServer(clientPlayer);
                                 }
                             }
-
-                            if (ClientWitherData.getIsWitherActive() || ClientWitherData.getMinionsActive()) {
-                                NetworkHandler.INSTANCE.sendToServer(new SummonWitherMinionsPacket());
-                                WitherMinions.getInstance().clientChangeActive(clientPlayer);
-                            }
-                            if (ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.SWIFT_ABILITY1) {
-                                NetworkHandler.INSTANCE.sendToServer(new SpeedBoostPacket());
-                            }
-                            if (ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.POWER_ABILITY1) {
-                                NetworkHandler.INSTANCE.sendToServer(new StrengthBoostPacket());
+                            if(ability5 != null && ability5.getFinalAbilityActive(clientPlayer) | ability5.getAbilityActive(clientPlayer)){
+                                ability5.sendPacketToServer(clientPlayer);
                             }
                         }
-                    }
-                    if (ModKeybinds.ABILITY2_KEY.consumeClick()) {
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
-                            if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility2 == AbilityManager.AbilityOption2.VOID_ABILITY2 ||
-                                    ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.VOID_ABILITY2) {
-                                if (!ClientVoidData.getIsEnderActive()) {
-                                    NetworkHandler.INSTANCE.sendToServer(new VoidRiftPacket());
-                                    data.lastPressTime = currentTime;
-                                }
-                            }
-                            if (ClientVoidData.getIsEnderActive()) {
-                                NetworkHandler.INSTANCE.sendToServer(new VoidGrabPacket());
-                            } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility2 == AbilityManager.AbilityOption2.WITHER_ABILITY2 ||
-                                    ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.WITHER_ABILITY2) {
-                                if (!net.kenji.kenjiscombatforms.network.witherform.ClientWitherData.getIsWitherActive()) {
-                                    NetworkHandler.INSTANCE.sendToServer(new SoulDriftPacket());
-                                } else NetworkHandler.INSTANCE.sendToServer(new WitherImplodePacket());
-                            }
-                            if (ClientWitherData.getIsWitherActive()) {
-                                NetworkHandler.INSTANCE.sendToServer(new WitherImplodePacket());
-                            }
-                            if (ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.SWIFT_ABILITY2) {
-                                NetworkHandler.INSTANCE.sendToServer(new SwiftEffectInflictPacket());
-                            }
-                            if (ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.POWER_ABILITY2) {
-                                NetworkHandler.INSTANCE.sendToServer(new PowerEffectInflictPacket());
-                            }
-                            data.lastPressTime = currentTime;
-                        }
-                    }
-                    if (ModKeybinds.ABILITY3_KEY.consumeClick()) {
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - data.lastPressTime > PRESS_COOLDOWN) {
-                            if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenFinal == AbilityManager.AbilityOption3.VOID_FINAL ||
-                                    ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.VOID_FINAL) {
-                                NetworkHandler.INSTANCE.sendToServer(new ToggleEnderPacket());
-                                EnderFormAbility.getInstance().spawnParticles(clientPlayer);
-
-                                if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
-                                    EnderFormAbility.getInstance().jumpUp(clientPlayer);
-                                    WitherFormAbility.getInstance().jumpUp(clientPlayer);
-                                }
-                                data.lastPressTime = currentTime;
-                            } else if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||
-                                    ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.WITHER_FINAL) {
-                                NetworkHandler.INSTANCE.sendToServer(new ToggleWitherFormPacket());
-
-                                Vec3 velocity = clientPlayer.getDeltaMovement();
-
-                                clientPlayer.setDeltaMovement(velocity.x, 0.5, velocity.z);
-
-                                WitherFormAbility.getInstance().spawnParticles(clientPlayer);
-                                data.lastPressTime = currentTime;
+                        if (data.currentAbilityIndex == 3) {
+                            System.out.println("CURRENT ABILITY3: " + ability3);
+                            if (ability3 != null) {
+                                ability3.sendPacketToServer(clientPlayer);
                             }
                         }
-                    }
-
-                    if (!ModKeybinds.ABILITY1_KEY.isDown()) {
-                        long currentTime = System.currentTimeMillis();
-
-
-                        if (data.tpPressCounter <= 0) {
-                            if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1 == AbilityManager.AbilityOption1.VOID_ABILITY1 ||
-                                    ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.VOID_ABILITY1) {
-                                // Send packet to server
-                                NetworkHandler.INSTANCE.sendToServer(new TeleportPlayerPacket());
-
-                                data.lastPressTime = currentTime;
-                                TeleportPlayer.getInstance().blink(clientPlayer);
-                            }
-                        }
-                        data.tpPressCounter = INITIAL_PRESS_COUNTER;
-                        data.pressCounter = INITIAL_PRESS_COUNTER;
+                        data.lastPressTime = currentTime;
                     }
                 }
             }

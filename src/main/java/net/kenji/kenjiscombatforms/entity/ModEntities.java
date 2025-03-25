@@ -40,7 +40,7 @@ public class ModEntities {
             .sized(0.6f, 1.95f).build("wither_minion"));
 
 
-    public static final RegistryObject<EntityType<ScrollTraderEntity>> ABILITY_TRADER = ENTITYTYPES.register("ability_trader", () -> EntityType.Builder.of(ScrollTraderEntity::new, MobCategory.AMBIENT)
+    public static final RegistryObject<EntityType<ScrollTraderEntity>> ABILITY_TRADER = ENTITYTYPES.register("scroll_trader", () -> EntityType.Builder.of(ScrollTraderEntity::new, MobCategory.AMBIENT)
             .sized(0.6f, 1.95f).build("scroll_trader"));
 
 

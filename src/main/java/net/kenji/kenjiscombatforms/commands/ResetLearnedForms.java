@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ public class ResetLearnedForms {
     private static int resetAbilitiesUnlocked(CommandSourceStack source) throws CommandSyntaxException {
 
         FormChangeHandler.getInstance().resetAllFormValues(source.getPlayer());
-        FormChangeHandler.getInstance().chooseBasicForm(source.getPlayer());
+        FormChangeHandler.getInstance().setFormOption(source.getPlayer(), FormManager.FormSelectionOption.BASIC);
 
         if (FormChangeHandler.getInstance().getFormValuesReset(source.getPlayer())) {
                 source.sendSuccess(() -> Component.literal("Have reset learned forms"), true);

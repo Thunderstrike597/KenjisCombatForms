@@ -1,8 +1,8 @@
 package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
@@ -20,7 +20,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import java.util.Map;
 import java.util.UUID;
 
-public class EnderWarpAbility implements Ability {
+public class EnderWarpAbility implements FinalAbility {
 
     private final EnderPlayerDataSets dataSets = EnderPlayerDataSets.getInstance();
     private final Map<UUID, EnderPlayerDataSets.TeleportPlayerData> playerDataMap = dataSets.A1playerDataMap;
@@ -31,6 +31,11 @@ public class EnderWarpAbility implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AltAbilityOption.ENDER_WARP.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.VOID_FINAL.name();
     }
 
@@ -114,6 +119,16 @@ public class EnderWarpAbility implements Ability {
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return false;
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         EnderPlayerDataSets.EnderWarpPlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -125,6 +140,11 @@ public class EnderWarpAbility implements Ability {
 
     @Override
     public void drainPerSecondCooldown(Player player) {
+
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
 
     }
 

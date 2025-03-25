@@ -100,6 +100,8 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
+    implementation fg.deobf("curse.maven:balm-531761:6338295")
+    implementation fg.deobf("curse.maven:waystones-245755:6270584")
 
     implementation fg.deobf("curse.maven:epic-fight-mod-405076:6145747")
     implementation fg.deobf("curse.maven:weapons-of-miracles-epicfight-918614:5889471")

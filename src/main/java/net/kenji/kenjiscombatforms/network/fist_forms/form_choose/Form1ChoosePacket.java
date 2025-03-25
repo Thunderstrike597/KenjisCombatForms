@@ -30,7 +30,7 @@ public class Form1ChoosePacket {
             ServerPlayer player = ctx.getSender();
             FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
             if (player != null) {
-                FormChangeHandler.getInstance().chooseForm1(player, FormManager.FormSelectionOption.valueOf(msg.form1));
+                FormChangeHandler.getInstance().setSelectedForm(player, FormManager.FormSelectionOption.valueOf(msg.form1));
                 if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
                     formChangeHandler.setSelectedFormChanged(player, player.getInventory().selected);
 

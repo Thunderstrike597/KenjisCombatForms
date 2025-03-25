@@ -1,10 +1,12 @@
 package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.client.Minecraft;
@@ -29,6 +31,17 @@ public class NewWitherAbility1CooldownGui {
         currentCooldown = (float) ClientVoidData.getCooldown();
     }
 
+    static int getX(){
+        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+            return simpleAbilityHandler.getSelectionModeX();
+        }else return 30;
+    }
+
+    static int getY(){
+        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+            return simpleAbilityHandler.getSelectionModeY();
+        }else return 50;
+    }
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent event) {
@@ -63,7 +76,7 @@ public class NewWitherAbility1CooldownGui {
             int abilityX = screenWidth - imageWidth;
             int abilityY = screenHeight - imageHeight;
 
-
+            int v = 32;
 
             int abilityCooldown = ClientWitherData.getCooldown();
             int ability4Cooldown = ClientWitherData.getMinionCooldown();
@@ -71,14 +84,15 @@ public class NewWitherAbility1CooldownGui {
             boolean areMinionsActive = ClientWitherData.getMinionsActive();
             boolean isWitherActive = ClientWitherData.getIsWitherActive();
 
-            int abilityFullHeight = 32;  // Maximum cooldown bar height
+
+            int abilityFullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
             int abilityMaxCooldown = abilityData.getMAX_COOLDOWN();  // Total cooldown time
             float abilityElapsedCooldown = abilityMaxCooldown - abilityCooldown;  // Remaining cooldown
             float abilityCooldownProgress = abilityElapsedCooldown / (float) abilityMaxCooldown;  // Normalize to 0-1
             int abilityBarHeight = (int) (abilityFullHeight * abilityCooldownProgress);
 
 
-            int ability4FullHeight = 32;  // Maximum cooldown bar height
+            int ability4FullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
             int ability4MaxCooldown = mData.getMAX_COOLDOWN();  // Total cooldown time
             float ability4ElapsedCooldown = ability4MaxCooldown - ability4Cooldown;  // Remaining cooldown
             float ability4CooldownProgress = ability4ElapsedCooldown / (float) ability4MaxCooldown;  // Normalize to 0-1
@@ -87,12 +101,12 @@ public class NewWitherAbility1CooldownGui {
             int maxCooldown = abilityData.getMAX_COOLDOWN();
 
 
+
             int simpleAbilityU = 0;
             int simpleAbilityV = 0;
-            int simpleAbilityWidth = 32;
-            int simpleAbilityHeight = 32;
-            int iconX = abilityX + 30;
-            int iconY = abilityY + 50;
+            int simpleAbilitySize = simpleAbilityHandler.getIconSize(v);
+            int iconX = abilityX + getX();
+            int iconY = abilityY + getY();
 
             boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
 
@@ -103,11 +117,11 @@ public class NewWitherAbility1CooldownGui {
                     ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.WITHER_ABILITY1) {
 
                 if (!areFinalsActive) {
-                    simpleAbilityHandler.drawAbility1Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilityBarHeight, maxCooldown, abilityCooldown);
+                    simpleAbilityHandler.drawAbility1Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
                 }
             }
             if (isWitherActive || areMinionsActive) {
-                simpleAbilityHandler.drawAbility4Icon(event,  ability4Resource, ability4BackgroundResource, ability4OverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, ability4BarHeight, ability4MaxCooldown, ability4Cooldown);
+                simpleAbilityHandler.drawAbility4Icon(event,  ability4Resource, ability4BackgroundResource, ability4OverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, ability4BarHeight, ability4MaxCooldown, ability4Cooldown);
             }
         }
     }

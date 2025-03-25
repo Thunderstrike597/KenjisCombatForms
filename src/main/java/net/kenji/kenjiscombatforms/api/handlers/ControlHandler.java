@@ -153,7 +153,7 @@ public class ControlHandler {
                                         break;
                                     case 2:
                                         if (ClientFistData.getForm2Option() != FormManager.FormSelectionOption.NONE) {
-                                            FormChangeHandler.getInstance().chooseForm2(clientPlayer, currentForm2);
+                                            FormChangeHandler.getInstance().setSelectedForm(clientPlayer, currentForm2);
                                             NetworkHandler.INSTANCE.sendToServer(new Form2ChoosePacket(currentForm2.name()));
                                         } else {
                                             data.currentState = 0;

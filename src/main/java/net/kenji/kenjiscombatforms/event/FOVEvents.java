@@ -7,6 +7,7 @@ import net.kenji.kenjiscombatforms.api.powers.VoidPowers.TeleportPlayer;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
@@ -69,16 +70,18 @@ public class FOVEvents {
             WitherPlayerDataSets.WitherDashPlayerData wData = getInstance().witherDataSets.getOrCreateDashPlayerData(clientPlayer);
             WitherPlayerDataSets.WitherMinionPlayerData wmPlayerData = getInstance().getOrCreateMinionPlayerData(clientPlayer);
             EnderPlayerDataSets.EnderFormPlayerData ePlayerData = getInstance().getOrCreateEnderFormPlayerData(clientPlayer);
+            EnderPlayerDataSets.TeleportPlayerData tpData = getInstance().enderDataSets.getOrCreateTeleportPlayerData(clientPlayer);
+
             int currentWitherCooldown = ClientWitherData.getCooldown();
             ItemStack itemInUse = clientPlayer.getUseItem();
 
 
-            if (ModKeybinds.ABILITY1_KEY.isDown()) {
+            if (ModKeybinds.ABILITY1_KEY.isDown() || ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY.isDown() && KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
                 if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1 == AbilityManager.AbilityOption1.VOID_ABILITY1 ||
                         ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.VOID_ABILITY1) {
 
                     if (ClientVoidData.getCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(clientPlayer).getMAX_COOLDOWN() / 2) {
-                        float zoomProgress = 1.0F - ((float) data.tpPressCounter / INITIAL_PRESS_COUNTER);
+                        float zoomProgress = 1.0F - ((float) tpData.tpPressCounter / INITIAL_PRESS_COUNTER);
 
                         // Calculate target FOV, but only zoom out to halfway point
                         double halfZoomOut = DEFAULT_FOV + (MAX_ZOOM_IN - DEFAULT_FOV);

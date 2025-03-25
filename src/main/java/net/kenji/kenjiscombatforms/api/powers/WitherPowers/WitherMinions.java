@@ -1,17 +1,17 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherMinionEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.particle_packets.MinionSummonParticlesPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
+import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SummonWitherMinionsPacket;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SyncWitherData4Packet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +35,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.Map;
 import java.util.UUID;
 
-public class WitherMinions implements Ability {
+public class WitherMinions implements FinalAbility {
     WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
 
 
@@ -49,6 +49,11 @@ public class WitherMinions implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AbilityOption4.WITHER_MINIONS.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.WITHER_FINAL.name();
     }
 
@@ -85,33 +90,6 @@ public class WitherMinions implements Ability {
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 getInstance().setAbilityCooldown(serverPlayer, getInstance().getPlayerData(serverPlayer).getMAX_COOLDOWN());
                 getInstance().syncDataToClient(serverPlayer);
-            }
-        }
-        @SubscribeEvent
-        public static void onPlayerDeath(LivingDeathEvent event) {
-            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                getInstance().witherMinionRemove(serverPlayer);
-            }
-        }
-
-
-        @SubscribeEvent
-        public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-            if (event.getEntity() instanceof ServerPlayer serverPlayer){
-                getInstance().witherMinionRemove(serverPlayer);
-            }
-            getInstance().playerDataMap.remove(event.getEntity().getUUID());
-        }
-
-        @SubscribeEvent
-        public static void onPlayerClone(PlayerEvent.Clone event) {
-            if (event.getOriginal() instanceof ServerPlayer originalPlayer &&
-                    event.getEntity() instanceof ServerPlayer newPlayer) {
-
-                WitherPlayerDataSets.WitherMinionPlayerData originalData = getInstance().getPlayerData(originalPlayer);
-                WitherPlayerDataSets.WitherMinionPlayerData newData = getInstance().getPlayerData(newPlayer);
-
-                getInstance().syncDataToClient(newPlayer);
             }
         }
     }
@@ -260,6 +238,16 @@ public void witherMinionRemove(ServerPlayer player){
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return AbilityManager.getInstance().getAbility(getFinalAbilityName()).getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         WitherPlayerDataSets.WitherMinionPlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -276,6 +264,13 @@ public void witherMinionRemove(ServerPlayer player){
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
+    @Override
+    public void sendPacketToServer(Player player) {
+        if (ClientWitherData.getIsWitherActive() || ClientWitherData.getMinionsActive()) {
+            NetworkHandler.INSTANCE.sendToServer(new SummonWitherMinionsPacket());
+            WitherMinions.getInstance().clientChangeActive(player);
+        }
+    }
 
 
     @Override
@@ -327,6 +322,9 @@ public void witherMinionRemove(ServerPlayer player){
             existingMinion4.remove(Entity.RemovalReason.DISCARDED);
         }
         data.areMinionsActive = false;
+
+        getInstance().witherMinionRemove(serverPlayer);
+        getInstance().playerDataMap.remove(serverPlayer.getUUID());
         ClientWitherData.setAreMinionsActive(false);
     }
 
@@ -334,7 +332,7 @@ public void witherMinionRemove(ServerPlayer player){
     public void decrementCooldown(Player player) {
         WitherPlayerDataSets.WitherMinionPlayerData data = getPlayerData(player);
         WitherPlayerDataSets.WitherFormPlayerData bData = getInstance().getOrCreateWitherFormPlayerData(player);
-        if(isAbilityChosenOrEquipped(player)) {
+        if(getFinalAbilityActive(player)) {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (EffectiveSide.get() == LogicalSide.SERVER) {
                     if (!data.areMinionsActive && !ClientWitherData.getMinionsActive() && bData.isWitherActive) {
@@ -374,7 +372,7 @@ public void witherMinionRemove(ServerPlayer player){
     @Override
     public void syncDataToClient(ServerPlayer player) {
         WitherPlayerDataSets.WitherMinionPlayerData data = getPlayerData(player);
-        if(isAbilityChosenOrEquipped(player)) {
+        if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new SyncWitherData4Packet(data.abilityCooldown, data.areMinionsActive)

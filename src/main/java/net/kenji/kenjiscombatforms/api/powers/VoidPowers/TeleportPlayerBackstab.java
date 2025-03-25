@@ -47,7 +47,7 @@ public class TeleportPlayerBackstab implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.VOID_ABILITY1.name();
+        return AbilityManager.AltAbilityOption.VOID_BACKSTAB.name();
     }
 
 
@@ -128,6 +128,16 @@ public class TeleportPlayerBackstab implements Ability {
 
     @Override
     public void drainPerSecondCooldown(Player player) {
+
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
 
     }
 

@@ -27,7 +27,7 @@ public class Form3SwapPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
             if (player != null) {
-                FormChangeHandler.getInstance().setForm3SwapOption(player, FormManager.FormSelectionOption.valueOf(msg.form3));
+                FormChangeHandler.getInstance().setFormSwapOption(player, 3,FormManager.FormSelectionOption.valueOf(msg.form3));
             }
         });
         ctx.setPacketHandled(true);

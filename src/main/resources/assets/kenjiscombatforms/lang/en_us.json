@@ -43,6 +43,9 @@
   "key.kenjiscombatforms.quick_form_change": "Quick Change Form",
   "key.kenjiscombatforms.toggle_hand_combat": "Toggle Hand Combat",
   "key.kenjiscombatforms.set_offhand_combat": "Set Offhand Combat",
+  "key.kenjiscombatforms.switch_current_ability": "Switch Current Ability",
+  "key.kenjiscombatforms.activate_current_ability": "Activate Current Ability",
+
 
   "entity.kenjiscombatforms.exiled_devil": "Exiled Devil",
   "entity.kenjiscombatforms.exiled_sensei": "Exiled Sensei",
@@ -168,6 +171,8 @@
   "item.kenjiscombatforms.power_fist": "§r",
   "item.kenjiscombatforms.power_fist_tier2": "§r",
   "item.kenjiscombatforms.power_fist_tier3": "§r",
+  "item.kenjiscombatforms.ender_form_fist": "§r",
+  "item.kenjiscombatforms.wither_form_fist": "§r",
 
 
 
@@ -215,6 +220,17 @@
   "tooltip.kenjiscombatforms.slot_liner.tooltip":"Used to craft \"Empty Slot\"",
   "tooltip.kenjiscombatforms.empty_slot.tooltip":"Used in the \"Essence Infusion Station\"",
 
+  "tooltip.kenjiscombatforms.basic_fist1.tooltip": "Basic Fist",
+  "tooltip.kenjiscombatforms.basic_fist2.tooltip": "Basic Fist: 2",
+  "tooltip.kenjiscombatforms.basic_fist3.tooltip": "Basic Fist: 3",
+
+  "tooltip.kenjiscombatforms.swift_fist1.tooltip": "Swift Fist",
+  "tooltip.kenjiscombatforms.swift_fist2.tooltip": "Swift Fist: 2",
+  "tooltip.kenjiscombatforms.swift_fist3.tooltip": "Swift Fist: 3",
+
+  "tooltip.kenjiscombatforms.power_fist1.tooltip": "Power Fist",
+  "tooltip.kenjiscombatforms.power_fist2.tooltip": "Power Fist: 2",
+  "tooltip.kenjiscombatforms.power_fist3.tooltip": "Power Fist: 3",
 
   "tooltip.kenjiscombatforms.void_fist1.tooltip": "Void Fist",
   "tooltip.kenjiscombatforms.void_fist2.tooltip": "Void Fist: 2",

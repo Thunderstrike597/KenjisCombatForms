@@ -2,12 +2,13 @@ package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.SyncWitherData5Packet;
+import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class WitherImplode implements Ability {
+public class WitherImplode implements FinalAbility {
 
     private final WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
     private final Map<UUID, WitherPlayerDataSets.WitherImplodePlayerData> playerDataMap = WitherPlayerDataSets.getInstance().A5playerDataMap;
@@ -38,6 +39,11 @@ public class WitherImplode implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AbilityOption5.WITHER_IMPLODE.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.WITHER_FINAL.name();
     }
 
@@ -128,6 +134,16 @@ public class WitherImplode implements Ability {
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return AbilityManager.getInstance().getAbility(getFinalAbilityName()).getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         WitherPlayerDataSets.WitherImplodePlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -140,6 +156,11 @@ public class WitherImplode implements Ability {
     @Override
     public void drainPerSecondCooldown(Player player) {
 
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+            NetworkHandler.INSTANCE.sendToServer(new WitherImplodePacket());
     }
 
 
@@ -196,7 +217,7 @@ public class WitherImplode implements Ability {
     @Override
     public void syncDataToClient(ServerPlayer player) {
         WitherPlayerDataSets.WitherImplodePlayerData data = getPlayerData(player);
-        if(isAbilityChosenOrEquipped(player)) {
+        if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new SyncWitherData5Packet(data.abilityCooldown)

@@ -5,6 +5,7 @@ import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.PowerPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,17 @@ public class NewPowerAbility1CooldownGui {
         currentCooldown = (float) ClientVoidData.getCooldown();
     }
 
+    static int getX(){
+        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+            return simpleAbilityHandler.getSelectionModeX();
+        }else return 30;
+    }
+
+    static int getY(){
+        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+            return simpleAbilityHandler.getSelectionModeY();
+        }else return 50;
+    }
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent event) {
@@ -59,10 +71,11 @@ public class NewPowerAbility1CooldownGui {
             int abilityY = screenHeight - imageHeight;
 
 
+            int v = 32;
             int abilityCooldown = ClientPowerData.getCooldown();
 
 
-            int ability1FullHeight = 32;  // Maximum cooldown bar height
+            int ability1FullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
             int ability1MaxCooldown = abilityData.getMAX_COOLDOWN();  // Total cooldown time
             float ability1ElapsedCooldown = ability1MaxCooldown - abilityCooldown;  // Remaining cooldown
             float ability1CooldownProgress = ability1ElapsedCooldown / (float) ability1MaxCooldown;  // Normalize to 0-1
@@ -72,12 +85,12 @@ public class NewPowerAbility1CooldownGui {
             int maxCooldown = abilityData.getMAX_COOLDOWN();
 
 
+
             int simpleAbilityU = 0;
             int simpleAbilityV = 0;
-            int simpleAbilityWidth = 32;
-            int simpleAbilityHeight = 32;
-            int iconX = abilityX + 30;
-            int iconY = abilityY + 50;
+            int simpleAbilitySize = simpleAbilityHandler.getIconSize(v);
+            int iconX = abilityX + getX();
+            int iconY = abilityY + getY();
 
             boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
 
@@ -88,7 +101,7 @@ public class NewPowerAbility1CooldownGui {
                     ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.POWER_ABILITY1) {
 
                 if (!areFinalsActive) {
-                    simpleAbilityHandler.drawAbility1Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilityWidth, simpleAbilityHeight, abilityBarHeight, maxCooldown, abilityCooldown);
+                    simpleAbilityHandler.drawAbility1Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
                 }
             }
         }

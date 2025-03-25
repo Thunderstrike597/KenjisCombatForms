@@ -2,13 +2,13 @@ package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.SyncVoidData5Packet;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
+import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.VoidGrabPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,7 +28,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
 
-public class VoidGrab implements Ability {
+public class VoidGrab implements FinalAbility {
 
     private final EnderPlayerDataSets dataSets = EnderPlayerDataSets.getInstance();
     private final Map<UUID, EnderPlayerDataSets.VoidGrabPlayerData> playerDataMap = EnderPlayerDataSets.getInstance().A5playerDataMap;
@@ -38,6 +38,11 @@ public class VoidGrab implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AbilityOption5.VOID_GRAB.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.VOID_FINAL.name();
     }
 
@@ -131,6 +136,16 @@ public class VoidGrab implements Ability {
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return AbilityManager.getInstance().getAbility(getFinalAbilityName()).getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         EnderPlayerDataSets.VoidGrabPlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -143,6 +158,11 @@ public class VoidGrab implements Ability {
     @Override
     public void drainPerSecondCooldown(Player player) {
 
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        NetworkHandler.INSTANCE.sendToServer(new VoidGrabPacket());
     }
 
 
@@ -196,7 +216,7 @@ public class VoidGrab implements Ability {
     @Override
     public void syncDataToClient(ServerPlayer player) {
         EnderPlayerDataSets.VoidGrabPlayerData data = getPlayerData(player);
-        if(isAbilityChosenOrEquipped(player)) {
+        if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new SyncVoidData5Packet(data.abilityCooldown)

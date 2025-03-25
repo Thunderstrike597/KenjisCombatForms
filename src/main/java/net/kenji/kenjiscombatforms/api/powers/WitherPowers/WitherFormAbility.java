@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
@@ -15,11 +16,14 @@ import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.WitherFormItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
+import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientFinalAbilitesPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.LargeSmokeParticlesTickPacket;
-import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.ability3.SyncWitherData3Packet;
+import net.kenji.kenjiscombatforms.network.witherform.ability3.ToggleWitherFormPacket;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -42,6 +46,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.PacketDistributor;
+import reascer.wom.gameasset.WOMAnimations;
 import reascer.wom.gameasset.WOMSkills;
 import yesman.epicfight.gameasset.EpicFightSkills;
 import yesman.epicfight.skill.Skill;
@@ -150,6 +155,10 @@ public class WitherFormAbility implements Ability {
         return INSTANCE;
     }
 
+    public boolean getDashActive(Player player){
+        WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
+        return data.isDashActive;
+    }
 
     public int getAbilityCooldown(ServerPlayer player) {
         return getPlayerData(player).abilityCooldown;
@@ -182,6 +191,21 @@ public class WitherFormAbility implements Ability {
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        NetworkHandler.INSTANCE.sendToServer(new ToggleWitherFormPacket());
+
+        if (!ClientEventHandler.getInstance().getAreFinalsActive()) {
+            WitherFormAbility.getInstance().jumpUp(player);
+        }
+        WitherFormAbility.getInstance().spawnParticles(player);
+    }
+
     public void jumpUp(Player player){
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         if(ClientVoidData.getCooldown3() == 0) {
@@ -190,21 +214,22 @@ public class WitherFormAbility implements Ability {
         }
     }
 
-
-
-    public void setSavedSkillCap(PlayerPatch<?> playerPatch){
-        skillCache.put(playerPatch.getOriginal().getUUID(), playerPatch.getSkill(SkillSlots.DODGE).getSkill());
-        System.out.println("Stored Skill Set: " + getStoredSkill(playerPatch.getOriginal()));
-
+    public boolean isSkillActive(PlayerPatch<?> playerPatch){
+        return playerPatch.getSkill(SkillSlots.DODGE).isActivated();
     }
+
+
     public static Skill getStoredSkill(Player player) {
         return skillCache.getOrDefault(player.getUUID(), EpicFightSkills.STEP);
     }
 
     Skill currentDodgeSkill;
 
-    private void setCurrentDodgeSkill(Skill skill){
+    private void setCurrentDodgeSkill(PlayerPatch playerPatch, Skill skill,CompoundTag nbt){
         currentDodgeSkill = skill;
+        if(getSkill(playerPatch) != null) {
+            nbt.putString("storedDodgeSkill", Objects.requireNonNull(getSkill(playerPatch)).getRegistryName().toString());
+        }
     }
 
 
@@ -217,20 +242,17 @@ public class WitherFormAbility implements Ability {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
         serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
             if (cap instanceof PlayerPatch<?> playerPatch) {
-                Skill currentSkill = playerPatch.getSkill(SkillSlots.DODGE).getSkill();
                 Skill skillToSet = WOMSkills.SHADOWSTEP;
                 CompoundTag nbt = serverPlayer.getPersistentData();
-
                 if (!data.isWitherActive && data.abilityCooldown == 0) {
-                    nbt.putString("storedDodgeSkill", currentSkill.getRegistryName().toString());
 
 
-                    setCurrentDodgeSkill(currentSkill);
+                    setCurrentDodgeSkill(playerPatch, getSkill(playerPatch), nbt);
                     activateAbility(serverPlayer);
                     jumpUp(serverPlayer);
                     setSkill(playerPatch, skillToSet);
                     data.hasPlayedSound = false;
-                } else {
+                } else if(data.isWitherActive){
                     deactivateAbilityOptional(serverPlayer);
                     restoreItem(serverPlayer);
                     setSkill(playerPatch, getCurrentDodgeSkill());
@@ -240,66 +262,82 @@ public class WitherFormAbility implements Ability {
         });
     }
 
-    private void setSkill(PlayerPatch playerPatch, Skill skillToSet){
+    private void setSkill(PlayerPatch<?> playerPatch, Skill skillToSet){
         playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
     }
+    private Skill getSkill(PlayerPatch<?> playerPatch){
+      if(playerPatch.getSkill(SkillSlots.DODGE) != null) {
+          return playerPatch.getSkill(SkillSlots.DODGE).getSkill();
+      }
+      return null;
+    }
+
 
     @Override
     public void activateAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
+        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(serverPlayer);
+
         data.isWitherActive = true;
+
+        abilityData.ability4 = AbilityManager.AbilityOption4.WITHER_MINIONS;
+        abilityData.ability5 = AbilityManager.AbilityOption5.WITHER_IMPLODE;
+
         playSound(serverPlayer);
-        setWitherFormItem(serverPlayer);
+        setFormItem(serverPlayer);
         syncDataToClient(serverPlayer);
     }
 
-    private static int originalSlot = CommonEventHandler.getInstance().getOriginalSlot();
 
 
-    private void setWitherFormItem(Player player){
-            int selectedSlot = player.getInventory().selected;
-            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-                if (storedItem.isEmpty()) {
-                    if (!(currentItem.getItem() instanceof BaseFistClass)) {
-                        container.setStoredItem(currentItem.copy());
-                    }
-                    player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
-                    player.getInventory().setItem(selectedSlot, WitherFormItem.getInstance().getDefaultInstance());
-                    originalSlot = selectedSlot; // Save the original slot
-                    NetworkHandler.INSTANCE.send(
-                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                            new SwitchItemPacket(originalSlot, storedItem)
-                    );                player.getInventory().setChanged();
 
-                    player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+
+    private void setFormItem(Player player){
+        int originalSlot = CommonEventHandler.getInstance().getOriginalSlot(player);
+        int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            if (storedItem.isEmpty()) {
+                if (!(currentItem.getItem() instanceof BaseFistClass)) {
+                    CommonEventHandler.getInstance().setStoredItemNBT(player, currentItem);
+                    container.setStoredItem(currentItem);
                 }
-            });
-        }
-        private void restoreItem(Player player){
-            int selectedSlot = player.getInventory().selected;
-            ItemStack currentItem = player.getInventory().getItem(selectedSlot);
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-                if (!storedItem.isEmpty()) {
-                    player.getInventory().setItem(originalSlot, container.getStoredItem());
-                    container.setStoredItem(ItemStack.EMPTY);
-
-                }else {
-                    player.getInventory().setItem(originalSlot, ItemStack.EMPTY);
-                }
-                originalSlot = -1;
+                player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
+                player.getInventory().setItem(selectedSlot, WitherFormItem.getInstance().getDefaultInstance());
+                CommonEventHandler.getInstance().setOriginalSlot(player,selectedSlot);
+                container.setOriginalSlot(selectedSlot);
 
                 NetworkHandler.INSTANCE.send(
                         PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                        new SwitchItemPacket(originalSlot, storedItem)
-                );
+                        new SyncNBTPacket(storedItem, originalSlot)
+                );                player.getInventory().setChanged();
+
                 player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+            }
+        });
+    }
+    private void restoreItem(Player player){
+        int selectedSlot = player.getInventory().selected;
+        ItemStack currentItem = player.getInventory().getItem(selectedSlot);
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            if (!storedItem.isEmpty()) {
+                player.getInventory().setItem(CommonEventHandler.getInstance().getOriginalSlot(player), container.getStoredItem());
+                container.setStoredItem(ItemStack.EMPTY);
+            }else {
+                player.getInventory().setItem(CommonEventHandler.getInstance().getOriginalSlot(player), ItemStack.EMPTY);
+            }
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                    new SyncRemovedNBTPacket(storedItem, CommonEventHandler.getInstance().getOriginalSlot(player))
+            );
 
-            });
-        }
+            container.setOriginalSlot(-1);
+            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 
+        });
+    }
     public boolean getWitherFormActive(Player player){
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         return data.isWitherActive;
@@ -388,20 +426,29 @@ public class WitherFormAbility implements Ability {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
         if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+            player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
+                if (cap instanceof PlayerPatch<?> playerPatch) {
+                    if (abilityData.chosenFinal.name().equals(getName())) {
+                        getInstance().decrementCooldown(player);
+                    }
+                    syncDataToClient(player);
+                    if (data.isWitherActive) {
+                        if (playerPatch.getServerAnimator().animationPlayer.getAnimation().getRealAnimation() == WOMAnimations.SHADOWSTEP_FORWARD){
+                            data.isDashActive = true;
+                        }else{
+                            data.isDashActive = false;
+                        }
 
-            if (abilityData.chosenFinal.name().equals(getName())) {
-                getInstance().decrementCooldown(player);
-            }
-            syncDataToClient(player);
-            if (data.isWitherActive) {
+                            player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
+                        NetworkHandler.INSTANCE.send(
+                                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                                new LargeSmokeParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
+                        );
 
-                    player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, -1, false, false));
 
-                    NetworkHandler.INSTANCE.send(
-                            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                            new LargeSmokeParticlesTickPacket(player.getX(), player.getY(), player.getZ(), player.isInvisible())
-                    );
-            }
+                    }
+                }
+            });
         }
     }
 
@@ -434,10 +481,15 @@ public class WitherFormAbility implements Ability {
     @Override
     public void syncDataToClient(ServerPlayer player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
-            NetworkHandler.INSTANCE.send(
+        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
+        NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherData3Packet(data.abilityCooldown, data.isWitherActive, player.getUUID())
+                    new SyncWitherData3Packet(data.abilityCooldown, data.isWitherActive, data.isDashActive, player.getUUID())
             );
+        NetworkHandler.INSTANCE.send(
+                PacketDistributor.PLAYER.with(() -> player),
+                new SyncClientFinalAbilitesPacket(abilityData.ability4, abilityData.ability5)
+        );
     }
 
 

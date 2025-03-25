@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.network.slots;
 
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
+import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.minecraft.nbt.CompoundTag;
@@ -41,10 +42,15 @@ public class RemoveItemPacket {
             ServerPlayer player = ctx.getSender();
 
             if (player != null) {
+                CompoundTag nbt = player.getPersistentData();
+                CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
+                ItemStack getStoredItem = commonEventHandler.getStoredItem(player);
+
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
                     if (ctx.getDirection().getReceptionSide().isClient()) {
+
                         if (!msg.storedItem.isEmpty()) {
-                            player.getInventory().setItem(msg.originalSlot, container.getStoredItem());
+                            player.getInventory().setItem(msg.originalSlot, getStoredItem);
                             container.setStoredItem(ItemStack.EMPTY);
                         }else {
                             player.getInventory().setItem(msg.originalSlot, ItemStack.EMPTY);
@@ -58,13 +64,14 @@ public class RemoveItemPacket {
                         ItemStack currentItem = player.getInventory().getItem(selectedSlot);
 
                         formChangeHandler.removeCurrentFormItem(player, selectedSlot);
-                        player.getInventory().setItem(msg.originalSlot, msg.storedItem);
+                        player.getInventory().setItem(msg.originalSlot, getStoredItem);
                         container.setStoredItem(ItemStack.EMPTY);
                         player.getInventory().setChanged();
 
-                        CompoundTag nbt = player.getPersistentData();
+                        msg.originalSlot = -1;
+
                         nbt.remove("storedItem");
-                        // Always place a weapon, regardless of capability state
+                        nbt.remove("originalSlot");
 
                     }
                 });

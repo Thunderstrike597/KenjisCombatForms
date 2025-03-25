@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.api.powers.swift_powers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
@@ -8,6 +9,7 @@ import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
+import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -116,6 +118,18 @@ public class SpeedBoost implements Ability {
     @Override
     public void drainPerSecondCooldown(Player player) {
 
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()){
+            NetworkHandler.INSTANCE.sendToServer(new SpeedBoostPacket());
+        }
     }
 
     @Override

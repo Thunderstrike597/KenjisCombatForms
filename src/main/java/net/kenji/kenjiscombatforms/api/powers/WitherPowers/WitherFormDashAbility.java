@@ -2,10 +2,9 @@ package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class WitherFormDashAbility implements Ability {
+public class WitherFormDashAbility implements FinalAbility {
 
     private final WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
     private final Map<UUID, WitherPlayerDataSets.WitherFormDashPlayerData> playerDataMap = dataSets.A6playerDataMap;
@@ -38,6 +37,11 @@ public class WitherFormDashAbility implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AltAbilityOption.WITHER_DASH.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.WITHER_FINAL.name();
     }
 
@@ -121,6 +125,16 @@ public class WitherFormDashAbility implements Ability {
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return false;
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         WitherPlayerDataSets.WitherFormDashPlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -135,6 +149,10 @@ public class WitherFormDashAbility implements Ability {
 
     }
 
+    @Override
+    public void sendPacketToServer(Player player) {
+
+    }
 
 
     @Override

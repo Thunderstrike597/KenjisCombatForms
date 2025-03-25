@@ -2,16 +2,13 @@ package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.particle_packets.MinionSummonParticlesPacket;
+import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.EnderLevitationPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.SyncVoidData4Packet;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
-import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SyncWitherData4Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,9 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Iterator;
@@ -34,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class EnderLevitation implements Ability {
+public class EnderLevitation implements FinalAbility {
     EnderPlayerDataSets dataSets = EnderPlayerDataSets.getInstance();
     private final Map<UUID, EnderPlayerDataSets.EnderLevitationPlayerData> playerDataMap = dataSets.A4playerDataMap;
 
@@ -46,6 +41,11 @@ public class EnderLevitation implements Ability {
 
     @Override
     public String getName() {
+        return AbilityManager.AbilityOption4.ENDER_LEVITATION.name();
+    }
+
+    @Override
+    public String getFinalAbilityName() {
         return AbilityManager.AbilityOption3.VOID_FINAL.name();
     }
 
@@ -148,6 +148,16 @@ public class EnderLevitation implements Ability {
     }
 
     @Override
+    public boolean getFinalAbilityActive(Player player) {
+        return AbilityManager.getInstance().getAbility(getFinalAbilityName()).getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
     public void fillPerSecondCooldown(Player player) {
         EnderPlayerDataSets.EnderLevitationPlayerData data = getPlayerData(player);
         int cooldown = data.abilityCooldown;
@@ -165,6 +175,10 @@ public class EnderLevitation implements Ability {
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
+    @Override
+    public void sendPacketToServer(Player player) {
+        NetworkHandler.INSTANCE.sendToServer(new EnderLevitationPacket());
+    }
 
 
     @Override
@@ -225,10 +239,12 @@ public class EnderLevitation implements Ability {
     @Override
     public void syncDataToClient(ServerPlayer player) {
         EnderPlayerDataSets.EnderLevitationPlayerData data = getPlayerData(player);
+        if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new SyncVoidData4Packet(data.abilityCooldown)
             );
+        }
     }
 
 

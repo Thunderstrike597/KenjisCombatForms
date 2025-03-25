@@ -1,16 +1,22 @@
 package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
+import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.*;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.voidform.ability1.SyncVoidDataPacket;
+import net.kenji.kenjiscombatforms.network.voidform.ability1.TeleportPlayerPacket;
+import net.kenji.kenjiscombatforms.network.voidform.ability2.TeleportPlayerBehindPacket;
 import net.kenji.kenjiscombatforms.screen.guiEffects.BlinkEffect;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -123,6 +129,23 @@ public class TeleportPlayer implements Ability {
 
     }
 
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+            if (ClientVoidData.getCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(player).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+               if(data.tpPressCounter >= 0) {
+                   data.tpPressCounter--;
+               }
+                NetworkHandler.INSTANCE.sendToServer(new TeleportPlayerBehindPacket());
+            }
+        }
+    }
 
 
     @Override
@@ -166,7 +189,20 @@ public class TeleportPlayer implements Ability {
 
     @Override
     public void tickClientAbilityData(Player player) {
+        EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
 
+        boolean isAbilitySelectionMode = KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get();
+        KeyMapping isAbilityKeyDown = isAbilitySelectionMode ? ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY : ModKeybinds.ABILITY1_KEY;
+
+        if (data.tpPressCounter <= 0 && !isAbilityKeyDown.isDown()) {
+            // Send packet to server for teleportation
+            NetworkHandler.INSTANCE.sendToServer(new TeleportPlayerPacket());
+
+            // Handle blink effect and reset counters
+            TeleportPlayer.getInstance().blink(player);
+            data.tpPressCounter = data.INITIAL_PRESS_COUNTER;
+            data.pressCounter = data.INITIAL_PRESS_COUNTER;
+        }
     }
 
     @Override

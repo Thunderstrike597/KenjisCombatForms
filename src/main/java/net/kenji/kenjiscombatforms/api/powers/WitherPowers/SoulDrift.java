@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
@@ -16,6 +17,7 @@ import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.particle_packets.SmokeParticlesPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.SoulParticlesTickPacket;
+import net.kenji.kenjiscombatforms.network.witherform.ability2.SoulDriftPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability2.SyncWitherData2Packet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
@@ -169,6 +171,17 @@ public class SoulDrift implements Ability {
         data.abilityCooldown = dataHandlers.increaseCooldown(data.abilityCooldown, data.tickCount);
     }
 
+    @Override
+    public boolean getAbilityActive(Player player) {
+        return getAbilityData(player).isAbilityActive();
+    }
+
+    @Override
+    public void sendPacketToServer(Player player) {
+        if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
+            NetworkHandler.INSTANCE.sendToServer(new SoulDriftPacket());
+        }
+    }
 
 
     public static class CurrentDamageGainStrategy implements AbilityDamageGainStrategy {
@@ -195,12 +208,12 @@ public class SoulDrift implements Ability {
     public void triggerAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.SoulDriftPlayerData data = getPlayerData(serverPlayer);
         if (!data.isSoulDriftActive && data.abilityCooldown <= 0) {
-            //activateAbility(serverPlayer);
+            activateAbility(serverPlayer);
             data.hasPlayedSound = false;
 
         }
         else if (data.isSoulDriftActive) {
-           // deactivateAbilityOptional(serverPlayer);
+            deactivateAbilityOptional(serverPlayer);
         }
     }
 

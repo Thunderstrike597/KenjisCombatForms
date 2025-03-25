@@ -18,18 +18,6 @@ public class ModTab {
             .title(Component.translatable("creativetab.kenjiscombattab"))
             .icon(() -> new ItemStack(ModItems.SWIFTFORM1.get()))
             .displayItems((itemDisplayParameters, output) -> {
-                output.accept(ModItems.BASICFORM1.get());
-                output.accept(ModItems.BASICFORM2.get());
-                output.accept(ModItems.BASICFORM3.get());
-
-                output.accept(ModItems.SWIFTFORM1.get());
-                output.accept(ModItems.SWIFTFORM2.get());
-                output.accept(ModItems.SWIFTFORM3.get());
-
-                output.accept(ModItems.POWERFORM1.get());
-                output.accept(ModItems.POWERFORM2.get());
-                output.accept(ModItems.POWERFORM3.get());
-
 
                 output.accept(ModItems.TYPE1_COMPONENT.get());
                 output.accept(ModItems.TYPE2_COMPONENT.get());

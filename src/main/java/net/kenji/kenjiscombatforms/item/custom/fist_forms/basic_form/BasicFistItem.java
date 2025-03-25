@@ -5,6 +5,9 @@ import com.google.common.collect.Multimap;
 import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
+import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +67,9 @@ public class BasicFistItem extends BaseBasicClass {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("tooltip.kenjiscombatforms.basic_fist.tooltip"));
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
     @Override
@@ -74,6 +80,11 @@ public class BasicFistItem extends BaseBasicClass {
 
     public void setFormMainHand(Player player, int slot){
              player.getInventory().setItem(slot, this.getDefaultInstance());
+        if(player instanceof ServerPlayer serverPlayer){
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> serverPlayer),
+                    new SyncNBTPacket(this.getDefaultInstance(), slot));
+        }
     }
 }
 
