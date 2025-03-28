@@ -12,7 +12,7 @@ import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
 import net.kenji.kenjiscombatforms.api.managers.forms.WitherForm;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientFormsPacket;
-import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientAbilityPacket;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,6 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -35,8 +37,10 @@ public class DataLoadHandler {
     @SubscribeEvent
     public static void onWorldLoad(LevelEvent.Load event) {
         if (!event.getLevel().isClientSide()) {
+
             ServerLevel level = (ServerLevel) event.getLevel();
             SavedDataHandler.get(level); // This ensures the data is loaded
+
         }
     }
 
@@ -72,12 +76,13 @@ public class DataLoadHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+
             SavedDataHandler savedData = SavedDataHandler.get(serverPlayer.serverLevel());
             CompoundTag playerData = savedData.getPlayerData(serverPlayer.getUUID());
 
-            // Load player data
+
             loadPlayerData(serverPlayer, playerData);
-            // Sync data to client
+
             syncDataToClient(serverPlayer);
         }
     }
@@ -90,53 +95,70 @@ public class DataLoadHandler {
         loadPlayerData(player, playerData);
     }
 
+    static Form getCurrentForm(FormManager.PlayerFormData playerFormData){
+       if(playerFormData.selectedForm != null) {
+           return FormManager.getInstance().getForm(playerFormData.selectedForm);
+       }
+       playerFormData.selectedForm = BasicForm.getInstance().getName();
+       return FormManager.getInstance().getForm(playerFormData.selectedForm);
+    }
 
     private static void loadPlayerData(ServerPlayer player, CompoundTag savedData) {
         UUID playerUUID = player.getUUID();
         AbilityManager.PlayerAbilityData playerAbilityData = AbilityManager.getInstance().getOrCreatePlayerAbilityData(player);
         FormManager.PlayerFormData playerFormData = FormManager.getInstance().getOrCreatePlayerFormData(player);
-        VoidForm.FormData voidFormData = VoidForm.getInstance().getOrCreateFormData(player);
-        WitherForm.FormData witherFormData = WitherForm.getInstance().getOrCreateFormData(player);
-        BasicForm.BasicFormData basicFormData = BasicForm.getInstance().getOrCreateFormData(player);
         FormLevelManager.PlayerFormLevelData formLevelData = FormLevelManager.getInstance().getOrCreatePlayerLevelData(player);
 
-        try {
             SavedDataHandler.triggerPlayerDataLoad(playerUUID, playerAbilityData, playerFormData, savedData);
-
             // These puts might not be necessary if the getOrCreate methods above already store the instances
             AbilityManager.getInstance().playerDataMap.put(playerUUID, playerAbilityData);
             FormManager.getInstance().playerDataMap.put(playerUUID, playerFormData);
-            VoidForm.getInstance().playerDataMap.put(playerUUID, voidFormData);
-            WitherForm.getInstance().playerDataMap.put(playerUUID, witherFormData);
-            BasicForm.getInstance().playerDataMap.put(playerUUID, basicFormData);
-            FormLevelManager.getInstance().playerDataMap.put(playerUUID, formLevelData);
-        } catch (Exception e) {
-            System.out.println("Error loading data for player: " + playerUUID);
-        }
-        Form currentForm = FormManager.getInstance().getForm(playerFormData.selectedForm.name());
-        AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
 
-        AbilityChangeHandler.getInstance().setFormsAndAbilities(player, currentFormData);
+
+            if(getCurrentForm(playerFormData) != null) {
+                AbstractFormData currentFormData = getCurrentForm(playerFormData).getFormData(player.getUUID());
+                AbilityChangeHandler.getInstance().setFormsAndAbilities(player, currentFormData);
+            }
     }
 
 
     private static void syncDataToClient(Player player) {
-        AbstractFormData voidFormData = VoidForm.getInstance().getFormData(player.getUUID());
-        AbstractFormData witherFormData = WitherForm.getInstance().getFormData(player.getUUID());
-        FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
-        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        Form currentForm = FormManager.getInstance().getForm(formData.selectedForm.name());
-        AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
+        List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
+        List<AbstractFormData> formData = FormManager.getInstance().getCurrentFormData(player);
 
-        if(player instanceof ServerPlayer serverPlayer) {
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new SyncClientFormsPacket(formData.form1, formData.form2, formData.form3, currentFormData.getCurrentFormLevel(), currentFormData.getCurrentFormXp(),currentFormData.getCurrentFormXpMAX())
-            );
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new SyncClientAbilityPacket(abilityData.ability1, abilityData.ability2, abilityData.ability3, abilityData.chosenAbility1, abilityData.chosenAbility2, abilityData.chosenFinal, formData.selectedForm)
-            );
+
+        Form currentForm = FormManager.getInstance().getForm(formValue.get(0).getName());
+        AbstractFormData currentFormData = formData.get(0);
+
+
+
+        Form basicForm = FormManager.getInstance().getForm(BasicForm.getInstance().getName());
+        if(!Objects.equals(formValue.get(1).getName(), "NONE") && formValue.get(1) != null) {
+            Form form1 = FormManager.getInstance().getForm(formValue.get(1).getName());
+            if(form1 != null) {
+                form1.syncDataToClient(player);
+            }
+        }if(!Objects.equals(formValue.get(2).getName(), "NONE") && formValue.get(2) != null) {
+            Form form2 = FormManager.getInstance().getForm(formValue.get(2).getName());
+            if(form2 != null) {
+                form2.syncDataToClient(player);
+            }
+        }if(!Objects.equals(formValue.get(3).getName(), "NONE") && formValue.get(3) != null) {
+            Form form3 = FormManager.getInstance().getForm(formValue.get(3).getName());
+            if(form3 != null) {
+                form3.syncDataToClient(player);
+            }
         }
+
+
+
+            if(player instanceof ServerPlayer serverPlayer) {
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new SyncClientFormsPacket(formValue.get(1).getName(), formValue.get(2).getName(), formValue.get(3).getName(), currentFormData.getCurrentFormLevel(), currentFormData.getCurrentFormXp(), currentFormData.getCurrentFormXpMAX())
+                );
+                currentForm.syncDataToClient(player);
+            }
+           basicForm.syncDataToClient(player);
     }
 }

@@ -1,23 +1,30 @@
 package net.kenji.kenjiscombatforms.api.managers.forms;
 
+import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.FormLevelStrategy;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.interfaces.form.FormAbilityStrategy;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
+import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientBasicFistPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,6 +58,30 @@ public class BasicForm implements Form {
     }
 
     @Override
+    public List<ResourceLocation> getLevelResources() {
+        return List.of(
+
+                new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/levels/level_1.png"),
+                new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/levels/level_2.png"),
+                new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/levels/level_3.png"));
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 148;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 90;
+    }
+
+    @Override
+    public int getGUISwapPos() {
+        return 0;
+    }
+
+    @Override
     public void updatePlayerData(UUID playerUUID, AbstractFormData formData) {
         if (formData instanceof BasicFormData) {
             playerDataMap.put(playerUUID, (BasicFormData) formData);
@@ -69,55 +100,76 @@ public class BasicForm implements Form {
             );
         }
     }
+
+    @Override
+    public void setCurrentForm(Player player, int slot) {
+        List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
+        String currentForm = formValue.get(0).getName();
+
+        if(Objects.equals(currentForm, this.getName())){
+            BasicFistItem basicFistItem = BasicFistItem.getInstance();
+            BasicFist2Item basicFist2Item = BasicFist2Item.getInstance();
+            BasicFist3Item basicFist3Item = BasicFist3Item.getInstance();
+
+            AbstractFormData currentFormData = this.getFormData(player.getUUID());
+
+            if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
+                basicFistItem.setFormMainHand(player, slot);
+            }
+            else if (currentFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
+                basicFist2Item.setFormMainHand(player, slot);
+            }
+            else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
+                basicFist3Item.setFormMainHand(player, slot);
+            }
+
+        }
+    }
+
     public static class BasicFormData extends AbstractFormData {
-        private AbilityManager.AbilityOption1 basicStoredAbility1;
-        private AbilityManager.AbilityOption2 basicStoredAbility2;
-        private AbilityManager.AbilityOption1 basicPreviousAbility1;
-        private AbilityManager.AbilityOption2 basicPreviousAbility2;
+        private String basicStoredAbility1;
+        private String basicStoredAbility2;
 
         private FormLevelManager.FormLevel basicFormLevel;
         private int basicFormXp;
         private int basicFormXpMAX;
 
         public BasicFormData() {
-            this.basicStoredAbility1 = AbilityManager.AbilityOption1.NONE;
-            this.basicStoredAbility2 = AbilityManager.AbilityOption2.NONE;
-            this.basicPreviousAbility1 = AbilityManager.AbilityOption1.NONE;
-            this.basicPreviousAbility2 = AbilityManager.AbilityOption2.NONE;
-
+            this.basicStoredAbility1 = "NONE";
+            this.basicStoredAbility2 = "NONE";
 
             this.basicFormLevel = FormLevelManager.FormLevel.LEVEL1;
             this.basicFormXp = 0;
-            this.basicFormXpMAX = KenjisCombatFormsCommon.MAX_FORM_STARTING_XP.get();
+            this.basicFormXpMAX = EpicFightCombatFormsCommon.MAX_FORM_STARTING_XP.get();
         }
 
         @Override
-        public AbilityManager.AbilityOption1 getCurrentStoredAbility1() {
-            return basicStoredAbility1;
+        public String getCurrentStoredAbility1() {
+                return basicStoredAbility1 != null && !basicStoredAbility1.isEmpty() ? basicStoredAbility1 : "NONE";
         }
 
         @Override
-        public void setCurrentStoredAbility1(AbilityManager.AbilityOption1 ability) {
-            this.basicStoredAbility1 = ability;
+        public void setCurrentStoredAbility1(String ability) {
+                this.basicStoredAbility1 = ability;
         }
 
         @Override
-        public AbilityManager.AbilityOption2 getCurrentStoredAbility2() {
-            return basicStoredAbility2;
+        public String getCurrentStoredAbility2() {
+            return basicStoredAbility2 != null && !basicStoredAbility2.isEmpty() ? basicStoredAbility2 : "NONE";
         }
 
         @Override
-        public void setCurrentStoredAbility2(AbilityManager.AbilityOption2 ability) {
+        public void setCurrentStoredAbility2(String ability) {
             this.basicStoredAbility2 = ability;
         }
 
         @Override
-        public AbilityManager.AbilityOption3 getStoredAbility3() {
-            return AbilityManager.AbilityOption3.NONE;
+        public String getStoredAbility3() {
+            return "NONE";
         }
 
         @Override
-        public void setStoredAbility3(AbilityManager.AbilityOption3 ability) {
+        public void setStoredAbility3(String ability) {
 
         }
 
@@ -132,35 +184,6 @@ public class BasicForm implements Form {
             this.basicFormLevel = currentFormLevel;
         }
 
-        @Override
-        public void setPreviousAbility1(AbilityManager.AbilityOption1 ability1) {
-            this.basicPreviousAbility1 = ability1;
-        }
-
-        @Override
-        public void setPreviousAbility2(AbilityManager.AbilityOption2 ability2) {
-            this.basicPreviousAbility2 = ability2;
-        }
-
-        @Override
-        public void setPreviousAbility3(AbilityManager.AbilityOption3 ability3) {
-
-        }
-
-        @Override
-        public AbilityManager.AbilityOption1 getPreviousAbility1() {
-            return this.basicPreviousAbility1;
-        }
-
-        @Override
-        public AbilityManager.AbilityOption2 getPreviousAbility2() {
-            return this.basicPreviousAbility2;
-        }
-
-        @Override
-        public AbilityManager.AbilityOption3 getPreviousAbility3() {
-            return AbilityManager.AbilityOption3.NONE;
-        }
 
         @Override
         public int getCurrentFormXp() {
@@ -170,7 +193,7 @@ public class BasicForm implements Form {
         @Override
         public int getCurrentFormXpMAX() {
             if (this.basicFormXpMAX == 0) {
-                this.basicFormXpMAX = KenjisCombatFormsCommon.MAX_FORM_STARTING_XP.get();
+                this.basicFormXpMAX = EpicFightCombatFormsCommon.MAX_FORM_STARTING_XP.get();
             }
             return this.basicFormXpMAX;
         }
@@ -210,93 +233,32 @@ public class BasicForm implements Form {
 
     public static class BasicFormAbilityStrategy implements FormAbilityStrategy {
         @Override
-        public void setChosenAbility1(Player player, AbilityManager.AbilityOption1 ability, AbilityManager.PlayerAbilityData abilityData) {
+        public void setChosenAbility1(Player player, String ability, AbilityManager.PlayerAbilityData abilityData) {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
 
             abilityData.chosenAbility1 = ability;
 
-                abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
-
 
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
         }
         @Override
-        public void setChosenAbility2(Player player, AbilityManager.AbilityOption2 ability, AbilityManager.PlayerAbilityData abilityData) {
+        public void setChosenAbility2(Player player, String ability, AbilityManager.PlayerAbilityData abilityData) {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
 
             abilityData.chosenAbility2 = ability;
 
-                abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
-                abilityData.chosenFinal = AbilityManager.AbilityOption3.NONE;
-
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
         }
+
         @Override
-        public void storeChosenAbility1(Player player, AbilityManager.AbilityOption1 ability, AbilityManager.PlayerAbilityData abilityData) {
+        public void setChooseFinalAbility(Player player, String ability, AbilityManager.PlayerAbilityData abilityData) {
+            getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
+        }
+
+
+        @Override
+        public void setLearnedFinalAbility(Player player, String ability, boolean hasLearnedAbility) {
             AbstractFormData formData = getInstance().getFormData(player.getUUID());
-
-
-            formData.setPreviousAbility1(ability);
-
-
-            formData.setPreviousAbility2(AbilityManager.AbilityOption2.NONE);
-            formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
-
-            getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
-        }
-        @Override
-        public void storeChosenAbility2(Player player, AbilityManager.AbilityOption2 ability, AbilityManager.PlayerAbilityData abilityData) {
-            AbstractFormData formData = getInstance().getFormData(player.getUUID());
-
-
-            formData.setPreviousAbility2(ability);
-
-            formData.setPreviousAbility1(AbilityManager.AbilityOption1.NONE);
-            formData.setPreviousAbility3(AbilityManager.AbilityOption3.NONE);
-
-
-            getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
-        }
-
-        @Override
-        public void storeChooseFinalAbility(Player player, AbilityManager.AbilityOption3 ability, AbilityManager.PlayerAbilityData abilityData) {
-            getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
-
-        }
-
-        @Override
-        public void setChooseFinalAbility(Player player, AbilityManager.AbilityOption3 ability, AbilityManager.PlayerAbilityData abilityData) {
-            getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
-        }
-
-        @Override
-        public void setStoredChosenAbilities(Player player, AbilityManager.AbilityOption1 ability, AbilityManager.AbilityOption2 ability2, AbilityManager.AbilityOption3 ability3, AbilityManager.PlayerAbilityData abilityData) {
-            AbstractFormData formData = getInstance().getFormData(player.getUUID());
-            if(ability != AbilityManager.AbilityOption1.NONE) {
-                abilityData.chosenAbility1 = ability;
-            }
-            if(ability2 != AbilityManager.AbilityOption2.NONE) {
-                abilityData.chosenAbility2 = ability2;
-            }
-            if(ability3 != AbilityManager.AbilityOption3.NONE) {
-                abilityData.chosenFinal = ability3;
-            }
-            if(ability == AbilityManager.AbilityOption1.NONE){
-                abilityData.chosenAbility1 = AbilityManager.AbilityOption1.NONE;
-            }
-            if(ability2 == AbilityManager.AbilityOption2.NONE){
-                abilityData.chosenAbility2 = AbilityManager.AbilityOption2.NONE;
-            }
-            if(ability3 == AbilityManager.AbilityOption3.NONE){
-                abilityData.chosenFinal= AbilityManager.AbilityOption3.NONE;
-            }
-        }
-
-        @Override
-        public void setLearnedFinalAbility(Player player, AbilityManager.AbilityOption3 ability, boolean hasLearnedAbility) {
-            AbstractFormData formData = getInstance().getFormData(player.getUUID());
-            formData.setStoredAbility3(ability);
             getInstance().syncDataToClient(player);
             getInstance().updatePlayerData(player.getUUID(), getInstance().getOrCreateFormData(player));
         }

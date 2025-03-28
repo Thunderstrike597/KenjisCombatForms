@@ -1,6 +1,5 @@
 package net.kenji.kenjiscombatforms.network.particle_packets;
 
-import net.kenji.kenjiscombatforms.particles.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

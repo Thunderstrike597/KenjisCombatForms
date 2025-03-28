@@ -21,10 +21,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import yesman.epicfight.api.animation.AnimationManager;
-import yesman.epicfight.api.animation.types.StaticAnimation;
-import yesman.epicfight.gameasset.Animations;
-import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 

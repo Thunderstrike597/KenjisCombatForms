@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.Objects;
+import java.util.List;
 
 public class SyncServerFormLevelPacket {
 
@@ -48,9 +48,12 @@ public class SyncServerFormLevelPacket {
             ServerPlayer player = ctx.getSender();
             if (player != null) {
 
-                FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(player);
-                Form form = FormManager.getInstance().getForm(msg.currentForm);
-                AbstractFormData currentFormData = form.getFormData(player.getUUID());
+                List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
+                List<AbstractFormData> formData = FormManager.getInstance().getCurrentFormData(player);
+
+
+                Form currentForm = FormManager.getInstance().getForm(formValue.get(0).getName());
+                AbstractFormData currentFormData = formData.get(0);
 
                 // Update server-side data
                 currentFormData.setCurrentFormXp(msg.formXp);
@@ -65,7 +68,7 @@ public class SyncServerFormLevelPacket {
 
                 NetworkHandler.INSTANCE.send(
                         PacketDistributor.PLAYER.with(() -> player),
-                        new SyncClientFormsPacket(formData.form1, formData.form2, formData.form3, msg.formLevel, msg.formXp, msg.formXpMAX)
+                        new SyncClientFormsPacket(formValue.get(1).getName(), formValue.get(2).getName(), formValue.get(3).getName(), msg.formLevel, msg.formXp, msg.formXpMAX)
                 );
                 // Sync to client
             }

@@ -1,7 +1,6 @@
 package net.kenji.kenjiscombatforms.item;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility1Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility2Component;
@@ -37,10 +36,8 @@ import net.kenji.kenjiscombatforms.item.custom.materials.SlotLiner;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.form_scrolls.WitherScroll;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Tiers;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -79,7 +76,7 @@ public class ModItems {
     public static final RegistryObject<SpawnEggItem> EXILED_DEVIL_SPAWN_EGG = ITEMS.register("exiled_devil_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.EXILED_DEVIL, 0x8B0000, 0x4B0000, new Item.Properties().stacksTo(16)));
     public static final RegistryObject<SpawnEggItem> EXILED_SENSEI_SPAWN_EGG = ITEMS.register("exiled_sensei_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.EXILED_SENSEI, 0xffae42, 0xe0b334, new Item.Properties().stacksTo(16)));
     public static final RegistryObject<SpawnEggItem> UNDEAD_SENSEI_SPAWN_EGG = ITEMS.register("undead_sensei_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.UNDEAD_SENSEI, 0x006400, 0xffc00, new Item.Properties().stacksTo(16)));
-    public static final RegistryObject<SpawnEggItem> ABILITY_TRADER_SPAWN_EGG = ITEMS.register("ability_trader_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.ABILITY_TRADER, 0xADDAE6, 0x00008B, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<SpawnEggItem> ABILITY_TRADER_SPAWN_EGG = ITEMS.register("ability_trader_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SCROLL_TRADER, 0xADDAE6, 0x00008B, new Item.Properties().stacksTo(16)));
 
     public static final RegistryObject<Item> SWIFTNESSESSENCE_TIER1 = ITEMS.register("tier1_swiftness_essence", () -> new SwiftnessEssenceTier1(new Item.Properties()));
     public static final RegistryObject<Item> SWIFTNESSESSENCE_TIER2 = ITEMS.register("tier2_swiftness_essence", () -> new SwiftnessEssenceTier2(new Item.Properties()));

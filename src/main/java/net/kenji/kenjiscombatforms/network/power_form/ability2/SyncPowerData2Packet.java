@@ -1,7 +1,11 @@
 package net.kenji.kenjiscombatforms.network.power_form.ability2;
 
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SyncPowerData2Packet {
@@ -22,7 +26,11 @@ public class SyncPowerData2Packet {
     public static void handle(SyncPowerData2Packet msg, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             // Update client-side data
-            ClientPowerData.setCooldown2(msg.cooldown);
+            Player player = ctx.getSender();
+
+            if(player != null) {
+
+            }
         });
     }
 }

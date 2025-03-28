@@ -3,18 +3,16 @@ package net.kenji.kenjiscombatforms.api.powers.power_powers;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.PowerPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility2Packet;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
-import net.kenji.kenjiscombatforms.network.swift_form.ability2.SyncSwiftData2Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -43,7 +41,17 @@ public class PowerEffectInflict implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption2.POWER_ABILITY2.name();
+        return "POWER_ABILITY2";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 230;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -191,10 +199,10 @@ public class PowerEffectInflict implements Ability {
         @Override
         public void fillDamageCooldown(Player player) {
             PowerPlayerDataSets.PowerInflictPlayerData data =getInstance().getPlayerData(player);
-            if (KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+            if (EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
                 if(!data.isAbilityActive()) {
                     if (data.abilityCooldown > 0) {
-                        data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                        data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                     }
                     if (player instanceof ServerPlayer serverPlayer) {
                         getInstance().syncDataToClient(serverPlayer);
@@ -211,7 +219,7 @@ public class PowerEffectInflict implements Ability {
 
         if (player instanceof ServerPlayer serverPlayer) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {
-                if (!KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+                if (!EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
 
                     if (!data.isInflictActive) {
                         fillPerSecondCooldown(player);
@@ -234,7 +242,7 @@ public class PowerEffectInflict implements Ability {
 
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility2.name().equals(getName())) {
+        if(abilityData.chosenAbility2.equals(getName())) {
             getInstance().decrementCooldown(player);
             syncDataToClient(player);
         }
@@ -251,14 +259,14 @@ public class PowerEffectInflict implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncPowerData2Packet(data.abilityCooldown)
+                    new SyncAbility2Packet(data.abilityCooldown, data.isInflictActive, false)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenAbility2.name().equals(getName());
+        return abilityData.chosenAbility2.equals(getName());
     }
 
     @Override

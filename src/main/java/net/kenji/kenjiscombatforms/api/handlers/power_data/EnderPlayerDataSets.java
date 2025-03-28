@@ -1,7 +1,9 @@
 package net.kenji.kenjiscombatforms.api.handlers.power_data;
 
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -33,16 +35,17 @@ public class EnderPlayerDataSets {
         public final int INITIAL_PRESS_COUNTER = 90;
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean isTpHoldActive = false;
         public Entity holdEntity;
         public int holdTickCounter = 0;
-        public final int maxDist = KenjisCombatFormsCommon.TELEPORT_DIST.get();
+        public final int maxDist = EpicFightCombatFormsCommon.TELEPORT_DIST.get();
         public long pressCounter = INITIAL_PRESS_COUNTER;
         public long tpPressCounter = INITIAL_PRESS_COUNTER;
 
 
         public TeleportPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY1_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY1_COOLDOWN.get());
         }
 
         @Override
@@ -51,14 +54,28 @@ public class EnderPlayerDataSets {
         }
 
         @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+
+        @Override
         public boolean isAbilityActive() {
             return false;
         }
+
+
     }
 
     public  static class VoidRiftPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean isRiftActive = false;
         public boolean hasPlayedSound = false;
         public BlockPos riftPosition = null;
@@ -66,29 +83,47 @@ public class EnderPlayerDataSets {
         public boolean canCount = false;
 
         public VoidRiftPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY2_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY2_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
+        }
+
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isRiftActive = value;
         }
 
         @Override
         public boolean isAbilityActive() {
             return isRiftActive;
         }
+
+
     }
     public static class EnderFormPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public boolean isEnderActive = false;
         public boolean hasPlayedSound = true;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public final Map<UUID, Entity> playerEnderMap = new ConcurrentHashMap<>();
         public Entity enderEntity;
 
         public EnderFormPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY3_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY3_COOLDOWN.get());
         }
 
         @Override
@@ -96,16 +131,33 @@ public class EnderPlayerDataSets {
 
         }
 
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isEnderActive = value;
+        }
 
         @Override
         public boolean isAbilityActive() {
             return isEnderActive;
         }
+
+
     }
 
     public static class EnderLevitationPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean isActive = false;
         public int countTicker = 0;
         public Map<UUID, EntityState> affectedEntities = new HashMap<>();
@@ -115,24 +167,40 @@ public class EnderPlayerDataSets {
         }
 
         public EnderLevitationPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY4_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY4_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+        @Override
+        public void setAbilityActive(boolean value) {
+            isActive = value;
+        }
 
         @Override
         public boolean isAbilityActive() {
             return isActive;
         }
+
+
     }
 
     public static class VoidGrabPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
-        public final int EXPLOSION_DAMAGE = KenjisCombatFormsCommon.EXPLOSION_DAMAGE.get();
+        public final int EXPLOSION_DAMAGE = EpicFightCombatFormsCommon.EXPLOSION_DAMAGE.get();
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean hasActivated = false;
         public int countTicker = 0;
         public Map<UUID, EntityState> affectedEntities = new HashMap<>();
@@ -144,23 +212,35 @@ public class EnderPlayerDataSets {
         }
 
         public VoidGrabPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY5_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY5_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
 
         @Override
         public boolean isAbilityActive() {
             return false;
         }
+
+
     }
     public static class EnderWarpPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
-        public final int maxDist = KenjisCombatFormsCommon.TELEPORT_DIST.get();
+        public int clientAbilityCooldown = MAX_COOLDOWN;
+        public final int maxDist = EpicFightCombatFormsCommon.TELEPORT_DIST.get();
 
         public EnderWarpPlayerData() {
             super(14);
@@ -170,11 +250,22 @@ public class EnderPlayerDataSets {
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
 
         @Override
         public boolean isAbilityActive() {
             return false;
         }
+
+
     }
 
 

@@ -1,11 +1,15 @@
 package net.kenji.kenjiscombatforms.network.fist_forms.ability_choose;
 
-import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
 import net.kenji.kenjiscombatforms.api.handlers.GlobalFormStrategyHandler;
+import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
+import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.Objects;
 
 
 public class Ability3ChoosePacket {
@@ -27,14 +31,10 @@ public class Ability3ChoosePacket {
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
             if (player != null) {
-                if(AbilityManager.getInstance().getPlayerAbilityData(player).ability3 != AbilityManager.AbilityOption3.NONE) {
-                    GlobalFormStrategyHandler.getInstance().setChosenAbility3(player, AbilityManager.AbilityOption3.valueOf(msg.abilityOption3));
-                    GlobalFormStrategyHandler.getInstance().setPreviouslyChosenAbility3(player, AbilityManager.AbilityOption3.valueOf(msg.abilityOption3));
+                FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
+                Form currentForm = FormManager.getInstance().getForm(formData.selectedForm);
+                AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
 
-                }
-                else {
-                    GlobalFormStrategyHandler.getInstance().setChosenAbility3(player, AbilityManager.AbilityOption3.NONE);
-                }
             }
         });
         ctx.setPacketHandled(true);

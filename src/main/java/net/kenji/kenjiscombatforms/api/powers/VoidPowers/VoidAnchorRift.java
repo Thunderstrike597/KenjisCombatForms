@@ -2,19 +2,18 @@ package net.kenji.kenjiscombatforms.api.powers.VoidPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.block.ModBlocks;
 import net.kenji.kenjiscombatforms.block.custom.VoidRiftBlock;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility2Packet;
 import net.kenji.kenjiscombatforms.network.particle_packets.RiftSummonParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ability2.SyncVoidData2Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ability2.VoidRiftPacket;
@@ -51,10 +50,18 @@ public class VoidAnchorRift implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption2.VOID_ABILITY2.name();
+        return "VOID_ABILITY2";
     }
 
+    @Override
+    public int getGUIDrawPosY() {
+        return 155;
+    }
 
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
+    }
 
 
     private EnderPlayerDataSets.VoidRiftPlayerData getPlayerData(Player player) {
@@ -206,10 +213,10 @@ public class VoidAnchorRift implements Ability {
         public void fillDamageCooldown(Player player) {
             EnderPlayerDataSets.VoidRiftPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new EnderPlayerDataSets.VoidRiftPlayerData());
 
-            if(KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
-               if(!data.isAbilityActive()) {
+            if(EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+               if(!getInstance().getAbilityActive(player)) {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                    }
                    if (player instanceof ServerPlayer serverPlayer) {
                        getInstance().syncDataToClient(serverPlayer);
@@ -231,7 +238,7 @@ public class VoidAnchorRift implements Ability {
     @Override
     public void activateAbility(ServerPlayer player) {
         EnderPlayerDataSets.VoidRiftPlayerData data = getPlayerData(player);
-        data.isRiftActive = true;
+        data.setAbilityActive(true);
         data.canCount = true;
         if(player.level().isClientSide) {
             playCustomSound(player);
@@ -248,14 +255,14 @@ public class VoidAnchorRift implements Ability {
     @Override
     public void deactivateAbilityOptional(ServerPlayer serverPlayer) {
         EnderPlayerDataSets.VoidRiftPlayerData data = getPlayerData(serverPlayer);
-        if (data.isRiftActive && data.riftPosition != null) {
+        if (getAbilityActive(serverPlayer) && data.riftPosition != null) {
             ServerLevel level = serverPlayer.serverLevel();
             if (level.getBlockState(data.riftPosition).getBlock() instanceof VoidRiftBlock) {
                 level.setBlock(data.riftPosition, Blocks.AIR.defaultBlockState(), 3);
                 level.sendBlockUpdated(data.riftPosition, level.getBlockState(data.riftPosition), Blocks.AIR.defaultBlockState(), 3);
                 serverPlayer.connection.send(new ClientboundBlockUpdatePacket(level, data.riftPosition));
             }
-            data.isRiftActive = false;
+            data.setAbilityActive(false);
             data.riftPosition = null; // Clear the stored position
         }
     }
@@ -267,16 +274,16 @@ public class VoidAnchorRift implements Ability {
             if (isAbilityChosenOrEquipped(player)) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     if (EffectiveSide.get() == LogicalSide.SERVER) {
-                        if(!KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
-                            if (!data.isRiftActive) {
+                        if(!EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+                            if (!getAbilityActive(player)) {
                                 fillPerSecondCooldown(player);
                             }
                         }
-                        if (data.abilityCooldown < data.getMAX_COOLDOWN() && data.isRiftActive) {
+                        if (data.abilityCooldown < data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                             drainPerSecondCooldown(player);
                             drainPerSecondCooldown(player);
                         }
-                        if (data.abilityCooldown >= data.getMAX_COOLDOWN() && data.isRiftActive) {
+                        if (data.abilityCooldown >= data.getMAX_COOLDOWN() && getAbilityActive(player)) {
 
                             deactivateAbilityOptional(serverPlayer);
                             if (!data.hasPlayedSound) {
@@ -294,7 +301,7 @@ public class VoidAnchorRift implements Ability {
         EnderPlayerDataSets.VoidRiftPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility2.name().equals(getName())) {
+        if(abilityData.chosenAbility2.equals(getName())) {
             getInstance().decrementCooldown(player);
             syncDataToClient(player);
             timerRiftPlacement(player);
@@ -311,7 +318,7 @@ public class VoidAnchorRift implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncVoidData2Packet(data.abilityCooldown)
+                    new SyncAbility2Packet(data.abilityCooldown, getAbilityActive(player), false)
             );
         }
     }
@@ -319,7 +326,7 @@ public class VoidAnchorRift implements Ability {
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenAbility2.name().equals(getName());
+        return abilityData.chosenAbility2.equals(getName());
     }
 
     @Override

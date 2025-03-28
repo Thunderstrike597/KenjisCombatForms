@@ -7,6 +7,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility5Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.SyncVoidData5Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.VoidGrabPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,12 +39,12 @@ public class VoidGrab implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption5.VOID_GRAB.name();
+        return "VOID_GRAB";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.VOID_FINAL.name();
+        return "VOID_FINAL";
     }
 
 
@@ -171,7 +172,7 @@ public class VoidGrab implements FinalAbility {
         EnderPlayerDataSets.VoidGrabPlayerData data = getPlayerData(serverPlayer);
         EnderPlayerDataSets.EnderFormPlayerData wData = getOrCreateEnderFormPlayerData(serverPlayer);
         long currentTime = System.currentTimeMillis();
-        if (data.abilityCooldown <= 0 && wData.isAbilityActive()) {
+        if (data.abilityCooldown <= 0 && wData.getAbilityAltActive()) {
             playSound(serverPlayer);
             activateAbility(serverPlayer);
         }
@@ -194,7 +195,7 @@ public class VoidGrab implements FinalAbility {
     public void decrementCooldown(Player player) {
         EnderPlayerDataSets.VoidGrabPlayerData data = getPlayerData(player);
         EnderPlayerDataSets.EnderFormPlayerData wData = dataSets.getOrCreateEnderFormPlayerData(player);
-        if (wData.isAbilityActive()) {
+        if (getFinalAbilityActive(player)) {
             fillPerSecondCooldown(player);
         }
     }
@@ -219,7 +220,7 @@ public class VoidGrab implements FinalAbility {
         if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncVoidData5Packet(data.abilityCooldown)
+                    new SyncAbility5Packet(data.abilityCooldown, false)
             );
         }
     }
@@ -228,7 +229,7 @@ public class VoidGrab implements FinalAbility {
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenFinal.name().equals(getName());
+        return abilityData.chosenFinal.equals(getName());
     }
 
 

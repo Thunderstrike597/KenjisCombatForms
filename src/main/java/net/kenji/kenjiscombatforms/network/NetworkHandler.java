@@ -17,6 +17,7 @@ import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form1SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form2SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form3SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
+import net.kenji.kenjiscombatforms.network.globalformpackets.*;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.*;
 import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
@@ -186,99 +187,6 @@ public class NetworkHandler {
                 .decoder(PowerEffectInflictPacket::new)
                 .consumerMainThread((msg, ctx) -> {
                     PowerEffectInflictPacket.handle(msg, ctx.get());
-                }).add();
-
-
-
-        INSTANCE.messageBuilder(SyncVoidDataPacket.class, packetId++)
-                .encoder(SyncVoidDataPacket::encode)
-                .decoder(SyncVoidDataPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncVoidDataPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncVoidData2Packet.class, packetId++)
-                .encoder(SyncVoidData2Packet::encode)
-                .decoder(SyncVoidData2Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncVoidData2Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncVoidData3Packet.class, packetId++)
-                .encoder(SyncVoidData3Packet::encode)
-                .decoder(SyncVoidData3Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncVoidData3Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncVoidData4Packet.class, packetId++)
-                .encoder(SyncVoidData4Packet::encode)
-                .decoder(SyncVoidData4Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncVoidData4Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncVoidData5Packet.class, packetId++)
-                .encoder(SyncVoidData5Packet::encode)
-                .decoder(SyncVoidData5Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncVoidData5Packet.handle(msg, ctx.get());
-                }).add();
-
-
-
-        INSTANCE.messageBuilder(SyncWitherDataPacket.class, packetId++)
-                .encoder(SyncWitherDataPacket::encode)
-                .decoder(SyncWitherDataPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncWitherDataPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncWitherData2Packet.class, packetId++)
-                .encoder(SyncWitherData2Packet::encode)
-                .decoder(SyncWitherData2Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncWitherData2Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncWitherData3Packet.class, packetId++)
-                .encoder(SyncWitherData3Packet::encode)
-                .decoder(SyncWitherData3Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncWitherData3Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncWitherData4Packet.class, packetId++)
-                .encoder(SyncWitherData4Packet::encode)
-                .decoder(SyncWitherData4Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncWitherData4Packet.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncWitherData5Packet.class, packetId++)
-                .encoder(SyncWitherData5Packet::encode)
-                .decoder(SyncWitherData5Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncWitherData5Packet.handle(msg, ctx.get());
-                }).add();
-
-
-        INSTANCE.messageBuilder(SyncSwiftDataPacket.class, packetId++)
-                .encoder(SyncSwiftDataPacket::encode)
-                .decoder(SyncSwiftDataPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncSwiftDataPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncSwiftData2Packet.class, packetId++)
-                .encoder(SyncSwiftData2Packet::encode)
-                .decoder(SyncSwiftData2Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncSwiftData2Packet.handle(msg, ctx.get());
-                }).add();
-
-        INSTANCE.messageBuilder(SyncPowerDataPacket.class, packetId++)
-                .encoder(SyncPowerDataPacket::encode)
-                .decoder(SyncPowerDataPacket::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncPowerDataPacket.handle(msg, ctx.get());
-                }).add();
-        INSTANCE.messageBuilder(SyncPowerData2Packet.class, packetId++)
-                .encoder(SyncPowerData2Packet::encode)
-                .decoder(SyncPowerData2Packet::new)
-                .consumerMainThread((msg, ctx) -> {
-                    SyncPowerData2Packet.handle(msg, ctx.get());
                 }).add();
 
 
@@ -524,5 +432,39 @@ public class NetworkHandler {
                 .consumerMainThread((msg, ctx) -> {
                     SyncRemovedNBTPacket.handle(msg, ctx.get());
                 }).add();
+
+
+
+        INSTANCE.messageBuilder(SyncAbility1Packet.class, packetId++)
+                .encoder(SyncAbility1Packet::encode)
+                .decoder(SyncAbility1Packet::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncAbility1Packet.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncAbility2Packet.class, packetId++)
+                .encoder(SyncAbility2Packet::encode)
+                .decoder(SyncAbility2Packet::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncAbility2Packet.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncAbility3Packet.class, packetId++)
+                .encoder(SyncAbility3Packet::encode)
+                .decoder(SyncAbility3Packet::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncAbility3Packet.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncAbility4Packet.class, packetId++)
+                .encoder(SyncAbility4Packet::encode)
+                .decoder(SyncAbility4Packet::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncAbility4Packet.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(SyncAbility5Packet.class, packetId++)
+                .encoder(SyncAbility5Packet::encode)
+                .decoder(SyncAbility5Packet::new)
+                .consumerMainThread((msg, ctx) -> {
+                    SyncAbility5Packet.handle(msg, ctx.get());
+                }).add();
+
     }
 }

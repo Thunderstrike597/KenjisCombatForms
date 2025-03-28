@@ -1,11 +1,8 @@
 package net.kenji.kenjiscombatforms.network.playerData;
 
-import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
-import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;

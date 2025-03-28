@@ -1,7 +1,6 @@
 package net.kenji.kenjiscombatforms.screen.guiEffects;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 

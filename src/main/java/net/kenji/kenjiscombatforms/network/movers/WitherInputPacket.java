@@ -1,14 +1,9 @@
 package net.kenji.kenjiscombatforms.network.movers;
 
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
-import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherPlayerEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
-
-import java.util.UUID;
 
 public class WitherInputPacket {
     public final boolean jump, sneak;

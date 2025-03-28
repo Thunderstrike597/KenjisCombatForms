@@ -6,8 +6,11 @@ import net.minecraft.world.entity.player.Player;
 public interface Ability {
 
     String getName();
+    int getGUIDrawPosY();
+    int getGUIDrawPosX();
 
     AbstractAbilityData getAbilityData(Player player);
+
     void fillPerSecondCooldown(Player player);
     void drainPerSecondCooldown(Player player);
     boolean getAbilityActive(Player player);

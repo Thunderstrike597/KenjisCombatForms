@@ -1,6 +1,5 @@
 package net.kenji.kenjiscombatforms.network.witherform;
 
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormDashAbility;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.minecraft.client.Minecraft;

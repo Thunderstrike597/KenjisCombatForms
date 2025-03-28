@@ -1,10 +1,8 @@
 package net.kenji.kenjiscombatforms.item.custom.base_items;
 
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import yesman.epicfight.world.item.WeaponItem;
 

@@ -2,7 +2,7 @@ package net.kenji.kenjiscombatforms.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class KenjisCombatFormsClient {
+public class EpicFightCombatFormsClient {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
@@ -14,6 +14,9 @@ public class KenjisCombatFormsClient {
 
     public static final ForgeConfigSpec.ConfigValue<Boolean> TRANSLUCENT_GUI;
     public static final ForgeConfigSpec.ConfigValue<Double> GUI_TRANSLUCENT_AMOUNT;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> HIDE_GUI_WHEN_NOT_ACTIVE;
+
+
 
     static {
         BUILDER.push("Gui Configs");
@@ -42,6 +45,9 @@ public class KenjisCombatFormsClient {
                 .comment("Want to adjust the above option? Well you can! This will adjust the amount of transparency vanilla gui will have, if translucent gui is set to true!")
                 .defineInRange("translucent amount", 0.5, 0.0, 1.0);
 
+        HIDE_GUI_WHEN_NOT_ACTIVE = BUILDER
+                .comment("When enabled this hides level & ability GUI if not holding a combat form!")
+                .define("hide gui when not in combat form mode", true);
 
 
         BUILDER.pop();

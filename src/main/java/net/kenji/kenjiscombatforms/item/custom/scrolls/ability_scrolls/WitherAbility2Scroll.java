@@ -2,6 +2,8 @@ package net.kenji.kenjiscombatforms.item.custom.scrolls.ability_scrolls;
 
 import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.SoulDrift;
+import net.kenji.kenjiscombatforms.api.powers.power_powers.StrengthBoost;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,8 +20,7 @@ public class WitherAbility2Scroll extends BaseUseItem {
     private static WitherAbility2Scroll INSTANCE;
     private static final int CHARGE_DURATION = 40; // Ticks required to charge the item
     private static final int MAX_USE_DURATION = 72000; // 1 hour in ticks
-    private final AbilityManager.AbilityOption2 ability = AbilityManager.AbilityOption2.WITHER_ABILITY2;
-
+    private final String ability = SoulDrift.getInstance().getName();
     public WitherAbility2Scroll(Properties properties) {
         super(properties.durability(2));
         if(INSTANCE == null){

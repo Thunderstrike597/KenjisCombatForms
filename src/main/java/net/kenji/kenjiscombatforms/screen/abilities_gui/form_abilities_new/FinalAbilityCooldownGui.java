@@ -1,15 +1,12 @@
 package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.PowerControl;
-import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -18,31 +15,24 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Objects;
+
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
-public class NewWitherFinalAbilityCooldownGui {
+public class FinalAbilityCooldownGui {
 
     private static final SimpleAbilityHandler simpleAbilityHandler = new SimpleAbilityHandler();
 
-
-    private static float prevCooldown = 0f;
-    private static float currentCooldown = 0f;
-
-    public static void updateCooldown() {
-        prevCooldown = currentCooldown;
-        currentCooldown = (float) ClientVoidData.getCooldown();
-    }
-   static int getX(){
-        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+    static int getX(){
+        if(EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
             return simpleAbilityHandler.getSelectionModeX();
         }else return 74;
     }
 
-   static int getY(){
-        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+    static int getY(){
+        if(EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
             return simpleAbilityHandler.getSelectionModeY();
         }else return 42;
     }
-
 
 
     @SubscribeEvent
@@ -60,12 +50,14 @@ public class NewWitherFinalAbilityCooldownGui {
 
         if (player != null) {
 
-            WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
-            WitherPlayerDataSets.WitherFormPlayerData abilityData = dataSets.getOrCreateWitherFormPlayerData(player);
+            AbilityManager abilityManager = AbilityManager.getInstance();
+            AbstractAbilityData ability3Data = abilityManager.getCurrentAbilityData(player).get(2);
+
 
 
             int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+
 
             int imageWidth = 128;
             int imageHeight = 128;
@@ -73,17 +65,14 @@ public class NewWitherFinalAbilityCooldownGui {
             int abilityY = screenHeight - imageHeight;
 
             int v = 44;
-            int abilityCooldown = ClientWitherData.getCooldown3();
+            int abilityCooldown = ability3Data.getClientAbilityCooldown();
 
 
             int ability1FullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
-            int ability1MaxCooldown = abilityData.getMAX_COOLDOWN();  // Total cooldown time
-            float ability1ElapsedCooldown = ability1MaxCooldown - abilityCooldown;  // Remaining cooldown
-            float ability1CooldownProgress = ability1ElapsedCooldown / (float) ability1MaxCooldown;  // Normalize to 0-1
+            int maxCooldown = ability3Data.getMAX_COOLDOWN();
+            float ability1ElapsedCooldown = maxCooldown - abilityCooldown;  // Remaining cooldown
+            float ability1CooldownProgress = ability1ElapsedCooldown / (float) maxCooldown;  // Normalize to 0-1
             int abilityBarHeight = (int) (ability1FullHeight * ability1CooldownProgress);
-
-
-            int maxCooldown = abilityData.getMAX_COOLDOWN();
 
 
             int simpleAbilityU = 0;
@@ -92,15 +81,11 @@ public class NewWitherFinalAbilityCooldownGui {
             int iconX = abilityX + getX();
             int iconY = abilityY + getY();
 
-            boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
 
+            if (!Objects.equals(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal, "NONE") ||
+                    !Objects.equals(ClientFistData.getChosenAbility3(), "NONE")) {
 
-
-
-            if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL ||
-                    ClientFistData.getChosenAbility3() == AbilityManager.AbilityOption3.WITHER_FINAL) {
-
-                simpleAbilityHandler.drawAbility3Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
+                simpleAbilityHandler.drawAbility3Icon(event, abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
             }
         }
     }

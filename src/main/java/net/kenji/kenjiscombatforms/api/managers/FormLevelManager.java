@@ -1,6 +1,6 @@
 package net.kenji.kenjiscombatforms.api.managers;
 
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
@@ -23,8 +23,8 @@ public class FormLevelManager {
 
 
     public static class PlayerFormLevelData {
-        public int voidFormMAX =  KenjisCombatFormsCommon.MAX_FORM_STARTING_XP.get();;
-        public int witherFormMAX =  KenjisCombatFormsCommon.MAX_FORM_STARTING_XP.get();;
+        public int voidFormMAX =  EpicFightCombatFormsCommon.MAX_FORM_STARTING_XP.get();;
+        public int witherFormMAX =  EpicFightCombatFormsCommon.MAX_FORM_STARTING_XP.get();;
     }
 
     public enum FormLevel {

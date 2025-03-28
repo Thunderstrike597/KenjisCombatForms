@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.Mod;
             event.put(ModEntities.WITHER_PLAYER.get(), WitherPlayerEntity.createMobAttributes().build());
             event.put(ModEntities.WITHER_MINION.get(), WitherMinionEntity.createMobAttributes().build());
 
-            event.put(ModEntities.ABILITY_TRADER.get(), ScrollTraderEntity.createMobAttributes().build());
+            event.put(ModEntities.SCROLL_TRADER.get(), ScrollTraderEntity.createMobAttributes().build());
         }
 
         @SubscribeEvent
@@ -53,8 +53,8 @@ import net.minecraftforge.fml.common.Mod;
                event.add(ModEntities.UNDEAD_SENSEI.get(), Attributes.MAX_HEALTH, 40);
                event.add(ModEntities.UNDEAD_SENSEI.get(), Attributes.ATTACK_DAMAGE, 3);
 
-               event.add(ModEntities.ABILITY_TRADER.get(), Attributes.MAX_HEALTH, 85);
-               event.add(ModEntities.ABILITY_TRADER.get(), Attributes.ATTACK_DAMAGE, 7);
+               event.add(ModEntities.SCROLL_TRADER.get(), Attributes.MAX_HEALTH, 85);
+               event.add(ModEntities.SCROLL_TRADER.get(), Attributes.ATTACK_DAMAGE, 7);
 
 
             event.add(ModEntities.WITHER_MINION.get(), Attributes.MAX_HEALTH, 25);

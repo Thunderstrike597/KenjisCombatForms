@@ -5,6 +5,8 @@ import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
 import net.kenji.kenjiscombatforms.api.interfaces.form.FormAbilityStrategy;
+import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderFormAbility;
+import net.kenji.kenjiscombatforms.api.powers.power_powers.StrengthBoost;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,14 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class VoidFinalAbilityScroll extends BaseUseItem {
     private static VoidFinalAbilityScroll INSTANCE;
     private static final int CHARGE_DURATION = 40; // Ticks required to charge the item
     private static final int MAX_USE_DURATION = 72000; // 1 hour in ticks
-    private final AbilityManager.AbilityOption3 ability = AbilityManager.AbilityOption3.VOID_FINAL;
-
+    private final String ability = EnderFormAbility.getInstance().getName();
     public VoidFinalAbilityScroll(Properties properties) {
         super(properties.durability(2));
         if(INSTANCE == null){
@@ -86,7 +88,7 @@ public class VoidFinalAbilityScroll extends BaseUseItem {
             int useTime = getUseDuration(stack) - timeLeft;
             FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
 
-            if (formData.selectedForm == FormManager.FormSelectionOption.VOID) {
+            if (Objects.equals(formData.selectedForm, VoidForm.getInstance().getName())) {
                 if (useTime >= CHARGE_DURATION) {
 
 

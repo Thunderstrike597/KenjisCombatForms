@@ -3,15 +3,11 @@ package net.kenji.kenjiscombatforms.network.slots;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
-import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 public class RemoveItemPacket {
     private int originalSlot;

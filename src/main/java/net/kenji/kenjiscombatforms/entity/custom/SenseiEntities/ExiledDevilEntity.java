@@ -1,6 +1,6 @@
 package net.kenji.kenjiscombatforms.entity.custom.SenseiEntities;
 
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -57,20 +57,20 @@ public class ExiledDevilEntity extends PathfinderMob {
     }
 
     private static boolean isCompatDifficulty(){
-        return KenjisCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
+        return EpicFightCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
     }
 
     @Override
     public void onAddedToWorld() {
         if(!isCompatDifficulty()) {
 
-            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.EXILED_DEVIL_HEALTH.get());
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.EXILED_DEVIL_HEALTH.get());
 
             if (!hasBeenDamaged) {
                 setHealth(this.getMaxHealth());
             }
         }else {
-            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.COMPAT_MODE_EXILED_DEVIL_HEALTH.get());
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.COMPAT_MODE_EXILED_DEVIL_HEALTH.get());
 
             if (!hasBeenDamaged) {
                 setHealth(this.getMaxHealth());
@@ -203,12 +203,12 @@ public class ExiledDevilEntity extends PathfinderMob {
         if (level.dimensionType().ultraWarm() && level.getDifficulty() != Difficulty.PEACEFUL) {
             if (level.getBlockState(pos.below()).isSolid() && level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir()) {
                 // Check for nearby entities of the same type
-                int searchRadius = KenjisCombatFormsCommon.EXILED_DEVIL_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
+                int searchRadius = EpicFightCombatFormsCommon.EXILED_DEVIL_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
                 List<ExiledDevilEntity> nearbyEntities = level.getEntitiesOfClass(ExiledDevilEntity.class,
                         new AABB(pos).inflate(searchRadius),
                         e -> true);
 
-                if(chance < KenjisCombatFormsCommon.EXILED_DEVIL_SPAWN_CHANCE.get()) {
+                if(chance < EpicFightCombatFormsCommon.EXILED_DEVIL_SPAWN_CHANCE.get()) {
                     if (nearbyEntities.isEmpty()) {
                         return true; // Allow spawn if no nearby entities found
                     }

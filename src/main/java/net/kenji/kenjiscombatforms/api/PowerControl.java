@@ -3,50 +3,22 @@ package net.kenji.kenjiscombatforms.api;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
-import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderFormAbility;
-import net.kenji.kenjiscombatforms.api.powers.VoidPowers.TeleportPlayer;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherMinions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.event.sound.SoundManager;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
-import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPacket;
-import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
-import net.kenji.kenjiscombatforms.network.voidform.ability2.TeleportPlayerBehindPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ability1.TeleportPlayerPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ability2.VoidRiftPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ability3.ToggleEnderPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.EnderLevitationPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.VoidGrabPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
-import net.kenji.kenjiscombatforms.network.witherform.ability2.SoulDriftPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ability3.ToggleWitherFormPacket;
-import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SummonWitherMinionsPacket;
-import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,15 +65,15 @@ public class PowerControl {
 
         public static boolean getCanUseAbilitiesWithoutForms(Player player){
             if(!(player.getMainHandItem().getItem() instanceof BaseFistClass)){
-                return KenjisCombatFormsCommon.CAN_USE_ABILITIES_NO_FORM.get();
+                return EpicFightCombatFormsCommon.CAN_USE_ABILITIES_NO_FORM.get();
             }
             return true;
         }
 
         boolean getAbilitiesNotActive(Player player, AbilityManager.PlayerAbilityData abilityData) {
             Ability[] abilities = {
-                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility1.name()),
-                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility2.name()),
+                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility1),
+                    AbilityManager.getInstance().getAbility(abilityData.chosenAbility2),
                   //  AbilityManager.getInstance().getAbility(abilityData.chosenFinal.name())
             };
 
@@ -132,6 +104,9 @@ public class PowerControl {
                 FinalAbility ability4 = AbilityManager.getInstance().getCurrentFinalAbilities(clientPlayer).get(0);
                 FinalAbility ability5 = AbilityManager.getInstance().getCurrentFinalAbilities(clientPlayer).get(1);
 
+                if(ability1 != null) {
+                    System.out.println(" Ability1 Cooldown: " + ability1.getAbilityData(clientPlayer).getClientAbilityCooldown());
+                }
 
                 if(ModKeybinds.SWITCH_CURRENT_ABILITY_KEY.isDown()){
                     PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
@@ -151,7 +126,7 @@ public class PowerControl {
                     System.out.println("CurrentAbilityIndex: " + data.currentAbilityIndex);
                 }
 
-                if(!KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if(!EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
                     if (getCanUseAbilitiesWithoutForms(clientPlayer)) {
 
                         PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
@@ -224,7 +199,6 @@ public class PowerControl {
                                 ability4.sendPacketToServer(clientPlayer);
                             }
                         } else if (data.currentAbilityIndex == 2) {
-                            System.out.println("CURRENT ABILITY2: " + ability2);
                             if (ability2 != null && !areFinalActive) {
                                 if(ability5 != null && !ability5.getAbilityActive(clientPlayer)) {
                                     ability2.sendPacketToServer(clientPlayer);
@@ -237,7 +211,6 @@ public class PowerControl {
                             }
                         }
                         if (data.currentAbilityIndex == 3) {
-                            System.out.println("CURRENT ABILITY3: " + ability3);
                             if (ability3 != null) {
                                 ability3.sendPacketToServer(clientPlayer);
                             }

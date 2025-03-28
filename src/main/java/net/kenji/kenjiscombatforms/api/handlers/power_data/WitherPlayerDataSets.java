@@ -1,7 +1,9 @@
 package net.kenji.kenjiscombatforms.api.handlers.power_data;
 
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
+import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -31,6 +33,7 @@ public class WitherPlayerDataSets {
     public static class WitherDashPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public final double MAX_SPEED = 3.0; // Blocks per tick
         public final double MAX_DISTANCE = 12.00;
         public final int MAX_DASH_TICKS = 12;
@@ -47,27 +50,52 @@ public class WitherPlayerDataSets {
 
 
         public WitherDashPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY1_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY1_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+        @Override
+        public void setAbilityAltActive(boolean value) {
+            canIgnoreCollide = value;
+        }
+
+        @Override
+        public boolean getAbilityAltActive() {
+            return canIgnoreCollide;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isDashActive = value;
+        }
 
         @Override
         public boolean isAbilityActive() {
-            return false;
+            return isDashActive;
         }
     }
     public static class SoulDriftPlayerData extends AbstractAbilityData{
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean isSoulDriftActive = false;
         public boolean hasPlayedSound = true;
 
         public SoulDriftPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY2_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY2_COOLDOWN.get());
         }
 
         @Override
@@ -76,8 +104,24 @@ public class WitherPlayerDataSets {
         }
 
         @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+
+        @Override
         public boolean isAbilityActive() {
             return isSoulDriftActive;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isSoulDriftActive = value;
         }
     }
 
@@ -88,16 +132,42 @@ public class WitherPlayerDataSets {
         public boolean hasPlayedSound = true;
         public boolean isDashActive = false;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public final Map<UUID, Entity> playerWitherMap = new ConcurrentHashMap<>();
         public Entity witherEntity;
 
         public WitherFormPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY3_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY3_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
+        }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+
+        @Override
+        public void setAbilityAltActive(boolean value) {
+            isDashActive = value;
+        }
+
+        @Override
+        public boolean getAbilityAltActive() {
+            return isDashActive;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isWitherActive = value;
         }
 
         @Override
@@ -107,10 +177,11 @@ public class WitherPlayerDataSets {
     }
     public static class WitherMinionPlayerData extends AbstractAbilityData{
         public int tickCount = 0;
-        public final int MINION_COUNT = KenjisCombatFormsCommon.MINION_COUNT.get();
+        public final int MINION_COUNT = EpicFightCombatFormsCommon.MINION_COUNT.get();
         public boolean areMinionsActive = false;
         public UUID playerUUID;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean hasPlayedSound = false;
         public int timerCount = 0;
         public boolean canCount = false;
@@ -124,29 +195,48 @@ public class WitherPlayerDataSets {
         public final Map<UUID, Entity> playerMinion4Map = new ConcurrentHashMap<>();
 
         public WitherMinionPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY4_COOLDOWN.get() * 6);
+            super(EpicFightCombatFormsCommon.ABILITY4_COOLDOWN.get() * 6);
         }
 
         @Override
         public void resetAbility() {
 
         }
+
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            areMinionsActive = value;
+        }
+
 
         @Override
         public boolean isAbilityActive() {
             return areMinionsActive;
         }
+
     }
 
     public static class WitherImplodePlayerData extends AbstractAbilityData{
         public int tickCount = 0;
-        public final int EXPLOSION_DAMAGE = KenjisCombatFormsCommon.EXPLOSION_DAMAGE.get();
+        public final int EXPLOSION_DAMAGE = EpicFightCombatFormsCommon.EXPLOSION_DAMAGE.get();
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public boolean hasActivated = false;
         public int countTicker = 0;
 
         public WitherImplodePlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY5_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY5_COOLDOWN.get());
         }
 
         @Override
@@ -155,13 +245,24 @@ public class WitherPlayerDataSets {
         }
 
         @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+        @Override
         public boolean isAbilityActive() {
             return false;
         }
+
     }
     public static class WitherFormDashPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
         public final double MAX_SPEED = 3.0; // Blocks per tick
         public final double MAX_DISTANCE = 12.00;
         public final int MAX_DASH_TICKS = 12;
@@ -181,10 +282,24 @@ public class WitherPlayerDataSets {
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
 
         @Override
         public boolean isAbilityActive() {
-            return false;
+            return isDashActive;
+        }
+
+        @Override
+        public void setAbilityActive(boolean value) {
+            isDashActive = value;
         }
     }
 
@@ -206,6 +321,4 @@ public class WitherPlayerDataSets {
     public WitherFormDashPlayerData getOrCreateWitherFormDashPlayerData(Player player){
         return getInstance().A6playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherFormDashPlayerData());
     }
-
-
 }

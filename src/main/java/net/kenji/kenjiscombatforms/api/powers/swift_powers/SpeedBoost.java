@@ -8,6 +8,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility1Packet;
 import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
@@ -35,7 +36,17 @@ public class SpeedBoost implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.SWIFT_ABILITY1.name();
+        return "SWIFT_ABILITY1";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 205;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -161,7 +172,6 @@ public class SpeedBoost implements Ability {
         SwiftPlayerDataSets.SpeedPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new SwiftPlayerDataSets.SpeedPlayerData());
           if(!player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
               fillPerSecondCooldown(player);
-              ClientSwiftData.setCooldown(data.abilityCooldown);
           }
         if(player.hasEffect(MobEffects.MOVEMENT_SPEED)){
             data.abilityCooldown = data.getMAX_COOLDOWN();
@@ -172,8 +182,9 @@ public class SpeedBoost implements Ability {
     public void tickServerAbilityData(ServerPlayer player) {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility1.name().equals(getName())) {
+        if(abilityData.chosenAbility1.equals(getName())) {
             getInstance().decrementCooldown(player);
+            syncDataToClient(player);
         }
     }
 
@@ -188,14 +199,14 @@ public class SpeedBoost implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncSwiftDataPacket(data.abilityCooldown)
+                    new SyncAbility1Packet(data.abilityCooldown, false, false)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenAbility1.name().equals(getName());
+        return abilityData.chosenAbility1.equals(getName());
     }
 
     @Override

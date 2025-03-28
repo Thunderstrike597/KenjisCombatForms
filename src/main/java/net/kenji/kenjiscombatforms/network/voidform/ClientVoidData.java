@@ -27,7 +27,6 @@ public class ClientVoidData {
     public static void setLevitationCooldown(int value) {
         levitationCooldown = value;
     }
-
     public static void setGrabCooldown(int value) {
         grabCooldown = value;
     }

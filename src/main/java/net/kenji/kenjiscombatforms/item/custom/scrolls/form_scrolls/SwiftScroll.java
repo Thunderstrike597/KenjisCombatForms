@@ -2,23 +2,17 @@ package net.kenji.kenjiscombatforms.item.custom.scrolls.form_scrolls;
 
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.api.managers.forms.SwiftForm;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
-import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
-import net.kenji.kenjiscombatforms.screen.form_menu.FormChooseMenu;
-import net.kenji.kenjiscombatforms.screen.form_menu.FormSwapMenu;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PacketDistributor;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class SwiftScroll extends BaseUseItem {
@@ -26,7 +20,7 @@ public class SwiftScroll extends BaseUseItem {
     private static final FormManager formManager = FormManager.getInstance();
     private static final int CHARGE_DURATION = 40; // Ticks required to charge the item
     private static final int MAX_USE_DURATION = 72000; // 1 hour in ticks
-    private static final FormManager.FormSelectionOption swiftOption = FormManager.FormSelectionOption.SWIFT;
+    private static final String swiftOption = SwiftForm.getInstance().getName();
 
 
     public SwiftScroll(Properties properties) {
@@ -66,7 +60,7 @@ public class SwiftScroll extends BaseUseItem {
         player.startUsingItem(hand);
         FormManager.PlayerFormData data = formManager.getFormData(player);
 
-        if (data.form1 != swiftOption && data.form2 != swiftOption && data.form3 != swiftOption) {
+        if (!Objects.equals(data.form1, swiftOption) && !Objects.equals(data.form2, swiftOption) && !Objects.equals(data.form3, swiftOption)) {
             return InteractionResultHolder.consume(itemStack);
         }
         return InteractionResultHolder.fail(itemStack);

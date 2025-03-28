@@ -2,19 +2,18 @@ package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.ShadowPlayerEntity;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility2Packet;
 import net.kenji.kenjiscombatforms.network.particle_packets.SmokeParticlesPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.SoulParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability2.SoulDriftPacket;
@@ -58,9 +57,18 @@ public class SoulDrift implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption2.WITHER_ABILITY2.name();
+        return "WITHER_ABILITY2";
     }
 
+    @Override
+    public int getGUIDrawPosY() {
+        return 180;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
+    }
 
 
     private final Map<UUID, WitherPlayerDataSets.SoulDriftPlayerData> playerDataMap = WitherPlayerDataSets.getInstance().A2playerDataMap;
@@ -191,10 +199,10 @@ public class SoulDrift implements Ability {
         public void fillDamageCooldown(Player player) {
             WitherPlayerDataSets.SoulDriftPlayerData data = getInstance().getPlayerData(player);
 
-            if(KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
-                if(!data.isAbilityActive()) {
+            if(EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+                if(!getInstance().getAbilityActive(player)) {
                     if (data.abilityCooldown > 0) {
-                        data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                        data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                     }
                     if (player instanceof ServerPlayer serverPlayer) {
                         getInstance().syncDataToClient(serverPlayer);
@@ -207,12 +215,11 @@ public class SoulDrift implements Ability {
     @Override
     public void triggerAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.SoulDriftPlayerData data = getPlayerData(serverPlayer);
-        if (!data.isSoulDriftActive && data.abilityCooldown <= 0) {
+        if (!getAbilityActive(serverPlayer) && data.abilityCooldown <= 0) {
             activateAbility(serverPlayer);
             data.hasPlayedSound = false;
-
         }
-        else if (data.isSoulDriftActive) {
+        else if (getAbilityActive(serverPlayer)) {
             deactivateAbilityOptional(serverPlayer);
         }
     }
@@ -221,7 +228,7 @@ public class SoulDrift implements Ability {
     public void activateAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.SoulDriftPlayerData data = getPlayerData(serverPlayer);
         Vec3 pushVector = new Vec3(0, 2.0, 0);
-        data.isSoulDriftActive = true;
+        data.setAbilityActive(true);
         activateDecoySummon(serverPlayer);
 
 
@@ -248,7 +255,7 @@ public class SoulDrift implements Ability {
         double radius = 2.0;
         serverPlayer.removeEffect(MobEffects.INVISIBILITY);
         serverPlayer.removeEffect(MobEffects.LEVITATION);
-        data.isSoulDriftActive = false;
+        data.setAbilityActive(false);
         Entity existingDecoy = playerShadowMap.remove(serverPlayer.getUUID());
         if (existingDecoy != null) {
             existingDecoy.remove(Entity.RemovalReason.DISCARDED);
@@ -265,11 +272,11 @@ public class SoulDrift implements Ability {
     public void decrementCooldown(Player player) {
         WitherPlayerDataSets.SoulDriftPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.SoulDriftPlayerData());
         if (isAbilityChosenOrEquipped(player)) {
-            if(!KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
-                if (!data.isSoulDriftActive) {
+            if(!EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+                if (!getAbilityActive(player)) {
                     fillPerSecondCooldown(player);
                 }
-            }else if (data.abilityCooldown < data.getMAX_COOLDOWN() && data.isAbilityActive()) {
+            }else if (data.abilityCooldown < data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                 drainPerSecondCooldown(player);
                 drainPerSecondCooldown(player);
             }
@@ -277,7 +284,7 @@ public class SoulDrift implements Ability {
                 player.removeEffect(MobEffects.INVISIBILITY);
                 player.removeEffect(MobEffects.LEVITATION);
                 player.setInvisible(false);
-                data.isSoulDriftActive = false;
+                data.setAbilityActive(false);
                 Entity existingShadow = playerShadowMap.remove(player.getUUID());
                 if (existingShadow != null) {
                     existingShadow.remove(Entity.RemovalReason.DISCARDED);
@@ -287,7 +294,7 @@ public class SoulDrift implements Ability {
                     playSound(player);
                 }
             }
-            if (data.abilityCooldown >= data.getMAX_COOLDOWN() && data.isAbilityActive()) {
+            if (data.abilityCooldown >= data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                 deactivateClientInvisibility(player);
             }
         }
@@ -299,11 +306,11 @@ public class SoulDrift implements Ability {
         WitherPlayerDataSets.SoulDriftPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility2.name().equals(getName())) {
+        if(abilityData.chosenAbility2.equals(getName())) {
             getInstance().decrementCooldown(player);
         }
         syncDataToClient(player);
-        if (data.isSoulDriftActive) {
+        if (getAbilityActive(player)) {
 
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
@@ -320,7 +327,7 @@ public class SoulDrift implements Ability {
     public void tickClientAbilityData(Player player) {
         WitherPlayerDataSets.SoulDriftPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.SoulDriftPlayerData());
         getInstance().decrementCooldown(player);
-        if (data.isSoulDriftActive){
+        if (getAbilityActive(player)){
             preventCombatActions(player);
             if (player.isShiftKeyDown() || player.isCrouching()) {
                 if (!player.level().getBlockState(player.blockPosition()).isSolid()) {
@@ -340,7 +347,7 @@ public class SoulDrift implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherData2Packet(data.abilityCooldown)
+                    new SyncAbility2Packet(data.abilityCooldown, getAbilityActive(player), false)
             );
         }
     }
@@ -348,7 +355,7 @@ public class SoulDrift implements Ability {
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenAbility2.name().equals(getName());
+        return abilityData.chosenAbility2.equals(getName());
     }
 
 

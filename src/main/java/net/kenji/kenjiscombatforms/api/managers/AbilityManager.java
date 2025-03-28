@@ -1,8 +1,12 @@
 package net.kenji.kenjiscombatforms.api.managers;
 
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
+import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
+import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.api.powers.EmptyAbility;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.*;
@@ -34,89 +38,70 @@ public class AbilityManager {
     }
 
     public Ability getAbility(String abilityName) {
-        return abilities.get(abilityName);
+        return abilityName != null && !abilityName.isEmpty() ? abilities.get(abilityName) :abilities.get("NONE");
     }
     public FinalAbility getFinalAbility(String abilityName) {
         return finalAbilities.get(abilityName);
     }
 
 
-    public enum AbilityOption1 {
-        NONE,
-        VOID_ABILITY1,
-        WITHER_ABILITY1,
-        SWIFT_ABILITY1,
-        POWER_ABILITY1
-    }
-    public enum AbilityOption2 {
-        NONE,
-        VOID_ABILITY2,
-        WITHER_ABILITY2,
-        SWIFT_ABILITY2,
-        POWER_ABILITY2
-    }
-    public enum AbilityOption3 {
-        NONE,
-        VOID_FINAL,
-        WITHER_FINAL
-    }
-    public enum AbilityOption4 {
-        NONE,
-        ENDER_LEVITATION,
-        WITHER_MINIONS,
-    }
-    public enum AbilityOption5 {
-        NONE,
-        VOID_GRAB,
-        WITHER_IMPLODE,
-    }
-    public enum AltAbilityOption {
-        NONE,
-        ENDER_WARP,
-        WITHER_DASH,
-        VOID_BACKSTAB
-    }
-
-
 
     public static class PlayerAbilityData {
-        public AbilityOption1 chosenAbility1 = AbilityOption1.NONE;
-        public AbilityOption2 chosenAbility2 = AbilityOption2.NONE;
-        public AbilityOption3 chosenFinal = AbilityOption3.NONE;
-        public AbilityOption1 ability1 = AbilityOption1.NONE;
-        public AbilityOption2 ability2 = AbilityOption2.NONE;
-        public AbilityOption3 ability3 = AbilityOption3.NONE;
-        public AbilityOption4 ability4 = AbilityOption4.NONE;
-        public AbilityOption5 ability5 = AbilityOption5.NONE;
+        public String chosenAbility1 = "NONE";
+        public String chosenAbility2 = "NONE";
+        public String chosenFinal = "NONE";
+        public String ability4 = "NONE";
+        public String ability5 = "NONE";
 
     }
+
 
 
     public List<Ability> getCurrentAbilities(Player player){
         AbilityManager.PlayerAbilityData abilityData = getInstance().getPlayerAbilityData(player);
-        if(!player.level().isClientSide) {
+
+        if (!player.level().isClientSide) {
             return Arrays.asList(
-                    getInstance().getAbility(abilityData.chosenAbility1.name()),
-                    getInstance().getAbility(abilityData.chosenAbility2.name()),
-                    getInstance().getAbility(abilityData.chosenFinal.name())
+                    getInstance().getAbility(Objects.requireNonNullElse(abilityData.chosenAbility1, EmptyAbility.getInstance().getName())),
+                    getInstance().getAbility(Objects.requireNonNullElse(abilityData.chosenAbility2, EmptyAbility.getInstance().getName())),
+                    getInstance().getAbility(Objects.requireNonNullElse(abilityData.chosenFinal, EmptyAbility.getInstance().getName()))
             );
-        }else return  Arrays.asList(
-                getInstance().getAbility(ClientFistData.getCurrentAbility1().name()),
-                getInstance().getAbility(ClientFistData.getCurrentAbility2().name()),
-                getInstance().getAbility(ClientFistData.getCurrentAbility3().name())
+        } else return Arrays.asList(
+                getInstance().getAbility(Objects.requireNonNullElse(ClientFistData.getChosenAbility1(), EmptyAbility.getInstance().getName())),
+                getInstance().getAbility(Objects.requireNonNullElse(ClientFistData.getChosenAbility2(), EmptyAbility.getInstance().getName())),
+                getInstance().getAbility(Objects.requireNonNullElse(ClientFistData.getChosenAbility3(), EmptyAbility.getInstance().getName()))
         );
     }
+
+    public List<AbstractAbilityData> getCurrentAbilityData(Player player){
+        Ability ability1 = getCurrentAbilities(player).get(0);
+        Ability ability2 = getCurrentAbilities(player).get(1);
+        Ability ability3 = getCurrentAbilities(player).get(2);
+
+        return Arrays.asList(ability1.getAbilityData(player),
+                ability2.getAbilityData(player),
+                ability3.getAbilityData(player));
+    }
+    public List<AbstractAbilityData> getCurrentFinalAbilityData(Player player){
+        FinalAbility ability1 = getCurrentFinalAbilities(player).get(0);
+        FinalAbility ability2 = getCurrentFinalAbilities(player).get(1);
+
+        return Arrays.asList(ability1.getAbilityData(player),
+                ability2.getAbilityData(player));
+    }
+
+
     public List<FinalAbility> getCurrentFinalAbilities(Player player){
         AbilityManager.PlayerAbilityData abilityData = getInstance().getPlayerAbilityData(player);
-        if(!player.level().isClientSide) {
-        return Arrays.asList(
-                getInstance().getFinalAbility(abilityData.ability4.name()),
-                getInstance().getFinalAbility(abilityData.ability5.name())
-        );
-        }else  return Arrays.asList(
-                getInstance().getFinalAbility(ClientFistData.getCurrentAbility4().name()),
-                getInstance().getFinalAbility(ClientFistData.getCurrentAbility5().name())
-        );
+            if (!player.level().isClientSide) {
+                return Arrays.asList(
+                        getInstance().getFinalAbility(abilityData.ability4),
+                        getInstance().getFinalAbility(abilityData.ability5)
+                );
+            } else return Arrays.asList(
+                    getInstance().getFinalAbility(ClientFistData.getCurrentAbility4()),
+                    getInstance().getFinalAbility(ClientFistData.getCurrentAbility5())
+            );
     }
 
 

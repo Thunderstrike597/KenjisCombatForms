@@ -1,7 +1,7 @@
 package net.kenji.kenjiscombatforms.entity.custom.traders;
 
 import net.kenji.kenjiscombatforms.block.ModBlocks;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -270,8 +270,8 @@ return new MerchantOffer(
                     }
 
                     // Check for nearby entities of the same type
-                    int playerSearchRadius = KenjisCombatFormsCommon.ABILITY_TRADER_PLAYER_SPAWNDIST.get();
-                    int traderSearchRadius = KenjisCombatFormsCommon.ABILITY_TRADER_SPAWNDIST.get();// Adjust this value to change the minimum distance between spawns
+                    int playerSearchRadius = EpicFightCombatFormsCommon.ABILITY_TRADER_PLAYER_SPAWNDIST.get();
+                    int traderSearchRadius = EpicFightCombatFormsCommon.ABILITY_TRADER_SPAWNDIST.get();// Adjust this value to change the minimum distance between spawns
                     List<Player> nearbyPlayers = level.getEntitiesOfClass(Player.class,
                             new AABB(pos).inflate(playerSearchRadius),
                             e -> true);
@@ -280,7 +280,7 @@ return new MerchantOffer(
                             new AABB(pos).inflate(traderSearchRadius),
                             e -> true);
 
-                    if(chance < KenjisCombatFormsCommon.ABILITY_TRADER_SPAWN_CHANCE.get()) {
+                    if(chance < EpicFightCombatFormsCommon.ABILITY_TRADER_SPAWN_CHANCE.get()) {
                         if (!nearbyPlayers.isEmpty()) {
                             if (nearbyTraders.isEmpty()) {
                                 return true; // Allow spawn if no nearby entities found

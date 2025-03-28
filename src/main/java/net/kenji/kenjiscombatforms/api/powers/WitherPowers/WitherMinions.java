@@ -1,14 +1,20 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
+import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
+import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.WitherMinionEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility4Packet;
 import net.kenji.kenjiscombatforms.network.particle_packets.MinionSummonParticlesPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SummonWitherMinionsPacket;
@@ -24,7 +30,6 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -49,12 +54,12 @@ public class WitherMinions implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption4.WITHER_MINIONS.name();
+        return "WITHER_MINIONS";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.WITHER_FINAL.name();
+        return "WITHER_FINAL";
     }
 
 
@@ -138,8 +143,8 @@ public void witherMinionRemove(ServerPlayer player){
 
     @OnlyIn(Dist.CLIENT)
     public void clientChangeActive(Player player){
-        int currentMinionCooldown = ClientWitherData.getMinionCooldown();
         WitherPlayerDataSets.WitherMinionPlayerData data = getPlayerData(player);
+        int currentMinionCooldown = data.getClientAbilityCooldown();
 
         if (currentMinionCooldown == 0) {
             data.areMinionsActive = true;
@@ -266,7 +271,11 @@ public void witherMinionRemove(ServerPlayer player){
 
     @Override
     public void sendPacketToServer(Player player) {
-        if (ClientWitherData.getIsWitherActive() || ClientWitherData.getMinionsActive()) {
+        WitherPlayerDataSets.WitherMinionPlayerData data = getPlayerData(player);
+        String finalAbilityName = getFinalAbilityName();
+        Ability finalAbility = AbilityManager.getInstance().getAbility(finalAbilityName);
+
+        if (finalAbility.getAbilityActive(player)) {
             NetworkHandler.INSTANCE.sendToServer(new SummonWitherMinionsPacket());
             WitherMinions.getInstance().clientChangeActive(player);
         }
@@ -335,14 +344,14 @@ public void witherMinionRemove(ServerPlayer player){
         if(getFinalAbilityActive(player)) {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (EffectiveSide.get() == LogicalSide.SERVER) {
-                    if (!data.areMinionsActive && !ClientWitherData.getMinionsActive() && bData.isWitherActive) {
+                    if (!data.areMinionsActive && !getAbilityActive(player) && getFinalAbilityActive(player)) {
                         fillPerSecondCooldown(player);
                         fillPerSecondCooldown(player);
                         fillPerSecondCooldown(player);
                         fillPerSecondCooldown(player);
                         fillPerSecondCooldown(player);
                         fillPerSecondCooldown(player);
-                    } else if (data.areMinionsActive || ClientWitherData.getMinionsActive()) {
+                    } else if (data.areMinionsActive || getAbilityActive(player)) {
                         drainPerSecondCooldown(player);
                     }
                     if (data.abilityCooldown >= data.getMAX_COOLDOWN() && data.areMinionsActive) {
@@ -375,14 +384,14 @@ public void witherMinionRemove(ServerPlayer player){
         if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherData4Packet(data.abilityCooldown, data.areMinionsActive)
+                    new SyncAbility4Packet(data.abilityCooldown, data.areMinionsActive)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenFinal.name().equals(getName());
+        return abilityData.chosenFinal.equals(getName());
     }
 
 

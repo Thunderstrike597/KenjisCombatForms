@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @JeiPlugin
-public class JEIKenjisCombatFormsPlugin implements IModPlugin {
+public class JEIEpicFightCombatFormsPlugin implements IModPlugin {
     @Override
     public @NotNull ResourceLocation getPluginUid() {
         return new ResourceLocation(KenjisCombatForms.MOD_ID, "jei_plugin");

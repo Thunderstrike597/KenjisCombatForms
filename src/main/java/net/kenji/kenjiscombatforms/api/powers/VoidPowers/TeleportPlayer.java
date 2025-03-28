@@ -5,12 +5,12 @@ import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.*;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility1Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.voidform.ability1.SyncVoidDataPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ability1.TeleportPlayerPacket;
@@ -46,7 +46,17 @@ public class TeleportPlayer implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.VOID_ABILITY1.name();
+        return "VOID_ABILITY1";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 155;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -104,7 +114,7 @@ public class TeleportPlayer implements Ability {
         return INSTANCE;
     }
     public void setAbilityCooldown(Player player) {
-        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
+        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
     }
 
 
@@ -138,7 +148,7 @@ public class TeleportPlayer implements Ability {
     public void sendPacketToServer(Player player) {
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
         if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
-            if (ClientVoidData.getCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(player).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+            if (data.getClientAbilityCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(player).getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
                if(data.tpPressCounter >= 0) {
                    data.tpPressCounter--;
                }
@@ -181,17 +191,17 @@ public class TeleportPlayer implements Ability {
     public void tickServerAbilityData(ServerPlayer player) {
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        if(abilityData.chosenAbility1.name().equals(getName())) {
+      //  if(abilityData.chosenAbility1.equals(getName())) {
             getInstance().decrementCooldown(player);
             syncDataToClient(player);
-        }
+       // }
     }
 
     @Override
     public void tickClientAbilityData(Player player) {
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
 
-        boolean isAbilitySelectionMode = KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get();
+        boolean isAbilitySelectionMode = EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get();
         KeyMapping isAbilityKeyDown = isAbilitySelectionMode ? ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY : ModKeybinds.ABILITY1_KEY;
 
         if (data.tpPressCounter <= 0 && !isAbilityKeyDown.isDown()) {
@@ -208,18 +218,18 @@ public class TeleportPlayer implements Ability {
     @Override
     public void syncDataToClient(ServerPlayer player) {
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
-        if(isAbilityChosenOrEquipped(player)) {
-            NetworkHandler.INSTANCE.send(
+        //if(isAbilityChosenOrEquipped(player)) {
+        NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncVoidDataPacket(data.abilityCooldown)
+                    new SyncAbility1Packet(data.abilityCooldown, false, false)
             );
-        }
+        //}
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenAbility1.name().equals(getName());
+        return abilityData.chosenAbility1.equals(getName());
     }
 
 
@@ -238,7 +248,7 @@ public class TeleportPlayer implements Ability {
     @OnlyIn(Dist.CLIENT)
     public void blink(Player player){
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
-        float currentVoidCooldown = ClientVoidData.getCooldown();
+        float currentVoidCooldown = data.getClientAbilityCooldown();
 
         if (currentVoidCooldown <= data.getMAX_COOLDOWN() / 2 && getLookingBlock(player, data.maxDist) != null) {
             BlinkEffect.triggerFade(player);

@@ -19,9 +19,8 @@ public class VoidGrabPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
             if (player != null) {
-                System.out.println("Received teleport request for player: " + player.getName().getString());
                 VoidGrab.getInstance().triggerAbility(player);
-            }else  System.out.println("DID NOT RECIEVE PACKET");
+            }
         });
         ctx.setPacketHandled(true);
     }

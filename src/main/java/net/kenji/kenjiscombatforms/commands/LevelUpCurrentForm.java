@@ -5,12 +5,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_level.SyncServerFormLevelPacket;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,10 +34,10 @@ public class LevelUpCurrentForm {
         Player player = source.getPlayer();
         if (player != null) {
             FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(player);
-            FormManager.FormSelectionOption currentForm = formData.selectedForm;
-            Form form = FormManager.getInstance().getForm(currentForm.name());
+            String currentForm = formData.selectedForm;
+            Form form = FormManager.getInstance().getForm(currentForm);
             AbstractFormData currentFormData = form.getFormData(player.getUUID());
-            int addedXPMAX = currentFormData.getCurrentFormXpMAX() * KenjisCombatFormsCommon.LEVEL2_FORM_MAX_XP_ADDITION.get();
+            int addedXPMAX = currentFormData.getCurrentFormXpMAX() * EpicFightCombatFormsCommon.LEVEL2_FORM_MAX_XP_ADDITION.get();
 
             switch (currentFormData.getCurrentFormLevel()) {
                 case LEVEL1 ->

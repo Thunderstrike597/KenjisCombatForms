@@ -3,6 +3,10 @@ package net.kenji.kenjiscombatforms.screen.form_menu;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.api.managers.forms.PowerForm;
+import net.kenji.kenjiscombatforms.api.managers.forms.SwiftForm;
+import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
+import net.kenji.kenjiscombatforms.api.managers.forms.WitherForm;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form1SwapPacket;
@@ -16,6 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Objects;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -119,17 +125,17 @@ public class FormSwapMenu extends Screen {
 
 
 
-            if (ClientFistData.getForm1Option() != FormManager.FormSelectionOption.NONE) {
+            if (!Objects.equals(ClientFistData.getForm1Option(), "NONE")) {
                 form1DrawPosY();
                 Form1SwapButton formButton1 = new Form1SwapButton(formButtonOffsetX, form1ButtonOffsetY, formButtonDrawPosX, form1ButtonDrawPosY, translatedForm1Text, button -> chooseForm1Option(getMinecraft().player), 76, 20);
                 this.addRenderableWidget(formButton1);
             }
-            if (ClientFistData.getForm2Option()  != FormManager.FormSelectionOption.NONE) {
+            if (!Objects.equals(ClientFistData.getForm2Option(), "NONE")) {
                 form2DrawPosY();
                 Form2SwapButton formButton2 = new Form2SwapButton(formButtonOffsetX, form2ButtonOffsetY, formButtonDrawPosX, form2ButtonDrawPosY, translatedForm2Text, button -> chooseForm2Option(getMinecraft().player), 76, 20);
                 this.addRenderableWidget(formButton2);
             }
-            if (ClientFistData.getForm3Option()  != FormManager.FormSelectionOption.NONE) {
+            if (!Objects.equals(ClientFistData.getForm3Option(), "NONE")) {
                 form3DrawPosY();
                 Form3SwapButton formButton3 = new Form3SwapButton(formButtonOffsetX, form3ButtonOffsetY, formButtonDrawPosX, form3ButtonDrawPosY, translatedForm3Text, button -> chooseForm3Option(getMinecraft().player), 76, 20);
                 this.addRenderableWidget(formButton3);
@@ -138,20 +144,20 @@ public class FormSwapMenu extends Screen {
     }
 
     private String getForm1Name(){
-        if(ClientFistData.getForm1Option() != FormManager.FormSelectionOption.NONE){
-            return ClientFistData.getForm1Option().name();
+        if(!Objects.equals(ClientFistData.getForm1Option(), "NONE")){
+            return ClientFistData.getForm1Option();
         }
         return "none";
     }
     private String getForm2Name(){
-        if(ClientFistData.getForm2Option() != FormManager.FormSelectionOption.NONE){
-            return ClientFistData.getForm2Option().name();
+        if(!Objects.equals(ClientFistData.getForm2Option(), "NONE")){
+            return ClientFistData.getForm2Option();
         }
         return "none";
     }
     private String getForm3Name(){
-        if(ClientFistData.getForm3Option() != FormManager.FormSelectionOption.NONE){
-            return ClientFistData.getForm3Option().name();
+        if(!Objects.equals(ClientFistData.getForm3Option(), "NONE")){
+            return ClientFistData.getForm3Option();
         }
         return "none";
     }
@@ -170,36 +176,18 @@ public class FormSwapMenu extends Screen {
 
 
     private void form1DrawPosY(){
-        if(ClientFistData.getForm1Option() == FormManager.FormSelectionOption.VOID){
-            form1ButtonDrawPosY = 151;
-        } if(ClientFistData.getForm1Option() == FormManager.FormSelectionOption.WITHER){
-            form1ButtonDrawPosY = 172;
-        } if(ClientFistData.getForm1Option() == FormManager.FormSelectionOption.SWIFT){
-            form1ButtonDrawPosY = 193;
-        } if(ClientFistData.getForm1Option() == FormManager.FormSelectionOption.POWER){
-            form1ButtonDrawPosY = 214;
+        if(!getForm1Name().equals("none")) {
+            form1ButtonDrawPosY = FormManager.getInstance().getForm(getForm1Name()).getGUISwapPos();
         }
     }
     private void form2DrawPosY(){
-        if(ClientFistData.getForm2Option() == FormManager.FormSelectionOption.VOID){
-            form2ButtonDrawPosY = 151;
-        } if(ClientFistData.getForm2Option() == FormManager.FormSelectionOption.WITHER){
-            form2ButtonDrawPosY = 172;
-        }if(ClientFistData.getForm2Option() == FormManager.FormSelectionOption.SWIFT){
-            form2ButtonDrawPosY = 193;
-        }if(ClientFistData.getForm2Option() == FormManager.FormSelectionOption.POWER){
-            form2ButtonDrawPosY = 214;
+        if(!getForm2Name().equals("none")) {
+            form2ButtonDrawPosY = FormManager.getInstance().getForm(getForm2Name()).getGUISwapPos();
         }
     }
     private void form3DrawPosY(){
-        if(ClientFistData.getForm3Option() == FormManager.FormSelectionOption.VOID){
-            form3ButtonDrawPosY = 151;
-        } if(ClientFistData.getForm3Option() == FormManager.FormSelectionOption.WITHER){
-            form3ButtonDrawPosY = 172;
-        } if(ClientFistData.getForm3Option() == FormManager.FormSelectionOption.SWIFT){
-            form3ButtonDrawPosY = 193;
-        } if(ClientFistData.getForm3Option() == FormManager.FormSelectionOption.POWER){
-            form3ButtonDrawPosY = 214;
+        if(!getForm3Name().equals("none")) {
+            form3ButtonDrawPosY = FormManager.getInstance().getForm(getForm3Name()).getGUISwapPos();
         }
     }
 

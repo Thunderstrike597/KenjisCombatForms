@@ -1,13 +1,9 @@
 package net.kenji.kenjiscombatforms.network.fist_forms.form_swap;
 
-import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
-import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.kenji.kenjiscombatforms.screen.form_menu.FormChooseMenu;
 import net.kenji.kenjiscombatforms.screen.form_menu.FormSwapMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;

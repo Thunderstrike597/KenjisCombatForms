@@ -37,12 +37,12 @@ public class WitherFormDashAbility implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AltAbilityOption.WITHER_DASH.name();
+        return "WITHER_DASH";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.WITHER_FINAL.name();
+        return "WITHER_FINAL";
     }
 
     public WitherPlayerDataSets.WitherFormDashPlayerData getPlayerData(Player player) {
@@ -193,7 +193,7 @@ public class WitherFormDashAbility implements FinalAbility {
                if (cap instanceof PlayerPatch playerPatch) {
                    if (playerPatch.getStamina() >= playerPatch.getMaxStamina()) {
                        if (getPlayerData(serverPlayer).abilityCooldown <= getPlayerData(serverPlayer).getMAX_COOLDOWN()) {
-                           if (wData.isWitherActive && eData.abilityCooldown <= eData.getMAX_COOLDOWN()) {
+                           if (wData.isAbilityActive() && eData.abilityCooldown <= eData.getMAX_COOLDOWN()) {
                                fillPerSecondCooldown(player);
                            }
                        }

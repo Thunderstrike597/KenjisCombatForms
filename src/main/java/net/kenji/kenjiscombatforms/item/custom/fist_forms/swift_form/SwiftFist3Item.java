@@ -2,14 +2,13 @@ package net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseSwiftClass;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -48,12 +47,12 @@ public class SwiftFist3Item extends BaseSwiftClass {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
             builder.putAll(super.getDefaultAttributeModifiers(slot));
 
-            int baseDamage = KenjisCombatFormsCommon.SWIFT_FORM_BASE_DAMAGE.get();
-            double damageMultiplier = KenjisCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
+            int baseDamage = EpicFightCombatFormsCommon.SWIFT_FORM_BASE_DAMAGE.get();
+            double damageMultiplier = EpicFightCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 
-            double baseSpeed = KenjisCombatFormsCommon.SWIFT_FORM_BASE_SPEED.get();
-            double speedMultiplier = KenjisCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
+            double baseSpeed = EpicFightCombatFormsCommon.SWIFT_FORM_BASE_SPEED.get();
+            double speedMultiplier = EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
             double finalSpeed = baseSpeed * speedMultiplier;
 
             builder.put(Attributes.ATTACK_DAMAGE,

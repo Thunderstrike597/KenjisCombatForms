@@ -37,7 +37,7 @@ public class ModEventBusClientEvents {
         EntityRenderers.register(ModEntities.ENDER_PLAYER.get(), EnderEntityRenderer::new);
         EntityRenderers.register(ModEntities.WITHER_PLAYER.get(), WitherPlayerRenderer::new);
         EntityRenderers.register(ModEntities.WITHER_MINION.get(), WitherMinionRenderer::new);
-        EntityRenderers.register(ModEntities.ABILITY_TRADER.get(), ScrollTraderRenderer::new);
+        EntityRenderers.register(ModEntities.SCROLL_TRADER.get(), ScrollTraderRenderer::new);
     }
 
     @SubscribeEvent

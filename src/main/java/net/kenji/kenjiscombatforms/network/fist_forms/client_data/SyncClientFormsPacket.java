@@ -11,15 +11,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SyncClientFormsPacket {
-    private final FormManager.FormSelectionOption form1;
-    private final FormManager.FormSelectionOption from2;
-    private final FormManager.FormSelectionOption from3;
+    private final String form1;
+    private final String from2;
+    private final String from3;
     private final FormLevelManager.FormLevel currentFormLevel;
     private final int currentFormXp;
     private final int currentFormXpMAX;
 
 
-    public SyncClientFormsPacket(FormManager.FormSelectionOption form1Option, FormManager.FormSelectionOption form2Option, FormManager.FormSelectionOption form3Option,  FormLevelManager.FormLevel currentFormLevel, int currentFormXp, int currentFormXpMAX) {
+    public SyncClientFormsPacket(String form1Option, String form2Option, String form3Option,  FormLevelManager.FormLevel currentFormLevel, int currentFormXp, int currentFormXpMAX) {
         this.form1 = form1Option;
         this.from2 = form2Option;
         this.from3 = form3Option;
@@ -29,18 +29,18 @@ public class SyncClientFormsPacket {
     }
 
     public SyncClientFormsPacket(FriendlyByteBuf buf) {
-     this.form1 = buf.readEnum(FormManager.FormSelectionOption.class);
-     this.from2 = buf.readEnum(FormManager.FormSelectionOption.class);
-     this.from3 = buf.readEnum(FormManager.FormSelectionOption.class);
+     this.form1 = buf.readUtf();
+     this.from2 = buf.readUtf();
+     this.from3 = buf.readUtf();
      this.currentFormLevel = buf.readEnum(FormLevelManager.FormLevel.class);
      this.currentFormXp = buf.readInt();
      this.currentFormXpMAX = buf.readInt();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeEnum(this.form1);
-        buf.writeEnum(this.from2);
-        buf.writeEnum(this.from3);
+        buf.writeUtf(this.form1);
+        buf.writeUtf(this.from2);
+        buf.writeUtf(this.from3);
         buf.writeEnum(this.currentFormLevel);
         buf.writeInt(this.currentFormXp);
         buf.writeInt(this.currentFormXpMAX);
@@ -52,8 +52,6 @@ public class SyncClientFormsPacket {
             if(ctx.getDirection().getReceptionSide().isClient()) {
                 clientSideOperations(msg);
             }
-
-
         });
     }
     @OnlyIn(Dist.CLIENT)

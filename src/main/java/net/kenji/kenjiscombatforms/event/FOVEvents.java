@@ -3,12 +3,10 @@ package net.kenji.kenjiscombatforms.event;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.api.powers.VoidPowers.TeleportPlayer;
-import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.api.powers.VoidPowers.TeleportPlayer;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
@@ -24,6 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,15 +71,12 @@ public class FOVEvents {
             EnderPlayerDataSets.EnderFormPlayerData ePlayerData = getInstance().getOrCreateEnderFormPlayerData(clientPlayer);
             EnderPlayerDataSets.TeleportPlayerData tpData = getInstance().enderDataSets.getOrCreateTeleportPlayerData(clientPlayer);
 
-            int currentWitherCooldown = ClientWitherData.getCooldown();
-            ItemStack itemInUse = clientPlayer.getUseItem();
 
+            if (ModKeybinds.ABILITY1_KEY.isDown() || ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY.isDown() && EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
+                if (Objects.equals(AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1, TeleportPlayer.getInstance().getName()) ||
+                        Objects.equals(ClientFistData.getChosenAbility1(), TeleportPlayer.getInstance().getName())) {
 
-            if (ModKeybinds.ABILITY1_KEY.isDown() || ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY.isDown() && KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {
-                if (AbilityManager.getInstance().getPlayerAbilityData(clientPlayer).chosenAbility1 == AbilityManager.AbilityOption1.VOID_ABILITY1 ||
-                        ClientFistData.getChosenAbility1() == AbilityManager.AbilityOption1.VOID_ABILITY1) {
-
-                    if (ClientVoidData.getCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(clientPlayer).getMAX_COOLDOWN() / 2) {
+                    if (tpData.getClientAbilityCooldown() <= EnderPlayerDataSets.getInstance().getOrCreateTeleportPlayerData(clientPlayer).getMAX_COOLDOWN() / 2) {
                         float zoomProgress = 1.0F - ((float) tpData.tpPressCounter / INITIAL_PRESS_COUNTER);
 
                         // Calculate target FOV, but only zoom out to halfway point
@@ -98,7 +94,7 @@ public class FOVEvents {
                 }
 
             }
-            if (ePlayerData.isEnderActive) {
+            if (ePlayerData.isAbilityActive()) {
                 event.setFOV(ENDER_FOV);
             }
         }

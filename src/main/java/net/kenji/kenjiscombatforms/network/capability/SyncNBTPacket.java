@@ -50,9 +50,9 @@ public class SyncNBTPacket {
                             }
 
                             FormChangeHandler.getInstance().setSelectedFormChanged(player, msg.originalSlot);
-                            container.setStoredItem(msg.storedItem);
                             commonEventHandler.setStoredItemNBT(player, msg.storedItem);
                             commonEventHandler.setOriginalSlot(player, msg.originalSlot);
+                            container.setStoredItem(msg.storedItem);
                             container.setOriginalSlot(msg.originalSlot);
 
 
@@ -67,9 +67,9 @@ public class SyncNBTPacket {
 
                             player.getInventory().setItem(msg.originalSlot, msg.storedItem);
 
-                            container.setStoredItem(msg.storedItem);
                             commonEventHandler.setStoredItemNBT(player, msg.storedItem);
                             commonEventHandler.setOriginalSlot(player, msg.originalSlot);
+                            container.setStoredItem(msg.storedItem);
                             container.setOriginalSlot(msg.originalSlot);
                             player.inventoryMenu.broadcastChanges();
                         });

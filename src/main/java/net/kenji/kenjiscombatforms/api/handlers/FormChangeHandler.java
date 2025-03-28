@@ -7,7 +7,7 @@ import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.managers.forms.*;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
@@ -23,15 +23,14 @@ import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFist
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFist3Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFistItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.*;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
-import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.List;
+import java.util.Objects;
 
 public class FormChangeHandler {
     private static final FormChangeHandler INSTANCE = new FormChangeHandler();
@@ -46,31 +45,28 @@ public class FormChangeHandler {
 
 
     public void resetAllFormValues(Player player) {
-        setFormValues(player, FormManager.FormSelectionOption.NONE);
+        setFormValues(player, "NONE");
     }
 
     public boolean hasSelectedForms(Player player) {
         FormManager.PlayerFormData data = formManager.getFormData(player);
         syncDataToClient(player);
-        return data.form1 != FormManager.FormSelectionOption.NONE ||
-                data.form2 != FormManager.FormSelectionOption.NONE ||
-                data.form3 != FormManager.FormSelectionOption.NONE;
+        List<Form> forms = FormManager.getInstance().getCurrentForms(player);
+
+        return !Objects.equals(forms.get(1).getName(), "NONE") &&
+                !Objects.equals(forms.get(2).getName(), "NONE") &&
+                !Objects.equals(forms.get(3).getName(), "NONE");
     }
 
     public void resetCurrentFormLevel(Player player) {
         FormManager.PlayerFormData formData = formManager.getFormData(player);
-        if (shouldResetForm(formData.selectedForm)) {
+
             resetFormProgress(player);
-        }
+
         syncDataToClient(player);
     }
 
-    private boolean shouldResetForm(FormManager.FormSelectionOption form) {
-        return switch (form) {
-            case BASIC, VOID, WITHER, SWIFT, POWER -> true;
-            default -> false;
-        };
-    }
+
 
     private void resetFormProgress(Player player) {
         FormManager.PlayerFormData formData = formManager.getFormData(player);
@@ -78,12 +74,12 @@ public class FormChangeHandler {
 
         currentFormData.setCurrentFormLevel(FormLevelManager.FormLevel.LEVEL1);
         currentFormData.setCurrentFormXp(0);
-        currentFormData.setCurrentFormXpMAX(KenjisCombatFormsCommon.MAX_FORM_STARTING_XP.get());
+        currentFormData.setCurrentFormXpMAX(EpicFightCombatFormsCommon.MAX_FORM_STARTING_XP.get());
 
         syncDataToClient(player);
     }
 
-    private void setFormValues(Player player, FormManager.FormSelectionOption value) {
+    private void setFormValues(Player player, String value) {
         FormManager.PlayerFormData data = formManager.getFormData(player);
         data.form1 = value;
         data.form2 = value;
@@ -91,7 +87,7 @@ public class FormChangeHandler {
         syncDataToClient(player);
     }
 
-    public void setFormOption(Player player, FormManager.FormSelectionOption formOption) {
+    public void setFormOption(Player player, String formOption) {
         FormManager.PlayerFormData data = formManager.getFormData(player);
         formManager.updatePlayerData(player.getUUID(), data);
 
@@ -99,24 +95,25 @@ public class FormChangeHandler {
             if (hasSelectedForms(player)) {
                 NetworkHandler.INSTANCE.send(
                         PacketDistributor.PLAYER.with(() -> serverPlayer),
-                        new FormToSwapPacket(formOption.name())
+                        new FormToSwapPacket(formOption)
                 );
             }
 
-            if (data.form1 == FormManager.FormSelectionOption.NONE) {
+            if (Objects.equals(data.form1, "NONE")) {
                 data.form1 = formOption;
-            } else if (data.form2 == FormManager.FormSelectionOption.NONE) {
+            } else if (Objects.equals(data.form2, "NONE")) {
                 data.form2 = formOption;
-            } else if (data.form3 == FormManager.FormSelectionOption.NONE) {
+            } else if (Objects.equals(data.form3, "NONE")) {
                 data.form3 = formOption;
             }
+
 
             updateSavedData(serverPlayer);
         }
     }
 
 
-    public void setFormSwapOption(Player player, int slot, FormManager.FormSelectionOption formOption) {
+    public void setFormSwapOption(Player player, int slot, String formOption) {
         FormManager.PlayerFormData data = formManager.getFormData(player);
         AbstractFormData formData = getFormData(player, formOption);
         formManager.updatePlayerData(player.getUUID(), data);
@@ -131,7 +128,7 @@ public class FormChangeHandler {
         syncDataToClient(player);
     }
 
-    public void setSelectedForm(Player player, FormManager.FormSelectionOption form) {
+    public void setSelectedForm(Player player, String form) {
         FormManager.PlayerFormData data = formManager.getFormData(player);
         data.selectedForm = form;
         AbstractFormData formData = getFormData(player, form);
@@ -140,52 +137,51 @@ public class FormChangeHandler {
         syncDataToClient(player);
     }
 
-    private AbstractFormData getFormData(Player player, FormManager.FormSelectionOption form) {
-        return formManager.getForm(form.name()).getFormData(player.getUUID());
+    private AbstractFormData getFormData(Player player, String form) {
+        return formManager.getForm(form).getFormData(player.getUUID());
     }
 
-    public boolean isFormSelected(Player player, FormManager.FormSelectionOption form) {
-        return formManager.getFormData(player).selectedForm == form;
+    public boolean isFormSelected(Player player, String form) {
+        return Objects.equals(formManager.getFormData(player).selectedForm, form);
     }
 
     public boolean getBasicSelected(Player player) {
-        return isFormSelected(player, FormManager.FormSelectionOption.BASIC);
+        return isFormSelected(player, BasicForm.getInstance().getName());
     }
 
     public boolean getVoidSelected(Player player) {
-        return isFormSelected(player, FormManager.FormSelectionOption.VOID);
+        return isFormSelected(player, VoidForm.getInstance().getName());
     }
 
     public boolean getWitherSelected(Player player) {
-        return isFormSelected(player, FormManager.FormSelectionOption.WITHER);
+        return isFormSelected(player, WitherForm.getInstance().getName());
     }
 
     public boolean getSwiftSelected(Player player) {
-        return isFormSelected(player, FormManager.FormSelectionOption.SWIFT);
+        return isFormSelected(player, SwiftForm.getInstance().getName());
     }
 
     public boolean getPowerSelected(Player player) {
-        return isFormSelected(player, FormManager.FormSelectionOption.POWER);
+        return isFormSelected(player, PowerForm.getInstance().getName());
     }
 
     private void syncDataToClient(Player player) {
-        FormManager.PlayerFormData formData = formManager.getFormData(player);
-        AbstractFormData currentFormData = getFormData(player, formData.selectedForm);
-        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
+        List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
+        List<AbstractFormData> formData = FormManager.getInstance().getCurrentFormData(player);
+
+
+        Form currentForm = FormManager.getInstance().getForm(formValue.get(0).getName());
+        AbstractFormData currentFormData = formData.get(0);
+
 
         if (player instanceof ServerPlayer serverPlayer) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new SyncClientFormsPacket(formData.form1, formData.form2, formData.form3,
+                    new SyncClientFormsPacket(formValue.get(1).getName(), formValue.get(2).getName(), formValue.get(3).getName(),
                             currentFormData.getCurrentFormLevel(), currentFormData.getCurrentFormXp(),
                             currentFormData.getCurrentFormXpMAX())
             );
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new SyncClientAbilityPacket(abilityData.ability1, abilityData.ability2, abilityData.ability3,
-                            abilityData.chosenAbility1, abilityData.chosenAbility2, abilityData.chosenFinal,
-                            formData.selectedForm)
-            );
+          currentForm.syncDataToClient(player);
         }
     }
 
@@ -195,135 +191,13 @@ public class FormChangeHandler {
         savedData.setDirty();
     }
 
-
     public void setSelectedFormChanged(ServerPlayer player, int slot){
-        LevelHandler levelHandler = LevelHandler.getInstance();
+        List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
+        Form currentForm = FormManager.getInstance().getForm(formValue.get(0).getName());
 
-
-            if (basicSelected(player)) {
-                setBasicFistForm(player, slot);
-            } else if (voidSelected(player)) {
-                setVoidFistForm(player, slot);
-            } else if (witherSelected(player)) {
-                setWitherFistForm(player, slot);
-            } else if (swiftSelected(player)) {
-                setSwiftFistForm(player, slot);
-            } else if (powerSelected(player)) {
-                setPowerFistForm(player, slot);
-            }
+           currentForm.setCurrentForm(player, slot);
     }
     public void removeCurrentFormItem(Player player, int slot){
         player.getMainHandItem().isEmpty();
-    }
-
-
-    private static boolean basicSelected(Player player){
-        return FormChangeHandler.getInstance().getBasicSelected(player);
-    }
-    private static boolean voidSelected(Player player){
-        return FormChangeHandler.getInstance().getVoidSelected(player);
-    }
-    private static boolean witherSelected(Player player){
-        return FormChangeHandler.getInstance().getWitherSelected(player);
-    }
-    private static boolean swiftSelected(Player player){
-        return FormChangeHandler.getInstance().getSwiftSelected(player);
-    }
-    private static boolean powerSelected(Player player){
-        return FormChangeHandler.getInstance().getPowerSelected(player);
-    }
-
-
-    private static boolean isNearItem(Player player){
-        return CommonEventHandler.getInstance().getIsNearItem(player);
-    }
-
-    private static void setBasicFistForm(ServerPlayer player, int slot){
-        BasicFistItem basicFistItem = BasicFistItem.getInstance();
-        BasicFist2Item basicFist2Item = BasicFist2Item.getInstance();
-        BasicFist3Item basicFist3Item = BasicFist3Item.getInstance();
-
-        AbstractFormData basicFormData = BasicForm.getInstance().getFormData(player.getUUID());
-
-        if (basicFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            basicFistItem.setFormMainHand(player, slot);
-        }
-        else if (basicFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
-            basicFist2Item.setFormMainHand(player, slot);
-        }
-        else if (basicFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            basicFist3Item.setFormMainHand(player, slot);
-        }
-    }
-
-
-
-    private static void setVoidFistForm(ServerPlayer player, int slot){
-        VoidFistItem voidFistItem = VoidFistItem.getInstance();
-        VoidFist2Item voidFist2Item = VoidFist2Item.getInstance();
-        VoidFist2Item voidFist3Item = VoidFist2Item.getInstance();
-
-        AbstractFormData voidFormData = VoidForm.getInstance().getFormData(player.getUUID());
-
-        if (voidFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            voidFistItem.setVoidFormMainHand(player, slot);
-        }
-        else if (voidFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
-            voidFist2Item.setVoidFormMainHand(player, slot);
-        }
-        else if (voidFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            voidFist3Item.setVoidFormMainHand(player, slot);
-        }
-    }
-    private static void setWitherFistForm(ServerPlayer player, int slot){
-        WitherFistItem witherFistItem = WitherFistItem.getInstance();
-        WitherFist2Item witherFist2Item = WitherFist2Item.getInstance();
-        WitherFist3Item witherFist3Item = WitherFist3Item.getInstance();
-
-        AbstractFormData witherFormData = WitherForm.getInstance().getFormData(player.getUUID());
-
-        if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            witherFistItem.setWitherFormMainHand(player, slot);
-        }
-        else if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            witherFist2Item.setWitherFormMainHand(player, slot);
-        }
-        else if (witherFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            witherFist3Item.setWitherFormMainHand(player, slot);
-        }
-    }
-    private static void setSwiftFistForm(ServerPlayer player, int slot){
-        SwiftFistItem fistItem = SwiftFistItem.getInstance();
-        SwiftFist2Item fist2Item = SwiftFist2Item.getInstance();
-        SwiftFist3Item fist3Item = SwiftFist3Item.getInstance();
-
-        AbstractFormData swiftFormData = SwiftForm.getInstance().getFormData(player.getUUID());
-
-        if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            fistItem.setFormMainHand(player, slot);
-        }
-        else if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            fist2Item.setFormMainHand(player, slot);
-        }
-        else if (swiftFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            fist3Item.setFormMainHand(player, slot);
-        }
-    }
-    private static void setPowerFistForm(ServerPlayer player, int slot){
-        PowerFistItem fistItem = PowerFistItem.getInstance();
-        PowerFist2Item fist2Item = PowerFist2Item.getInstance();
-        PowerFist3Item fist3Item = PowerFist3Item.getInstance();
-
-        AbstractFormData powerFormData = PowerForm.getInstance().getFormData(player.getUUID());
-
-        if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-            fistItem.setFormMainHand(player, slot);
-        }
-        else if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-            fist2Item.setFormMainHand(player, slot);
-        }
-        else if (powerFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-            fist3Item.setFormMainHand(player, slot);
-        }
     }
 }

@@ -1,7 +1,12 @@
 package net.kenji.kenjiscombatforms.network.voidform.ability1;
 
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SyncVoidDataPacket {
@@ -22,7 +27,12 @@ public class SyncVoidDataPacket {
     public static void handle(SyncVoidDataPacket msg, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             // Update client-side data
-            ClientVoidData.setCooldown(msg.cooldown);
+            if(ctx.getDirection().getReceptionSide().isClient()){
+                Player player = Minecraft.getInstance().player;
+                if(player != null) {
+
+                }
+            }
         });
     }
 }

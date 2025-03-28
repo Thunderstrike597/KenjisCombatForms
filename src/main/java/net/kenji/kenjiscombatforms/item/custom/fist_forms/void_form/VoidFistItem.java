@@ -2,16 +2,12 @@ package net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseVoidClass;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
-import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -44,12 +40,12 @@ public class VoidFistItem extends BaseVoidClass {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
             builder.putAll(super.getDefaultAttributeModifiers(slot));
 
-            int baseDamage = KenjisCombatFormsCommon.VOID_FORM_BASE_DAMAGE.get();
-            double damageMultiplier = KenjisCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
+            int baseDamage = EpicFightCombatFormsCommon.VOID_FORM_BASE_DAMAGE.get();
+            double damageMultiplier = EpicFightCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 
-            double baseSpeed = KenjisCombatFormsCommon.VOID_FORM_BASE_SPEED.get();
-            double speedMultiplier = KenjisCombatFormsCommon.LEVEL1_SPEED_MULTIPLIER.get();
+            double baseSpeed = EpicFightCombatFormsCommon.VOID_FORM_BASE_SPEED.get();
+            double speedMultiplier = EpicFightCombatFormsCommon.LEVEL1_SPEED_MULTIPLIER.get();
             double finalSpeed = baseSpeed * speedMultiplier;
 
             builder.put(Attributes.ATTACK_DAMAGE,

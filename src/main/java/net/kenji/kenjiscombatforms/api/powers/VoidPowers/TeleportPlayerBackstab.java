@@ -5,7 +5,7 @@ import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
@@ -19,7 +19,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.*;
@@ -47,7 +46,17 @@ public class TeleportPlayerBackstab implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AltAbilityOption.VOID_BACKSTAB.name();
+        return "VOID_BACKSTAB";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 155;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -111,7 +120,7 @@ public class TeleportPlayerBackstab implements Ability {
     }
 
     public void setAbilityCooldown(Player player) {
-        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
+        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
     }
 
     ServerPlayer serverPlayer;
@@ -147,7 +156,7 @@ public class TeleportPlayerBackstab implements Ability {
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(serverPlayer);
         long currentTime = System.currentTimeMillis();
         if (getLookingEntity(serverPlayer, data.maxDist) != null) {
-            if (data.abilityCooldown <= data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+            if (data.abilityCooldown <= data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
                 activateAbility(serverPlayer);
                 playSound(serverPlayer);
                 setAbilityCooldown(serverPlayer);
@@ -246,7 +255,7 @@ public class TeleportPlayerBackstab implements Ability {
     public void blink(Player player){
         EnderPlayerDataSets.TeleportPlayerData data = getPlayerData(player);
        if(getLookingEntity(player, data.maxDist) != null) {
-           int currentVoidCooldown = ClientVoidData.getCooldown2();
+           int currentVoidCooldown = data.getClientAbilityCooldown();
            if (currentVoidCooldown <= data.getMAX_COOLDOWN() / 2) {
                BlinkEffect.triggerFade(player);
            }
@@ -256,7 +265,7 @@ public class TeleportPlayerBackstab implements Ability {
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenAbility1.name().equals(getName());
+        return abilityData.chosenAbility1.equals(getName());
     }
 
     public Entity getLookingEntity(Player player, int maxDistance){

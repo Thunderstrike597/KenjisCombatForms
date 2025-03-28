@@ -4,6 +4,10 @@ import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherFormAbility;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
@@ -51,17 +55,24 @@ public class ClientEventHandler {
     }
 
     public boolean getAreFinalsActive(){
-        return ClientVoidData.getIsEnderActive() || ClientWitherData.getIsWitherActive();
-    }
-    public boolean getIsAllButWitherActive(){
-        return ClientVoidData.getIsEnderActive() && !ClientWitherData.getIsWitherActive();
-    }
-    public boolean getAllButEnderActive(){
-        return ClientWitherData.getIsWitherActive() && !ClientVoidData.getIsEnderActive();
+       Player player = Minecraft.getInstance().player;
+       if(player != null) {
+           Ability ability3 = AbilityManager.getInstance().getCurrentAbilities(player).get(2);
+           if (ability3 != null) {
+               AbstractAbilityData ability3Data = ability3.getAbilityData(player);
+               return ability3Data.isAbilityActive();
+           }
+       }
+           return false;
     }
 
-    public boolean getIsWitherActive(){
-        return ClientWitherData.getIsWitherActive();
+    public boolean getIsWitherActive() {
+        Player player = Minecraft.getInstance().player;
+        if (player != null) {
+
+        return WitherFormAbility.getInstance().getAbilityActive(player);
+        }
+        return false;
     }
 
     public void setCanCrash(boolean canCrash){
@@ -100,7 +111,6 @@ public class ClientEventHandler {
                 player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
                     ItemStack storedItem = commonEventHandler.getStoredItem(player);
                     if(!getInstance().getAreFinalsActive()) {
-                        System.out.println("storedItem: " + storedItem);
                         if (storedItem.isEmpty()) {
                             if (!(currentItem.getItem() instanceof BaseFistClass)) {
                                 commonEventHandler.setStoredItemNBT(player, currentItem);
@@ -134,6 +144,7 @@ public class ClientEventHandler {
                             if (currentItem.getItem() instanceof BaseFistClass) {
                                 player.getInventory().setItem(selectedSlot, ItemStack.EMPTY);
                                 NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, selectedSlot));
+                                container.setOriginalSlot(-1);
                             }
                         }
                     }
@@ -157,7 +168,7 @@ public class ClientEventHandler {
                 CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
                 int originalSlot = getInstance().getOriginalSlot(clientPlayer);
 
-                if (ClientWitherData.getIsWitherActive()) {
+                if (WitherFormAbility.getInstance().getAbilityActive(clientPlayer)) {
                     boolean jump = mc.options.keyJump.isDown();
                     boolean sneak = ControlHandler.controlRelatedEvents.getInstance().getShiftDown(clientPlayer);
 
@@ -195,6 +206,7 @@ public class ClientEventHandler {
                             NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
                             commonEventHandler.setStoredItemNBT(clientPlayer, ItemStack.EMPTY);
                             commonEventHandler.setOriginalSlot(clientPlayer, -1);
+                            container.setOriginalSlot(-1);
 
                             NetworkHandler.INSTANCE.sendToServer(new SyncRemovedNBTPacket(storedItem, originalSlot));
 

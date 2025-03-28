@@ -1,8 +1,7 @@
 package net.kenji.kenjiscombatforms.entity.custom.SenseiEntities;
 
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
-import net.kenji.kenjiscombatforms.item.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +31,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.*;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -210,15 +208,15 @@ public class ExiledSenseiEntity extends TamableAnimal implements NeutralMob{
 
 
     private static boolean isCompatDifficulty(){
-        return KenjisCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
+        return EpicFightCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
     }
 
     @Override
     public void onAddedToWorld() {
         if (this.isTame()) {
-            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.TAMED_EXILED_SENSEI_HEALTH.get());
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.TAMED_EXILED_SENSEI_HEALTH.get());
         }else if (!this.isTame()) {
-            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.EXILED_SENSEI_HEALTH.get());
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.EXILED_SENSEI_HEALTH.get());
         } if(!hasBeenDamaged){
             setHealth(this.getMaxHealth());
         }
@@ -279,12 +277,12 @@ void isAfraidFunc(){
     double chance = RANDOM.nextDouble();
         float currentHealth = this.getHealth();
        if(getLastAttacker() != null) {
-           if (currentHealth < KenjisCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isTame() && !isAfraidCacheLock && getLastAttacker().is(playerEntity)) {
+           if (currentHealth < EpicFightCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isTame() && !isAfraidCacheLock && getLastAttacker().is(playerEntity)) {
                isAfraidCacheLock = true;
-               if (chance < KenjisCombatFormsCommon.IS_AFRAID_CHANCE.get()) {
+               if (chance < EpicFightCombatFormsCommon.IS_AFRAID_CHANCE.get()) {
                    isAfraidCache = true;
                    System.out.println("Scared Success");
-               } else if(chance > KenjisCombatFormsCommon.IS_AFRAID_CHANCE.get()){
+               } else if(chance > EpicFightCombatFormsCommon.IS_AFRAID_CHANCE.get()){
                    isAfraidCache = false;
                    System.out.println("Scared Failed");
                }
@@ -618,15 +616,15 @@ protected void naturalAggroGoals(){
 
 
         boolean emeraldItem = player.getMainHandItem().is(Items.EMERALD);
-        boolean formItem = player.getMainHandItem().is(KenjisCombatFormsCommon.getSenseiTameItem());
+        boolean formItem = player.getMainHandItem().is(EpicFightCombatFormsCommon.getSenseiTameItem());
         int itemCount = player.getMainHandItem().getCount();
 
         interactPlayer = player;
         long currentTime = System.currentTimeMillis();
             if (interactPlayer != null) {
                 if (!this.level().isClientSide) {
-                    if (emeraldItem && itemCount >= KenjisCombatFormsCommon.TAMING_EMERALDS_MIN.get() && tameProgress == 0 && Boolean.TRUE.equals(isAfraidCache) && !this.isTame() && KenjisCombatFormsCommon.IS_SENSEI_TAMABLE.get()) {
-                        player.getMainHandItem().setCount(itemCount - KenjisCombatFormsCommon.TAMING_EMERALDS_MIN.get());
+                    if (emeraldItem && itemCount >= EpicFightCombatFormsCommon.TAMING_EMERALDS_MIN.get() && tameProgress == 0 && Boolean.TRUE.equals(isAfraidCache) && !this.isTame() && EpicFightCombatFormsCommon.IS_SENSEI_TAMABLE.get()) {
+                        player.getMainHandItem().setCount(itemCount - EpicFightCombatFormsCommon.TAMING_EMERALDS_MIN.get());
                         tameProgress = 1;
                         playTamingProcessEvent(level);
                         return InteractionResult.SUCCESS;
@@ -634,7 +632,7 @@ protected void naturalAggroGoals(){
                 }
             }
 
-        if (Boolean.TRUE.equals(isAfraidCache) && !this.isTame() && formItem && tameProgress == 1 && KenjisCombatFormsCommon.IS_SENSEI_TAMABLE.get()) {
+        if (Boolean.TRUE.equals(isAfraidCache) && !this.isTame() && formItem && tameProgress == 1 && EpicFightCombatFormsCommon.IS_SENSEI_TAMABLE.get()) {
             String messageTameString = "messages.kenjiscombatforms.tame_message";
             this.tame(player);
             deleteFormItem(player);
@@ -645,7 +643,7 @@ protected void naturalAggroGoals(){
             resetAfraidState();
             tameMessage(player, messageTameString);
             lastInteractionTime = currentTime;
-            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.TAMED_EXILED_SENSEI_HEALTH.get());
+            Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.TAMED_EXILED_SENSEI_HEALTH.get());
             this.setHealth(this.getMaxHealth());
            this.removeEffect(MobEffects.GLOWING);
             playTameSoundEvent(level);
@@ -758,9 +756,9 @@ protected void naturalAggroGoals(){
     @Override
     public void setTarget(@Nullable LivingEntity lEntity) {
         if(getLastHurtByMob() != null) {
-            if (this.getHealth() > KenjisCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isStaying && !getLastHurtByMob().is(undeadSensei) && Boolean.FALSE.equals(isAfraidCache)) {
+            if (this.getHealth() > EpicFightCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isStaying && !getLastHurtByMob().is(undeadSensei) && Boolean.FALSE.equals(isAfraidCache)) {
                 this.setLastHurtByMob(lEntity);
-            }else if(this.getHealth() > KenjisCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isStaying && getLastHurtByMob().is(undeadSensei)){
+            }else if(this.getHealth() > EpicFightCombatFormsCommon.IS_AFRAID_MIN_HEALTH.get() && !isStaying && getLastHurtByMob().is(undeadSensei)){
                 this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, UndeadSenseiEntity.class, 6.0F, 1.4, 1.0));
             }
         }
@@ -790,12 +788,12 @@ protected void naturalAggroGoals(){
                 }
 
                 // Check for nearby entities of the same type
-                int searchRadius = KenjisCombatFormsCommon.EXILED_SENSEI_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
+                int searchRadius = EpicFightCombatFormsCommon.EXILED_SENSEI_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
                 List<ExiledSenseiEntity> nearbyEntities = level.getEntitiesOfClass(ExiledSenseiEntity.class,
                         new AABB(pos).inflate(searchRadius),
                         e -> true);
 
-                if(chance < KenjisCombatFormsCommon.EXILED_SENSEI_SPAWN_CHANCE.get()) {
+                if(chance < EpicFightCombatFormsCommon.EXILED_SENSEI_SPAWN_CHANCE.get()) {
                     if (nearbyEntities.isEmpty()) {
                         return true; // Allow spawn if no nearby entities found
                     }

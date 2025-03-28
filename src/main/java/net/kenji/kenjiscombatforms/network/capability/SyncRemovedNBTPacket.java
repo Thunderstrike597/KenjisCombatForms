@@ -2,7 +2,6 @@ package net.kenji.kenjiscombatforms.network.capability;
 
 import net.kenji.kenjiscombatforms.api.capabilities.ExtraContainerCapability;
 import net.kenji.kenjiscombatforms.api.handlers.CommonEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,6 +55,7 @@ public class SyncRemovedNBTPacket {
                             }
                             commonEventHandler.setStoredItemNBT(player, msg.storedItem);
                             commonEventHandler.setOriginalSlot(player, msg.originalSlot);
+                            container.setStoredItem(msg.storedItem);
                             container.setOriginalSlot(msg.originalSlot);
                         });
                     }
@@ -90,6 +90,7 @@ public class SyncRemovedNBTPacket {
                 }
                 commonEventHandler.setStoredItemNBT(player, msg.storedItem);
                 commonEventHandler.setOriginalSlot(player, msg.originalSlot);
+                container.setStoredItem(msg.storedItem);
                 container.setOriginalSlot(msg.originalSlot);
             });
         }

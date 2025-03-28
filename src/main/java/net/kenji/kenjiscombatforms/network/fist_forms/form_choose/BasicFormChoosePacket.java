@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.network.fist_forms.form_choose;
 
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +23,7 @@ public class BasicFormChoosePacket {
             ServerPlayer player = ctx.getSender();
             FormChangeHandler formChangeHandler = FormChangeHandler.getInstance();
             if (player != null) {
-                FormChangeHandler.getInstance().setSelectedForm(player, FormManager.FormSelectionOption.BASIC);
+                FormChangeHandler.getInstance().setSelectedForm(player, BasicForm.getInstance().getName());
                 if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
                     formChangeHandler.setSelectedFormChanged(player, player.getInventory().selected);
                 }

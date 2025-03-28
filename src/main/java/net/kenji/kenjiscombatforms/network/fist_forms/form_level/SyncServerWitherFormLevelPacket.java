@@ -3,11 +3,9 @@ package net.kenji.kenjiscombatforms.network.fist_forms.form_level;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.WitherForm;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
-import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 public class SyncServerWitherFormLevelPacket {
 

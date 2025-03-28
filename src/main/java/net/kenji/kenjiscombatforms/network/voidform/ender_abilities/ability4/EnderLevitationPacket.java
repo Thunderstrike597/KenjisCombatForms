@@ -1,7 +1,6 @@
 package net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4;
 
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.EnderLevitation;
-import net.kenji.kenjiscombatforms.api.powers.VoidPowers.VoidGrab;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

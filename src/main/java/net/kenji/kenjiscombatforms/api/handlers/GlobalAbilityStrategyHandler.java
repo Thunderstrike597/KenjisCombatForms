@@ -38,17 +38,17 @@ public class GlobalAbilityStrategyHandler {
                 AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getOrCreatePlayerAbilityData(player);
                 Entity entity = event.getEntity();
                 AbilityDamageGainStrategy ability2Strategy = switch (abilityData.chosenAbility2) {
-                    case VOID_ABILITY2 -> new VoidAnchorRift.CurrentDamageGainStrategy();
-                    case WITHER_ABILITY2 -> new SoulDrift.CurrentDamageGainStrategy();
-                    case SWIFT_ABILITY2 -> new SwiftEffectInflict.CurrentDamageGainStrategy();
-                    case POWER_ABILITY2 -> new PowerEffectInflict.CurrentDamageGainStrategy();
+                    case "VOID_ABILITY2" -> new VoidAnchorRift.CurrentDamageGainStrategy();
+                    case "WITHER_ABILITY2" -> new SoulDrift.CurrentDamageGainStrategy();
+                    case "SWIFT_ABILITY2" -> new SwiftEffectInflict.CurrentDamageGainStrategy();
+                    case "POWER_ABILITY2" -> new PowerEffectInflict.CurrentDamageGainStrategy();
 
                     default -> new NoOpDamageGainStrategy();
                 };
                 ability2Strategy.fillDamageCooldown(player);
                 AbilityDamageGainStrategy ability3Strategy = switch (abilityData.chosenFinal) {
-                    case VOID_FINAL -> new EnderFormAbility.CurrentDamageGainStrategy();
-                    case WITHER_FINAL -> new WitherFormAbility.CurrentDamageGainStrategy();
+                    case "VOID_FINAL" -> new EnderFormAbility.CurrentDamageGainStrategy();
+                    case "WITHER_FINAL" -> new WitherFormAbility.CurrentDamageGainStrategy();
 
                     default -> new NoOpDamageGainStrategy();
                 };

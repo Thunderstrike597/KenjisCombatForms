@@ -36,40 +36,42 @@ public class CommonEventHandler {
 
     int originalSlot = -1;
 
-    public int getOriginalSlot(Player player){
+    public int getOriginalSlot(Player player) {
         CompoundTag nbt = player.getPersistentData();
         return nbt.getInt("originalSlot");
     }
 
-    public void setOriginalSlot(Player player, int slotIndex){
+    public void setOriginalSlot(Player player, int slotIndex) {
         CompoundTag nbt = player.getPersistentData();
         nbt.putInt("originalSlot", slotIndex);
     }
-    public void setStoredItemNBT(Player player, ItemStack storedItem){
+
+    public void setStoredItemNBT(Player player, ItemStack storedItem) {
         CompoundTag nbt = player.getPersistentData();
         nbt.put(ExtraContainerCapability.storedItem, storedItem.copy().serializeNBT());
     }
 
-    public ItemStack getStoredItem(Player player){
+    public ItemStack getStoredItem(Player player) {
         CompoundTag nbt = player.getPersistentData();
         return ItemStack.of(nbt.getCompound(ExtraContainerCapability.storedItem));
     }
 
 
-    private FormLevelManager.PlayerFormLevelData getOrCreateLevelData(ServerPlayer player){
+    private FormLevelManager.PlayerFormLevelData getOrCreateLevelData(ServerPlayer player) {
         return LevelHandler.getInstance().getOrCreatePlayerLevelData(player);
     }
 
     private static final CommonEventHandler INSTANCE = new CommonEventHandler();
-    public static CommonEventHandler getInstance(){
+
+    public static CommonEventHandler getInstance() {
         return INSTANCE;
     }
 
-    public boolean getIsNearItem(Player player){
+    public boolean getIsNearItem(Player player) {
         return getInstance().isNearItem(player);
     }
 
-    public boolean getIsHoldingFistForm(Player player){
+    public boolean getIsHoldingFistForm(Player player) {
         return isHoldingFistForm(player);
     }
 
@@ -79,11 +81,11 @@ public class CommonEventHandler {
         if (player == null) return;
 
         // Retrieve the stored item from the capability before the dimension change
-        if(getInstance().getOriginalSlot(player) != -1) {
-            player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
-                ItemStack storedItem = container.getStoredItem();
-                int originalSlot = container.getOriginalSlot();
 
+        player.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
+            ItemStack storedItem = container.getStoredItem();
+            int originalSlot = container.getOriginalSlot();
+            if (getInstance().getOriginalSlot(player) != -1 && container.getOriginalSlot() != -1) {
                 System.out.println("Stored Item before dimension change: " + storedItem);
                 System.out.println("slot before dimension change: " + originalSlot);
                 CompoundTag nbt = player.getPersistentData();
@@ -101,8 +103,8 @@ public class CommonEventHandler {
                             new SyncRemovedNBTPacket(storedItem, originalSlot)
                     );
                 }
-            });
-        }
+            }
+        });
     }
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {

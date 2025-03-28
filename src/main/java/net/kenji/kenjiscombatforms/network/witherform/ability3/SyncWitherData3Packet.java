@@ -1,8 +1,12 @@
 package net.kenji.kenjiscombatforms.network.witherform.ability3;
 
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
@@ -40,11 +44,11 @@ public class SyncWitherData3Packet {
     public static void handle(SyncWitherData3Packet msg, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             // Update client-side data
-        if(ctx.getDirection().getReceptionSide().isClient()){
-            clientSideOperations(msg);
-        }
+            if(ctx.getDirection().getReceptionSide().isClient()){
+                Player player = Minecraft.getInstance().player;
+                clientSideOperations(msg);
 
-
+            }
         });
     }
 
@@ -52,7 +56,7 @@ public class SyncWitherData3Packet {
     public static void clientSideOperations(SyncWitherData3Packet msg){
     Minecraft minecraft = Minecraft.getInstance();
 
-        ClientWitherData.setCooldown3(msg.cooldown);
+
         ClientWitherData.setIsWitherActive(msg.isWitherActive);
         ClientWitherData.setIsWitherDashActive(msg.isWitherDashActive);
         if(msg.witherEntityUUID != null) {

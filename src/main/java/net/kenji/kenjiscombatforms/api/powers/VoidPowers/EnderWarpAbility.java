@@ -31,12 +31,12 @@ public class EnderWarpAbility implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AltAbilityOption.ENDER_WARP.name();
+        return "ENDER_WARP";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.VOID_FINAL.name();
+        return "VOID_FINAL";
     }
 
     public EnderPlayerDataSets.EnderWarpPlayerData getPlayerData(Player player) {
@@ -188,7 +188,7 @@ public class EnderWarpAbility implements FinalAbility {
     public void decrementCooldown(Player player) {
         EnderPlayerDataSets.EnderFormPlayerData wData = dataSets.getOrCreateEnderFormPlayerData(player);
         EnderPlayerDataSets.EnderWarpPlayerData eData = getPlayerData(player);
-        if(wData.isEnderActive && eData.abilityCooldown <= eData.getMAX_COOLDOWN()){
+        if(getAbilityActive(player) && eData.abilityCooldown <= eData.getMAX_COOLDOWN()){
             fillPerSecondCooldown(player);
         }
     }

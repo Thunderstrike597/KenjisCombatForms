@@ -1,7 +1,6 @@
 package net.kenji.kenjiscombatforms.entity.custom.SenseiEntities;
 
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.event.LootTableModifier;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -63,19 +62,19 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
     }
 
     private static boolean isCompatDifficulty(){
-        return KenjisCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
+        return EpicFightCombatFormsCommon.DIFFICULTY_COMPAT_MODE.get();
     }
 
 
     @Override
     public void onAddedToWorld() {
        if(!isCompatDifficulty()) {
-           Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.UNDEAD_SENSEI_HEALTH.get());
+           Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.UNDEAD_SENSEI_HEALTH.get());
            if (!hasBeenDamaged) {
                setHealth(this.getMaxHealth());
            }
        } else {
-           Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(KenjisCombatFormsCommon.COMPAT_MODE_UNDEAD_SENSEI_HEALTH.get());
+           Objects.requireNonNull(this.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(EpicFightCombatFormsCommon.COMPAT_MODE_UNDEAD_SENSEI_HEALTH.get());
            if (!hasBeenDamaged) {
                setHealth(this.getMaxHealth());
            }
@@ -184,11 +183,11 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
     }
 
                 // Check for nearby entities of the same type
-                int searchRadius = KenjisCombatFormsCommon.UNDEAD_SENSEI_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
+                int searchRadius = EpicFightCombatFormsCommon.UNDEAD_SENSEI_SPAWNDIST.get(); // Adjust this value to change the minimum distance between spawns
                 List<UndeadSenseiEntity> nearbyEntities = level.getEntitiesOfClass(UndeadSenseiEntity.class,
                         new AABB(pos).inflate(searchRadius),
                         e -> true);
-                if(chance < KenjisCombatFormsCommon.UNDEAD_SENSEI_SPAWN_CHANCE.get()) {
+                if(chance < EpicFightCombatFormsCommon.UNDEAD_SENSEI_SPAWN_CHANCE.get()) {
                     if (nearbyEntities.isEmpty()) {
                         return true; // Allow spawn if no nearby entities found
                     }

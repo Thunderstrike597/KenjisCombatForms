@@ -7,6 +7,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility4Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.EnderLevitationPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.SyncVoidData4Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,12 +42,12 @@ public class EnderLevitation implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption4.ENDER_LEVITATION.name();
+        return "ENDER_LEVITATION";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.VOID_FINAL.name();
+        return "VOID_FINAL";
     }
 
 
@@ -211,7 +212,7 @@ public class EnderLevitation implements FinalAbility {
         EnderPlayerDataSets.EnderLevitationPlayerData data = getPlayerData(player);
         EnderPlayerDataSets.EnderFormPlayerData bData = dataSets.getOrCreateEnderFormPlayerData(player);
             if (player instanceof ServerPlayer serverPlayer) {
-                if (!data.isActive && bData.isAbilityActive()) {
+                if (!data.isActive && getFinalAbilityActive(serverPlayer)) {
                     fillPerSecondCooldown(player);
                     fillPerSecondCooldown(player);
                 }
@@ -242,7 +243,7 @@ public class EnderLevitation implements FinalAbility {
         if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncVoidData4Packet(data.abilityCooldown)
+                    new SyncAbility4Packet(data.abilityCooldown, false)
             );
         }
     }
@@ -253,7 +254,7 @@ public class EnderLevitation implements FinalAbility {
         EnderPlayerDataSets.EnderLevitationPlayerData data = getPlayerData(player);
         EnderPlayerDataSets.EnderFormPlayerData eData = getInstance().getOrCreateEnderFormPlayerData(player);
 
-        if (eData.isEnderActive) {
+        if (getFinalAbilityActive(player)) {
             double radius = 10.0;
             AABB searchArea = new AABB(player.getOnPos()).inflate(radius);
 

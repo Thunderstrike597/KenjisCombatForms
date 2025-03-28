@@ -2,8 +2,11 @@ package net.kenji.kenjiscombatforms.api.handlers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
+import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
@@ -16,17 +19,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,7 +89,6 @@ public class ControlHandler {
             if (clientPlayer != null) {
                 PlayerData data = getInstance().getOrCreatePlayerData(clientPlayer);
 
-
                 if (event.getKey() == mc.options.keyShift.getKey().getValue()) {
                     if (clientEventHandler.getIsWitherActive()) {
                         if (event.getAction() == GLFW.GLFW_PRESS || event.getAction() == GLFW.GLFW_REPEAT) {
@@ -121,9 +122,9 @@ public class ControlHandler {
 
 
                 if (ModKeybinds.QUICK_FORM_CHANGE_KEY.consumeClick()) {
-                    FormManager.FormSelectionOption currentForm1 = ClientFistData.getForm1Option();
-                    FormManager.FormSelectionOption currentForm2 = ClientFistData.getForm2Option();
-                    FormManager.FormSelectionOption currentForm3 = ClientFistData.getForm3Option();
+                    String currentForm1 = ClientFistData.getForm1Option();
+                    String currentForm2 = ClientFistData.getForm2Option();
+                    String currentForm3 = ClientFistData.getForm3Option();
 
                     boolean isFinalActive = ClientEventHandler.getInstance().getAreFinalsActive();
 
@@ -141,30 +142,43 @@ public class ControlHandler {
 
                                 switch (data.currentState) {
                                     case 0:
+                                        ClientFistData.setSelectedForm(BasicForm.getInstance().getName());
+                                        ClientFistData.setSpecificFormData(clientPlayer);
                                         NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
                                         break;
                                     case 1:
-                                        if (ClientFistData.getForm1Option() != FormManager.FormSelectionOption.NONE) {
-                                            NetworkHandler.INSTANCE.sendToServer(new Form1ChoosePacket(currentForm1.name()));
+                                        if (!Objects.equals(ClientFistData.getForm1Option(), "NONE")) {
+                                            ClientFistData.setSelectedForm(ClientFistData.getForm1Option());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
+                                            NetworkHandler.INSTANCE.sendToServer(new Form1ChoosePacket(currentForm1));
                                         } else {
                                             data.currentState = 0;
+                                            ClientFistData.setSelectedForm(BasicForm.getInstance().getName());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
                                             NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
                                         }
                                         break;
                                     case 2:
-                                        if (ClientFistData.getForm2Option() != FormManager.FormSelectionOption.NONE) {
-                                            FormChangeHandler.getInstance().setSelectedForm(clientPlayer, currentForm2);
-                                            NetworkHandler.INSTANCE.sendToServer(new Form2ChoosePacket(currentForm2.name()));
+                                        if (!Objects.equals(ClientFistData.getForm2Option(), "NONE")) {
+                                            ClientFistData.setSelectedForm(ClientFistData.getForm2Option());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
+                                            NetworkHandler.INSTANCE.sendToServer(new Form2ChoosePacket(currentForm2));
                                         } else {
                                             data.currentState = 0;
+                                            ClientFistData.setSelectedForm(BasicForm.getInstance().getName());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
                                             NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
                                         }
                                         break;
                                     case 3:
-                                        if (ClientFistData.getForm3Option() != FormManager.FormSelectionOption.NONE) {
-                                            NetworkHandler.INSTANCE.sendToServer(new Form3ChoosePacket(currentForm3.name()));
+                                        if (!Objects.equals(ClientFistData.getForm3Option(), "NONE")) {
+                                            ClientFistData.setSelectedForm(ClientFistData.getForm3Option());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
+                                            NetworkHandler.INSTANCE.sendToServer(new Form3ChoosePacket(currentForm3));
                                         } else {
                                             data.currentState = 0;
+                                            ClientFistData.setSelectedForm(BasicForm.getInstance().getName());
+                                            ClientFistData.setSpecificFormData(clientPlayer);
                                             NetworkHandler.INSTANCE.sendToServer(new BasicFormChoosePacket());
                                         }
                                         break;

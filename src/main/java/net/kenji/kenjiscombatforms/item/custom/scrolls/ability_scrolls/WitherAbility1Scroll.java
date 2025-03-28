@@ -2,6 +2,8 @@ package net.kenji.kenjiscombatforms.item.custom.scrolls.ability_scrolls;
 
 import net.kenji.kenjiscombatforms.api.handlers.AbilityChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
+import net.kenji.kenjiscombatforms.api.powers.WitherPowers.WitherDash;
+import net.kenji.kenjiscombatforms.api.powers.power_powers.StrengthBoost;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,8 +20,7 @@ public class WitherAbility1Scroll extends BaseUseItem {
     private static WitherAbility1Scroll INSTANCE;
     private static final int CHARGE_DURATION = 40; // Ticks required to charge the item
     private static final int MAX_USE_DURATION = 72000; // 1 hour in ticks
-    private final AbilityManager.AbilityOption1 ability = AbilityManager.AbilityOption1.WITHER_ABILITY1;
-
+    private final String ability = WitherDash.getInstance().getName();
 
     public WitherAbility1Scroll(Properties properties) {
         super(properties.durability(2));

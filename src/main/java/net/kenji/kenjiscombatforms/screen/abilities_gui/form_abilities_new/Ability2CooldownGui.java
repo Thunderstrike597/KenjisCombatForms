@@ -2,11 +2,12 @@ package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
+import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
-import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -16,31 +17,28 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Objects;
+
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
-public class NewSwiftAbility2CooldownGui {
+public class Ability2CooldownGui {
 
     private static final SimpleAbilityHandler simpleAbilityHandler = new SimpleAbilityHandler();
 
 
-    private static float prevCooldown = 0f;
-    private static float currentCooldown = 0f;
-
-    public static void updateCooldown() {
-        prevCooldown = currentCooldown;
-        currentCooldown = (float) ClientVoidData.getCooldown();
-    }
 
     static int getX(){
-        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+        if(EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
             return simpleAbilityHandler.getSelectionModeX();
         }else return 50;
     }
 
     static int getY(){
-        if(KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
+        if(EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()){
             return simpleAbilityHandler.getSelectionModeY();
         }else return 32;
     }
+
+
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGuiOverlayEvent event) {
@@ -54,11 +52,15 @@ public class NewSwiftAbility2CooldownGui {
         ResourceLocation abilityResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/ability2_gui2.png");
         ResourceLocation abilityOverlayResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/ability2_gui3.png");
 
+        ResourceLocation ability4BackgroundResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/ability5_gui1.png");
+        ResourceLocation ability4Resource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/ability5_gui2.png");
+        ResourceLocation ability4OverlayResource = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/abilities/ability5_gui3.png");
+
 
         if (player != null) {
 
-            SwiftPlayerDataSets dataSets = SwiftPlayerDataSets.getInstance();
-            SwiftPlayerDataSets.SwiftInflictPlayerData abilityData = dataSets.getOrCreateSwiftInflictPlayerData(player);
+            AbilityManager abilityManager = AbilityManager.getInstance();
+            AbstractAbilityData ability2Data = abilityManager.getCurrentAbilityData(player).get(1);
 
 
             int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
@@ -71,18 +73,14 @@ public class NewSwiftAbility2CooldownGui {
 
             int v = 38;
 
-            int abilityCooldown = ClientSwiftData.getCooldown2();
+            int abilityCooldown = ability2Data.getClientAbilityCooldown();
 
 
-            int ability1FullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
-            int ability1MaxCooldown = abilityData.getMAX_COOLDOWN();  // Total cooldown time
-            float ability1ElapsedCooldown = ability1MaxCooldown - abilityCooldown;  // Remaining cooldown
-            float ability1CooldownProgress = ability1ElapsedCooldown / (float) ability1MaxCooldown;  // Normalize to 0-1
-            int abilityBarHeight = (int) (ability1FullHeight * ability1CooldownProgress);
-
-
-            int maxCooldown = abilityData.getMAX_COOLDOWN();
-
+            int abilityFullHeight = simpleAbilityHandler.getIconSize(v);  // Maximum cooldown bar height
+            int maxCooldown = ability2Data.getMAX_COOLDOWN();
+            float abilityElapsedCooldown = maxCooldown - abilityCooldown;  // Remaining cooldown
+            float abilityCooldownProgress = abilityElapsedCooldown / (float) maxCooldown;  // Normalize to 0-1
+            int abilityBarHeight = (int) (abilityFullHeight * abilityCooldownProgress);
 
 
             int simpleAbilityU = 0;
@@ -91,17 +89,14 @@ public class NewSwiftAbility2CooldownGui {
             int iconX = abilityX + getX();
             int iconY = abilityY + getY();
 
-
             boolean areFinalsActive = ClientEventHandler.getInstance().getAreFinalsActive();
 
 
-
-
-            if (AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility2 == AbilityManager.AbilityOption2.SWIFT_ABILITY2 ||
-                    ClientFistData.getChosenAbility2() == AbilityManager.AbilityOption2.SWIFT_ABILITY2) {
+            if (!Objects.equals(AbilityManager.getInstance().getPlayerAbilityData(player).chosenAbility2, "NONE") ||
+                    !Objects.equals(ClientFistData.getChosenAbility2(), "NONE")) {
 
                 if (!areFinalsActive) {
-                    simpleAbilityHandler.drawAbility2Icon(event,  abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
+                    simpleAbilityHandler.drawAbility2Icon(event, abilityResource, abilityBackgroundResource, abilityOverlayResource, iconX, iconY, simpleAbilityU, simpleAbilityV, simpleAbilitySize, abilityBarHeight, maxCooldown, abilityCooldown);
                 }
             }
         }

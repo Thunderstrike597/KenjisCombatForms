@@ -3,16 +3,19 @@ package net.kenji.kenjiscombatforms;
 import com.mojang.logging.LogUtils;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.*;
+import net.kenji.kenjiscombatforms.api.powers.EmptyAbility;
+import net.kenji.kenjiscombatforms.api.powers.EmptyFinalAbility;
 import net.kenji.kenjiscombatforms.api.powers.VoidPowers.*;
 import net.kenji.kenjiscombatforms.api.powers.WitherPowers.*;
+import net.kenji.kenjiscombatforms.api.powers.power_powers.PowerEffectInflict;
 import net.kenji.kenjiscombatforms.api.powers.power_powers.StrengthBoost;
 import net.kenji.kenjiscombatforms.api.powers.swift_powers.SpeedBoost;
 import net.kenji.kenjiscombatforms.api.powers.swift_powers.SwiftEffectInflict;
 import net.kenji.kenjiscombatforms.block.ModBlocks;
 import net.kenji.kenjiscombatforms.block.entity.ModBlockEntities;
 import net.kenji.kenjiscombatforms.commands.*;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsClient;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsClient;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
@@ -96,8 +99,8 @@ public class KenjisCombatForms
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, KenjisCombatFormsCommon.SPEC, "kenjiscombatforms-Common.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, KenjisCombatFormsClient.SPEC, "kenjiscombatforms-Client.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EpicFightCombatFormsCommon.SPEC, "kenjiscombatforms-Common.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, EpicFightCombatFormsClient.SPEC, "kenjiscombatforms-Client.toml");
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -143,7 +146,7 @@ public class KenjisCombatForms
                  SpawnPlacements.Type.ON_GROUND,
                  Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                  ExiledDevilEntity::checkSpawnRules);
-         SpawnPlacements.register(ABILITY_TRADER.get(),
+         SpawnPlacements.register(SCROLL_TRADER.get(),
                  SpawnPlacements.Type.ON_GROUND,
                  Heightmap.Types.WORLD_SURFACE,
                  ScrollTraderEntity::checkSpawnRules);
@@ -153,12 +156,12 @@ public class KenjisCombatForms
         });
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
-
     }
 
 
     public static void init() {
         FormManager formManager = FormManager.getInstance();
+        formManager.registerForm(NoneForm.getInstance());
         formManager.registerForm(BasicForm.getInstance());
         formManager.registerForm(VoidForm.getInstance());
         formManager.registerForm(WitherForm.getInstance());
@@ -166,10 +169,13 @@ public class KenjisCombatForms
         formManager.registerForm(PowerForm.getInstance());
 
         AbilityManager abilityManager = AbilityManager.getInstance();
+        abilityManager.registerAbility(EmptyAbility.getInstance());
         abilityManager.registerAbility(TeleportPlayer.getInstance());
         abilityManager.registerAbility(TeleportPlayerBackstab.getInstance());
         abilityManager.registerAbility(VoidAnchorRift.getInstance());
         abilityManager.registerAbility(EnderFormAbility.getInstance());
+
+        abilityManager.registerFinalAbility(EmptyFinalAbility.getInstance());
         abilityManager.registerFinalAbility(EnderLevitation.getInstance());
         abilityManager.registerFinalAbility(VoidGrab.getInstance());
         abilityManager.registerFinalAbility(EnderWarpAbility.getInstance());
@@ -185,6 +191,7 @@ public class KenjisCombatForms
         abilityManager.registerAbility(SpeedBoost.getInstance());
         abilityManager.registerAbility(StrengthBoost.getInstance());
         abilityManager.registerAbility(SwiftEffectInflict.getInstance());
+        abilityManager.registerAbility(PowerEffectInflict.getInstance());
     }
 
 

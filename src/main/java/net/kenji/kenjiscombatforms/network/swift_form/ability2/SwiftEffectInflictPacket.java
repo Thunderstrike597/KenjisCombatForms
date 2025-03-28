@@ -1,6 +1,5 @@
 package net.kenji.kenjiscombatforms.network.swift_form.ability2;
 
-import net.kenji.kenjiscombatforms.api.powers.swift_powers.SpeedBoost;
 import net.kenji.kenjiscombatforms.api.powers.swift_powers.SwiftEffectInflict;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

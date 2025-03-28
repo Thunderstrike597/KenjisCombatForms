@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.item.custom.scrolls.form_scrolls;
 
 import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.BaseUseItem;
 import net.minecraft.world.InteractionHand;
@@ -10,8 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PacketDistributor;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class VoidScroll extends BaseUseItem {
@@ -19,7 +20,7 @@ public class VoidScroll extends BaseUseItem {
     private static final FormManager formManager = FormManager.getInstance();
     private static final int CHARGE_DURATION = 40; // Ticks required to charge the item
     private static final int MAX_USE_DURATION = 72000; // 1 hour in ticks
-    private static final FormManager.FormSelectionOption voidOption = FormManager.FormSelectionOption.VOID;
+    private static final String voidOption = VoidForm.getInstance().getName();
 
 
     public VoidScroll(Properties properties) {
@@ -60,7 +61,7 @@ public class VoidScroll extends BaseUseItem {
 
         FormManager.PlayerFormData data = formManager.getFormData(player);
 
-        if (data.form1 != voidOption && data.form2 != voidOption && data.form3 != voidOption) {
+        if (!Objects.equals(data.form1, voidOption) && !Objects.equals(data.form2, voidOption) && !Objects.equals(data.form3, voidOption)) {
 
             return InteractionResultHolder.consume(itemStack);
         }

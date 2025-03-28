@@ -10,7 +10,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrat
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
@@ -19,6 +19,7 @@ import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
 import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientFinalAbilitesPacket;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility3Packet;
 import net.kenji.kenjiscombatforms.network.particle_packets.LargeSmokeParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
@@ -68,7 +69,17 @@ public class WitherFormAbility implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption3.WITHER_FINAL.name();
+        return "WITHER_FINAL";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 180;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
     private WitherPlayerDataSets.WitherDashPlayerData getOrCreateDashPlayerData(Player player) {
@@ -208,7 +219,7 @@ public class WitherFormAbility implements Ability {
 
     public void jumpUp(Player player){
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
-        if(ClientVoidData.getCooldown3() == 0) {
+        if(data.getClientAbilityCooldown() == 0) {
             Vec3 velocity = player.getDeltaMovement();
             player.setDeltaMovement(velocity.x, 0.5, velocity.z);
         }
@@ -244,7 +255,7 @@ public class WitherFormAbility implements Ability {
             if (cap instanceof PlayerPatch<?> playerPatch) {
                 Skill skillToSet = WOMSkills.SHADOWSTEP;
                 CompoundTag nbt = serverPlayer.getPersistentData();
-                if (!data.isWitherActive && data.abilityCooldown == 0) {
+                if (!getAbilityActive(serverPlayer) && data.abilityCooldown == 0) {
 
 
                     setCurrentDodgeSkill(playerPatch, getSkill(playerPatch), nbt);
@@ -252,7 +263,7 @@ public class WitherFormAbility implements Ability {
                     jumpUp(serverPlayer);
                     setSkill(playerPatch, skillToSet);
                     data.hasPlayedSound = false;
-                } else if(data.isWitherActive){
+                } else if(getAbilityActive(serverPlayer)){
                     deactivateAbilityOptional(serverPlayer);
                     restoreItem(serverPlayer);
                     setSkill(playerPatch, getCurrentDodgeSkill());
@@ -278,10 +289,10 @@ public class WitherFormAbility implements Ability {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(serverPlayer);
 
-        data.isWitherActive = true;
+        data.setAbilityActive(true);
 
-        abilityData.ability4 = AbilityManager.AbilityOption4.WITHER_MINIONS;
-        abilityData.ability5 = AbilityManager.AbilityOption5.WITHER_IMPLODE;
+        abilityData.ability4 = WitherMinions.getInstance().getName();
+        abilityData.ability5 = WitherImplode.getInstance().getName();
 
         playSound(serverPlayer);
         setFormItem(serverPlayer);
@@ -338,15 +349,11 @@ public class WitherFormAbility implements Ability {
 
         });
     }
-    public boolean getWitherFormActive(Player player){
-        WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
-        return data.isWitherActive;
-    }
 
     @Override
     public void deactivateAbilityOptional(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(serverPlayer);
-        data.isWitherActive = false;
+        data.setAbilityActive(false);
 
         serverPlayer.removeEffect(MobEffects.INVISIBILITY);
         serverPlayer.removeEffect(MobEffects.LEVITATION);
@@ -367,14 +374,14 @@ public class WitherFormAbility implements Ability {
         @Override
         public void fillDamageCooldown(Player player) {
             WitherPlayerDataSets.WitherFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.WitherFormPlayerData());
-            if(KenjisCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
-               if(!data.isAbilityActive()) {
+            if(EpicFightCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
+               if(!getInstance().getAbilityActive(player)) {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                    }
                } else {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get() / 2;
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get() / 2;
                    }
                }
 
@@ -392,18 +399,18 @@ public class WitherFormAbility implements Ability {
         if (isAbilityChosenOrEquipped(player)) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    if (data.abilityCooldown > 0 && !data.isWitherActive) {
-                        if (!KenjisCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
+                    if (data.abilityCooldown > 0 && !getAbilityActive(player)) {
+                        if (!EpicFightCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
 
                             WitherPlayerDataSets.WitherDashPlayerData sData = getOrCreateDashPlayerData(serverPlayer);
                             WitherPlayerDataSets.SoulDriftPlayerData bData = getOrCreateSoulDriftPlayerData(serverPlayer);
-                            if (abilityData.chosenFinal == AbilityManager.AbilityOption3.WITHER_FINAL)
+                            if (Objects.equals(abilityData.chosenFinal, getName()))
                                 fillPerSecondCooldown(player);
                         }
-                    }if (data.abilityCooldown < data.getMAX_COOLDOWN() && data.isWitherActive) {
+                    }if (data.abilityCooldown < data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                         drainPerSecondCooldown(player);
                     }
-                    if (data.abilityCooldown >= data.getMAX_COOLDOWN() && data.isWitherActive) {
+                    if (data.abilityCooldown >= data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                         deactivateAbilityOptional(serverPlayer);
                         Entity existingShadow = data.playerWitherMap.remove(player.getUUID());
                         if (existingShadow != null) {
@@ -425,14 +432,14 @@ public class WitherFormAbility implements Ability {
     public void tickServerAbilityData(ServerPlayer player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.name().equals(getName())) {
+        if(AbilityManager.getInstance().getPlayerAbilityData(player).chosenFinal.equals(getName())) {
             player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
-                    if (abilityData.chosenFinal.name().equals(getName())) {
+                    if (abilityData.chosenFinal.equals(getName())) {
                         getInstance().decrementCooldown(player);
                     }
                     syncDataToClient(player);
-                    if (data.isWitherActive) {
+                    if (getAbilityActive(player)) {
                         if (playerPatch.getServerAnimator().animationPlayer.getAnimation().getRealAnimation() == WOMAnimations.SHADOWSTEP_FORWARD){
                             data.isDashActive = true;
                         }else{
@@ -467,14 +474,8 @@ public class WitherFormAbility implements Ability {
     @Override
     public void tickClientAbilityData(Player player) {
         WitherPlayerDataSets.WitherFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new WitherPlayerDataSets.WitherFormPlayerData());
-         if(ClientFistData.getChosenAbility3().name().equals(getName())) {
-             if (ClientWitherData.getIsWitherActive()) {
-                 //preventCombatActions(player);
+         if(ClientFistData.getChosenAbility3().equals(getName())) {
 
-             }
-             if (!ClientWitherData.getIsWitherActive()) {
-
-             }
          }
     }
 
@@ -484,7 +485,7 @@ public class WitherFormAbility implements Ability {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
         NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherData3Packet(data.abilityCooldown, data.isWitherActive, data.isDashActive, player.getUUID())
+                    new SyncAbility3Packet(data.abilityCooldown, getAbilityActive(player), data.isDashActive)
             );
         NetworkHandler.INSTANCE.send(
                 PacketDistributor.PLAYER.with(() -> player),
@@ -495,7 +496,7 @@ public class WitherFormAbility implements Ability {
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenFinal.name().equals(getName());
+        return abilityData.chosenFinal.equals(getName());
     }
 
 
@@ -573,7 +574,6 @@ public class WitherFormAbility implements Ability {
 
     @OnlyIn(Dist.CLIENT)
     public void spawnParticles(Player player) {
-        int currentVoidCooldown = ClientVoidData.getCooldown3();
         BlockParticleOption whiteFallingDust = new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.WHITE_WOOL.defaultBlockState());
 
         Random random = new Random();

@@ -6,33 +6,25 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
-import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
-import net.kenji.kenjiscombatforms.api.managers.forms.SwiftForm;
 import net.kenji.kenjiscombatforms.api.managers.forms.VoidForm;
 import net.kenji.kenjiscombatforms.api.managers.forms.WitherForm;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
-import net.kenji.kenjiscombatforms.api.interfaces.form.FormAbilityStrategy;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AbilityChangeHandler {
 
-   private static final AbilityManager.AbilityOption1 NONE = AbilityManager.AbilityOption1.NONE;
-    private static final AbilityManager.AbilityOption2 NONE2 = AbilityManager.AbilityOption2.NONE;
-    private static final AbilityManager.AbilityOption3 NONE3 = AbilityManager.AbilityOption3.NONE;
-    private static final FormManager.FormSelectionOption BASIC = FormManager.FormSelectionOption.BASIC;
-    private static final FormManager.FormSelectionOption VOID = FormManager.FormSelectionOption.VOID;
-    private static final FormManager.FormSelectionOption WITHER = FormManager.FormSelectionOption.WITHER;
-
+   private static final String NONE = "NONE";
+    private static final String NONE2 = "NONE";
+    private static final String NONE3 = "NONE";
 
 
 
@@ -43,16 +35,10 @@ public class AbilityChangeHandler {
         return INSTANCE;
     }
 
-    public boolean getVoid1Selected(Player player){
-        return isAbilitySelected(player, AbilityManager.AbilityOption1.VOID_ABILITY1);
-    }
-    public boolean getWither1Selected(Player player){
-        return isAbilitySelected(player, AbilityManager.AbilityOption1.WITHER_ABILITY1);
-    }
 
-    private boolean isAbilitySelected(Player player, AbilityManager.AbilityOption1 form) {
+    private boolean isAbilitySelected(Player player, String form) {
         AbilityManager.PlayerAbilityData data = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return data.chosenAbility1 == form;
+        return Objects.equals(data.chosenAbility1, form);
     }
 
 
@@ -116,13 +102,13 @@ public class AbilityChangeHandler {
 
 
     private void abilityValuesToReset(Player player) {
-        AbstractFormData voidFormData = VoidForm.getInstance().getFormData(player.getUUID());
-        AbstractFormData witherFormData = WitherForm.getInstance().getFormData(player.getUUID());
-
-        voidFormData.setCurrentStoredAbility1(AbilityManager.AbilityOption1.NONE);
-        voidFormData.setCurrentStoredAbility2(AbilityManager.AbilityOption2.NONE);
-        witherFormData.setCurrentStoredAbility1(AbilityManager.AbilityOption1.NONE);
-        witherFormData.setCurrentStoredAbility2(AbilityManager.AbilityOption2.NONE);
+        FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
+        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
+        Form currentForm = FormManager.getInstance().getForm(formData.selectedForm);
+        AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
+        currentFormData.setCurrentStoredAbility1("NONE");
+        currentFormData.setCurrentStoredAbility2("NONE");
+        currentFormData.setStoredAbility3("NONE");
     }
 
 
@@ -131,20 +117,20 @@ public class AbilityChangeHandler {
     }
 
 
-    public void storeAbility1(Player player, String formName, AbilityManager.AbilityOption1 ability) {
+    public void storeAbility1(Player player, String formName, String ability) {
         getFormData(player, formName).ifPresent(formData -> {
             formData.setCurrentStoredAbility1(ability);
             setFormAbility1(player);
-            FormManager.getInstance().getForm(formName).syncDataToClient(player);
+            syncDataToClient(player);
         });
         AbilityManager.getInstance().updatePlayerData(player.getUUID(), AbilityManager.getInstance().getPlayerAbilityData(player));
     }
 
-    public void storeAbility2(Player player, String formName, AbilityManager.AbilityOption2 ability) {
+    public void storeAbility2(Player player, String formName, String ability) {
         getFormData(player, formName).ifPresent(formData -> {
             formData.setCurrentStoredAbility2(ability);
             setFormAbility2(player);
-            FormManager.getInstance().getForm(formName).syncDataToClient(player);
+            syncDataToClient(player);
         });
         AbilityManager.getInstance().updatePlayerData(player.getUUID(), AbilityManager.getInstance().getPlayerAbilityData(player));
     }
@@ -152,14 +138,14 @@ public class AbilityChangeHandler {
 
 
     public void setAbility1(Player player, FormManager.PlayerFormData formData, AbilityManager.PlayerAbilityData abilityData) {
-        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm.name()))
+        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm))
                 .ifPresent(form -> {
                     AbstractFormData specificFormData = form.getFormData(player.getUUID());
-                    abilityData.ability1 = Optional.ofNullable(specificFormData.getCurrentStoredAbility1())
-                            .orElse(AbilityManager.AbilityOption1.NONE);
+                    abilityData.chosenAbility1 = Optional.ofNullable(specificFormData.getCurrentStoredAbility1())
+                            .orElse("NONE");
 
                     form.updatePlayerData(player.getUUID(), specificFormData);
-                    form.syncDataToClient(player);
+                    syncDataToClient(player);
                 });
 
         AbilityManager.getInstance().updatePlayerData(player.getUUID(),
@@ -167,14 +153,14 @@ public class AbilityChangeHandler {
     }
 
     public void setAbility2(Player player, FormManager.PlayerFormData formData, AbilityManager.PlayerAbilityData abilityData) {
-        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm.name()))
+        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm))
                 .ifPresent(form -> {
                     AbstractFormData specificFormData = form.getFormData(player.getUUID());
-                    abilityData.ability2 = Optional.ofNullable(specificFormData.getCurrentStoredAbility2())
-                            .orElse(AbilityManager.AbilityOption2.NONE);
+                    abilityData.chosenAbility2 = Optional.ofNullable(specificFormData.getCurrentStoredAbility2())
+                            .orElse("NONE");
 
                     form.updatePlayerData(player.getUUID(), specificFormData);
-                    form.syncDataToClient(player);
+                    syncDataToClient(player);
                 });
 
         AbilityManager.getInstance().updatePlayerData(player.getUUID(),
@@ -182,14 +168,14 @@ public class AbilityChangeHandler {
     }
 
     public void setAbility3(Player player, FormManager.PlayerFormData formData, AbilityManager.PlayerAbilityData abilityData) {
-        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm.name()))
+        Optional.ofNullable(FormManager.getInstance().getForm(formData.selectedForm))
                 .ifPresent(form -> {
                     AbstractFormData specificFormData = form.getFormData(player.getUUID());
-                    abilityData.ability3 = Optional.ofNullable(specificFormData.getStoredAbility3())
-                            .orElse(AbilityManager.AbilityOption3.NONE);
+                    abilityData.chosenFinal = Optional.ofNullable(specificFormData.getStoredAbility3())
+                            .orElse("NONE");
 
                     form.updatePlayerData(player.getUUID(), specificFormData);
-                    form.syncDataToClient(player);
+                    syncDataToClient(player);
                 });
 
         AbilityManager.getInstance().updatePlayerData(player.getUUID(),
@@ -202,40 +188,35 @@ public class AbilityChangeHandler {
     private void syncDataToClient(Player player) {
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        Form currentForm = FormManager.getInstance().getForm(formData.selectedForm.name());
+        Form currentForm = FormManager.getInstance().getForm(formData.selectedForm);
         AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
-        System.out.println("Is Syncing To Client! Ability1: " + abilityData.ability1 + "Ability2:" + abilityData.ability2 + "Ability3:" + abilityData.ability3);
-        if(player instanceof ServerPlayer serverPlayer) {
-           NetworkHandler.INSTANCE.send(
-                   PacketDistributor.PLAYER.with(() -> serverPlayer),
-                   new SyncClientAbilityPacket(abilityData.ability1, abilityData.ability2, abilityData.ability3, abilityData.chosenAbility1, abilityData.chosenAbility2, abilityData.chosenFinal, formData.selectedForm)
-           );
-       }
+        System.out.println("Is Syncing To Client! Ability1: " + abilityData.chosenAbility1 + " Ability2: " + abilityData.chosenAbility2 + " Ability3 :" + abilityData.chosenFinal);
+            currentForm.syncDataToClient(player);
+
     }
 
-    public void storeFormAbility1(Player player, AbilityManager.AbilityOption1 ability) {
+    public void storeFormAbility1(Player player, String ability) {
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
         System.out.println("HasStoredAbility! Ability1: " + ability);
-        String form = formData.selectedForm.name();
+        String form = formData.selectedForm;
         if (player instanceof ServerPlayer serverPlayer) {
             SavedDataHandler savedData = SavedDataHandler.get(serverPlayer.serverLevel());
             savedData.updatePlayerData(player.getUUID());
+
             storeAbility1(player, form, ability);
-            reValueAbility1(player, ability);
             savedData.setDirty();
         }
     }
-    public void storeFormAbility2(Player player, AbilityManager.AbilityOption2 ability) {
+    public void storeFormAbility2(Player player, String ability) {
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
         System.out.println("HasStoredAbility! Ability2: " + ability);
-        String form = formData.selectedForm.name();
+        String form = formData.selectedForm;
         if (player instanceof ServerPlayer serverPlayer) {
             SavedDataHandler savedData = SavedDataHandler.get(serverPlayer.serverLevel());
             savedData.updatePlayerData(player.getUUID());
 
             storeAbility2(player, form, ability);
 
-            reValueAbility2(player, ability);
             savedData.setDirty();
         }
     }
@@ -248,7 +229,6 @@ public class AbilityChangeHandler {
     }
     public void setFormAbility2(Player player){
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
-
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
         setAbility2(player, formData, abilityData);
     }
@@ -259,25 +239,7 @@ public class AbilityChangeHandler {
         setAbility3(player, formData, abilityData);
     }
 
-    public void reValueAbility1(Player player, AbilityManager.AbilityOption1 ability1){
-        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility1 != AbilityManager.AbilityOption1.NONE){
-            GlobalFormStrategyHandler.getInstance().setChosenAbility1(player, ability1);
-            GlobalFormStrategyHandler.getInstance().setPreviouslyChosenAbility1(player, ability1);
-        }syncDataToClient(player);
-
-    }
-    public void reValueAbility2(Player player, AbilityManager.AbilityOption2 ability2){
-        AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-
-
-        if(abilityData.chosenAbility2 != AbilityManager.AbilityOption2.NONE){
-            GlobalFormStrategyHandler.getInstance().setChosenAbility2(player, ability2);
-            GlobalFormStrategyHandler.getInstance().setPreviouslyChosenAbility2(player, ability2);
-        }
-        syncDataToClient(player);
-    }
 
 
 
@@ -287,7 +249,6 @@ public class AbilityChangeHandler {
        setFormAbility1(player);
        setFormAbility2(player);
        setFormAbility3(player);
-       setAbilities(player, currentFormData, abilityData);
 
        AbilityChangeHandler abilityChangeHandler = AbilityChangeHandler.getInstance();
        abilityChangeHandler.deactivateCurrentAbilities(player);
@@ -296,8 +257,4 @@ public class AbilityChangeHandler {
 
        AbilityManager.getInstance().updatePlayerData(player.getUUID(), AbilityManager.getInstance().getPlayerAbilityData(player));
    }
-
-   private void setAbilities(Player player, AbstractFormData currentFormData, AbilityManager.PlayerAbilityData data) {
-        GlobalFormStrategyHandler.getInstance().setStoredChosenAbilities(player, currentFormData.getPreviousAbility1(), currentFormData.getPreviousAbility2(), currentFormData.getPreviousAbility3());
-    }
 }

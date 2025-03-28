@@ -11,7 +11,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import yesman.epicfight.world.item.WeaponItem;
 
 import java.util.List;
 

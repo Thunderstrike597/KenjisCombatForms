@@ -2,19 +2,15 @@ package net.kenji.kenjiscombatforms.api.powers.swift_powers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.PowerPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
-import net.kenji.kenjiscombatforms.network.swift_form.ClientSwiftData;
-import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility2Packet;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SyncSwiftData2Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +18,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -46,7 +41,17 @@ public class SwiftEffectInflict implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption2.SWIFT_ABILITY2.name();
+        return "SWIFT_ABILITY2";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 205;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -168,10 +173,10 @@ public class SwiftEffectInflict implements Ability {
         public void fillDamageCooldown(Player player) {
             SwiftPlayerDataSets.SwiftInflictPlayerData data = getInstance().getPlayerData(player);
 
-            if(KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+            if(EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
                if(!data.isAbilityActive()) {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                    }
                    if (player instanceof ServerPlayer serverPlayer) {
                        getInstance().syncDataToClient(serverPlayer);
@@ -213,7 +218,7 @@ public class SwiftEffectInflict implements Ability {
         SwiftPlayerDataSets.SwiftInflictPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new SwiftPlayerDataSets.SwiftInflictPlayerData());
         if (player instanceof ServerPlayer serverPlayer) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {
-                if(!KenjisCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
+                if(!EpicFightCombatFormsCommon.ABILITY2_COMBAT_MODE.get()) {
 
                     if (!data.isInflictActive) {
                         fillPerSecondCooldown(player);
@@ -236,7 +241,7 @@ public class SwiftEffectInflict implements Ability {
 
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility2.name().equals(getName())) {
+        if(abilityData.chosenAbility2.equals(getName())) {
             getInstance().decrementCooldown(player);
             syncDataToClient(player);
         }
@@ -253,14 +258,14 @@ public class SwiftEffectInflict implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncSwiftData2Packet(data.abilityCooldown)
+                    new SyncAbility2Packet(data.abilityCooldown, data.isInflictActive, false)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenAbility2.name().equals(getName());
+        return abilityData.chosenAbility2.equals(getName());
     }
 
     @Override

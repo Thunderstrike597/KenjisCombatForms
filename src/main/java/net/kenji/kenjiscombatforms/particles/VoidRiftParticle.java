@@ -3,7 +3,6 @@ package net.kenji.kenjiscombatforms.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import org.jetbrains.annotations.Nullable;
 
 public class VoidRiftParticle extends TextureSheetParticle {
     public VoidRiftParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {

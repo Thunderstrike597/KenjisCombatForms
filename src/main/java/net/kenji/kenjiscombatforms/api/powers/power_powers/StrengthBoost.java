@@ -3,19 +3,15 @@ package net.kenji.kenjiscombatforms.api.powers.power_powers;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.PowerPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.handlers.power_data.SwiftPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.AbilityDamageGainStrategy;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
-import net.kenji.kenjiscombatforms.api.interfaces.form.FormLevelStrategy;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility1Packet;
 import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
 import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability1.SyncPowerDataPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +36,17 @@ public class StrengthBoost implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.POWER_ABILITY1.name();
+        return "POWER_ABILITY1";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 230;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -168,7 +174,6 @@ public class StrengthBoost implements Ability {
         PowerPlayerDataSets.StrengthPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new PowerPlayerDataSets.StrengthPlayerData());
             if (!player.hasEffect(MobEffects.DAMAGE_BOOST)) {
                 fillPerSecondCooldown(player);
-                ClientPowerData.setCooldown(data.abilityCooldown);
             }
         if(player.hasEffect(MobEffects.DAMAGE_BOOST)){
             data.abilityCooldown = data.getMAX_COOLDOWN();
@@ -179,8 +184,9 @@ public class StrengthBoost implements Ability {
     public void tickServerAbilityData(ServerPlayer player) {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenAbility1.name().equals(getName())) {
+        if(abilityData.chosenAbility1.equals(getName())) {
             getInstance().decrementCooldown(player);
+            syncDataToClient(player);
         }
 
     }
@@ -196,14 +202,14 @@ public class StrengthBoost implements Ability {
         if(isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncPowerDataPacket(data.abilityCooldown)
+                    new SyncAbility1Packet(data.abilityCooldown, false, false)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenAbility1.name().equals(getName());
+        return abilityData.chosenAbility1.equals(getName());
     }
 
     @Override

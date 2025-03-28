@@ -1,16 +1,16 @@
 package net.kenji.kenjiscombatforms.api.powers.WitherPowers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.handlers.ClientEventHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.event.sound.SoundManager;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility1Packet;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.SyncWitherDataPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
@@ -23,7 +23,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
@@ -36,9 +35,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import reascer.wom.gameasset.WOMAnimations;
-import reascer.wom.gameasset.WOMSkills;
-import yesman.epicfight.gameasset.Animations;
-import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
@@ -59,7 +55,17 @@ public class WitherDash implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption1.WITHER_ABILITY1.name();
+        return "WITHER_ABILITY1";
+    }
+
+    @Override
+    public int getGUIDrawPosY() {
+        return 180;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
     }
 
 
@@ -127,7 +133,7 @@ public class WitherDash implements Ability {
 
 
     public void setAbilityCooldown(Player player) {
-        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
+        getPlayerData(player).abilityCooldown = getPlayerData(player).abilityCooldown + getPlayerData(player).getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
     }
 
     @Override
@@ -158,9 +164,11 @@ public class WitherDash implements Ability {
     @Override
     public void sendPacketToServer(Player player) {
         WitherPlayerDataSets.WitherDashPlayerData wData = getInstance().dataSets.getOrCreateDashPlayerData(player);
+        WitherPlayerDataSets.WitherMinionPlayerData mData = getInstance().dataSets.getOrCreateMinionPlayerData(player);
+
         if(!ClientEventHandler.getInstance().getAreFinalsActive()) {
-            if (!ClientWitherData.getMinionsActive()) {
-                if (ClientWitherData.getCooldown() <= wData.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+            if (!getAbilityActive(player)) {
+                if (wData.getClientAbilityCooldown() <= wData.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
                     NetworkHandler.INSTANCE.sendToServer(new WitherDashPacket(player.getUUID(), player.getLookAngle(), wData.MAX_SPEED));
 
                     WitherDash.getInstance().activateClientAbility(player);
@@ -190,11 +198,11 @@ public class WitherDash implements Ability {
     @Override
     public void activateAbility(ServerPlayer serverPlayer) {
         WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(serverPlayer);
-        if(data.abilityCooldown <= data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+        if(data.abilityCooldown <= data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
             serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
                     playerPatch.getAnimator().playAnimation(WOMAnimations.SHADOWSTEP_FORWARD.get(), 0);
-                    data.abilityCooldown = data.abilityCooldown + data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
+                    data.abilityCooldown = data.abilityCooldown + data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
                     data.isDashActive = true;
                 }
             });
@@ -212,7 +220,7 @@ public class WitherDash implements Ability {
 
     public void activateClientAbility(Player player) {
         WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(player);
-        if(ClientWitherData.getCooldown() <= data.getMAX_COOLDOWN() / KenjisCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
+        if(data.getClientAbilityCooldown() <= data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
 
             player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
@@ -241,7 +249,7 @@ public class WitherDash implements Ability {
     public void tickServerAbilityData(ServerPlayer player) {
         WitherPlayerDataSets.WitherDashPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        if (abilityData.chosenAbility1.name().equals(getName())) {
+        if (abilityData.chosenAbility1.equals(getName())) {
             getInstance().decrementCooldown(player);
 
             player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
@@ -274,7 +282,7 @@ public class WitherDash implements Ability {
         if (isAbilityChosenOrEquipped(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherDataPacket(data.abilityCooldown, data.isDashActive, data.canIgnoreCollide)
+                    new SyncAbility1Packet(data.abilityCooldown, data.isDashActive, data.canIgnoreCollide)
             );
         }
     }
@@ -282,7 +290,7 @@ public class WitherDash implements Ability {
     public boolean isAbilityChosenOrEquipped(Player player) {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenAbility1.name().equals(getName());
+        return abilityData.chosenAbility1.equals(getName());
     }
 
     @Override

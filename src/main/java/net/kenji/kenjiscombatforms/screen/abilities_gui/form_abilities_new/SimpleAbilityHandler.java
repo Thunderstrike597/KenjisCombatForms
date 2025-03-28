@@ -2,8 +2,8 @@ package net.kenji.kenjiscombatforms.screen.abilities_gui.form_abilities_new;
 
 import net.kenji.kenjiscombatforms.api.PowerControl;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsClient;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsClient;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -35,13 +35,13 @@ public class SimpleAbilityHandler {
 
 
     private static boolean getHideAbilityBars() {
-        return KenjisCombatFormsClient.HIDE_ABILITY_BARS.get();
+        return EpicFightCombatFormsClient.HIDE_ABILITY_BARS.get();
     }
 
-    public static boolean getHideAbilityBarsFirstPerson(Player player){
+    static boolean getHideAbilityBarsFirstPerson(Player player){
        if(player.level().isClientSide) {
            if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
-               if (KenjisCombatFormsClient.HIDE_ABILITY_BARS_FIRST_PERSON.get()) {
+               if (EpicFightCombatFormsClient.HIDE_ABILITY_BARS_FIRST_PERSON.get()) {
                    return false;
                } else
                    return true;
@@ -52,13 +52,20 @@ public class SimpleAbilityHandler {
 
     public static boolean getCanUseAbilitiesWithoutForms(Player player){
         if(!(player.getMainHandItem().getItem() instanceof BaseFistClass)){
-            return KenjisCombatFormsCommon.CAN_USE_ABILITIES_NO_FORM.get();
+            return EpicFightCombatFormsCommon.CAN_USE_ABILITIES_NO_FORM.get();
+        }
+        return true;
+    }
+
+    public static boolean hideAbilityGUIWhenNotActive(Player player){
+        if(EpicFightCombatFormsClient.HIDE_GUI_WHEN_NOT_ACTIVE.get()){
+            return player.getMainHandItem().getItem() instanceof BaseFistClass;
         }
         return true;
     }
 
     boolean isSelectionMode(){
-        return KenjisCombatFormsCommon.ABILITY_SELECTION_MODE.get();
+        return EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get();
     }
 
     int abilityIndex(Player player){
@@ -73,78 +80,82 @@ public class SimpleAbilityHandler {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-            if(isSelectionMode()){
-                if(abilityIndex(player) != 1)
-                    return;
-            }
+           if(hideAbilityGUIWhenNotActive(player)) {
+               if (isSelectionMode()) {
+                   if (abilityIndex(player) != 1)
+                       return;
+               }
 
 
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
+               ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+               if (getCanUseAbilitiesWithoutForms(player)) {
+                   if (getHideAbilityBarsFirstPerson(player)) {
+                       if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        // ✅ Draw the FULL Background Texture (without clipping)
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                           // ✅ Draw the FULL Background Texture (without clipping)
+                           event.getGuiGraphics().blit(abilityBackgroundResource,
+                                   iconX, iconY,
+                                   iconU, iconV,
+                                   iconSize, iconSize,
+                                   iconSize, iconSize
+                           );
 
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (iconSize - cooldownHeight),
-                                iconU, iconV + (iconSize - cooldownHeight),
-                                iconSize, cooldownHeight, // ✅ Uses positive height
-                                iconSize, iconSize);
-                    }
-                    if(abilityCooldown == 0){
+                           event.getGuiGraphics().blit(abilityResource,
+                                   iconX, iconY + (iconSize - cooldownHeight),
+                                   iconU, iconV + (iconSize - cooldownHeight),
+                                   iconSize, cooldownHeight, // ✅ Uses positive height
+                                   iconSize, iconSize);
+                       }
+                       if (abilityCooldown == 0) {
 
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
-                    }
-                }
-            }
+                           event.getGuiGraphics().blit(abilityOverlayResource,
+                                   iconX, iconY,
+                                   iconU, iconV,
+                                   iconSize, iconSize,
+                                   iconSize, iconSize
+                           );
+                       }
+                   }
+               }
+           }
         }
     }
     public void drawAbility4Icon(RenderGuiOverlayEvent event, ResourceLocation abilityResource, ResourceLocation abilityBackgroundResource, ResourceLocation abilityOverlayResource, int iconX, int iconY, int iconU, int iconV, int iconSize, int cooldownHeight, int MAX_COOLDOWN, int abilityCooldown) {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-            if(isSelectionMode()){
-                if(abilityIndex(player) != 1)
-                    return;
-            }
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
+            if(hideAbilityGUIWhenNotActive(player)) {
+                if (isSelectionMode()) {
+                    if (abilityIndex(player) != 1)
+                        return;
+                }
+                ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+                if (getCanUseAbilitiesWithoutForms(player)) {
+                    if (getHideAbilityBarsFirstPerson(player)) {
+                        if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityBackgroundResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
 
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (iconSize - cooldownHeight),
-                                iconU, iconV + (iconSize - cooldownHeight),
-                                iconSize, cooldownHeight,
-                                iconSize, iconSize);
-                    }
-                    if(abilityCooldown == 0){
+                            event.getGuiGraphics().blit(abilityResource,
+                                    iconX, iconY + (iconSize - cooldownHeight),
+                                    iconU, iconV + (iconSize - cooldownHeight),
+                                    iconSize, cooldownHeight,
+                                    iconSize, iconSize);
+                        }
+                        if (abilityCooldown == 0) {
 
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityOverlayResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
+                        }
                     }
                 }
             }
@@ -156,36 +167,38 @@ public class SimpleAbilityHandler {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-            if(isSelectionMode()){
-                if(abilityIndex(player) != 2)
-                    return;
-            }
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
+            if (hideAbilityGUIWhenNotActive(player)) {
+                if (isSelectionMode()) {
+                    if (abilityIndex(player) != 2)
+                        return;
+                }
+                ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+                if (getCanUseAbilitiesWithoutForms(player)) {
+                    if (getHideAbilityBarsFirstPerson(player)) {
+                        if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityBackgroundResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
 
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (iconSize - cooldownHeight),
-                                iconU, iconV + (iconSize - cooldownHeight),
-                                iconSize, cooldownHeight,
-                                iconSize, iconSize);
-                    }
-                    if(abilityCooldown == 0){
+                            event.getGuiGraphics().blit(abilityResource,
+                                    iconX, iconY + (iconSize - cooldownHeight),
+                                    iconU, iconV + (iconSize - cooldownHeight),
+                                    iconSize, cooldownHeight,
+                                    iconSize, iconSize);
+                        }
+                        if (abilityCooldown == 0) {
 
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityOverlayResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
+                        }
                     }
                 }
             }
@@ -197,37 +210,39 @@ public class SimpleAbilityHandler {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-            if(isSelectionMode()){
-                if(abilityIndex(player) != 2)
-                    return;
-            }
+            if(hideAbilityGUIWhenNotActive(player)) {
+                if (isSelectionMode()) {
+                    if (abilityIndex(player) != 2)
+                        return;
+                }
 
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
+                ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+                if (getCanUseAbilitiesWithoutForms(player)) {
+                    if (getHideAbilityBarsFirstPerson(player)) {
+                        if (data.isHandCombat || !getHideAbilityBars()) {
 
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityBackgroundResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
 
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (iconSize - cooldownHeight),
-                                iconU, iconV + (iconSize - cooldownHeight),
-                                iconSize, cooldownHeight,
-                                iconSize, iconSize);
-                    }
-                    if(abilityCooldown == 0){
+                            event.getGuiGraphics().blit(abilityResource,
+                                    iconX, iconY + (iconSize - cooldownHeight),
+                                    iconU, iconV + (iconSize - cooldownHeight),
+                                    iconSize, cooldownHeight,
+                                    iconSize, iconSize);
+                        }
+                        if (abilityCooldown == 0) {
 
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityOverlayResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
+                        }
                     }
                 }
             }
@@ -237,38 +252,40 @@ public class SimpleAbilityHandler {
         Minecraft mcInstance = Minecraft.getInstance();
         Player player = mcInstance.player;
         if (player != null && player.level().isClientSide) {
-            if(isSelectionMode()){
-                if(abilityIndex(player) != 3)
-                    return;
-            }
+            if(hideAbilityGUIWhenNotActive(player)) {
+                if (isSelectionMode()) {
+                    if (abilityIndex(player) != 3)
+                        return;
+                }
 
-            ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
-            if (getCanUseAbilitiesWithoutForms(player)) {
-                if (getHideAbilityBarsFirstPerson(player)) {
-                    if (data.isHandCombat || !getHideAbilityBars()) {
+                ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
+                if (getCanUseAbilitiesWithoutForms(player)) {
+                    if (getHideAbilityBarsFirstPerson(player)) {
+                        if (data.isHandCombat || !getHideAbilityBars()) {
 
 
-                        event.getGuiGraphics().blit(abilityBackgroundResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityBackgroundResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
 
-                        event.getGuiGraphics().blit(abilityResource,
-                                iconX, iconY + (iconSize - cooldownHeight),
-                                iconU, iconV + (iconSize - cooldownHeight),
-                                iconSize, cooldownHeight,
-                                iconSize, iconSize);
-                    }
-                    if(abilityCooldown == 0){
+                            event.getGuiGraphics().blit(abilityResource,
+                                    iconX, iconY + (iconSize - cooldownHeight),
+                                    iconU, iconV + (iconSize - cooldownHeight),
+                                    iconSize, cooldownHeight,
+                                    iconSize, iconSize);
+                        }
+                        if (abilityCooldown == 0) {
 
-                        event.getGuiGraphics().blit(abilityOverlayResource,
-                                iconX, iconY,
-                                iconU, iconV,
-                                iconSize, iconSize,
-                                iconSize, iconSize
-                        );
+                            event.getGuiGraphics().blit(abilityOverlayResource,
+                                    iconX, iconY,
+                                    iconU, iconV,
+                                    iconSize, iconSize,
+                                    iconSize, iconSize
+                            );
+                        }
                     }
                 }
             }

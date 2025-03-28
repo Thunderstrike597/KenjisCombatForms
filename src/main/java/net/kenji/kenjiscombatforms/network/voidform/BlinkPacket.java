@@ -20,7 +20,7 @@ public class BlinkPacket {
             ServerPlayer player = ctx.getSender();
             if (player != null) {
                 BlinkEffect.triggerFade(player);
-            }else  System.out.println("DID NOT RECIEVE PACKET");
+            }
         });
         ctx.setPacketHandled(true);
     }

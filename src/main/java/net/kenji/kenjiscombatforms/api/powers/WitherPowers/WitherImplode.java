@@ -7,6 +7,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.FinalAbility;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility5Packet;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.SyncWitherData5Packet;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,12 +40,12 @@ public class WitherImplode implements FinalAbility {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption5.WITHER_IMPLODE.name();
+        return "WITHER_IMPLODE";
     }
 
     @Override
     public String getFinalAbilityName() {
-        return AbilityManager.AbilityOption3.WITHER_FINAL.name();
+        return "WITHER_FINAL";
     }
 
 
@@ -169,7 +170,7 @@ public class WitherImplode implements FinalAbility {
         WitherPlayerDataSets.WitherImplodePlayerData data = getPlayerData(serverPlayer);
         WitherPlayerDataSets.WitherFormPlayerData wData = getOrCreateWitherFormPlayerData(serverPlayer);
         long currentTime = System.currentTimeMillis();
-        if (data.abilityCooldown <= 0 && wData.isWitherActive) {
+        if (data.abilityCooldown <= 0 && getFinalAbilityActive(serverPlayer)) {
             playSound(serverPlayer);
             activateAbility(serverPlayer);
         }
@@ -194,7 +195,7 @@ public class WitherImplode implements FinalAbility {
         WitherPlayerDataSets.WitherMinionPlayerData mData = dataSets.getOrCreateMinionPlayerData(player);
         WitherPlayerDataSets.WitherFormPlayerData wData = dataSets.getOrCreateWitherFormPlayerData(player);
         if(isAbilityChosenOrEquipped(player)) {
-            if (!mData.areMinionsActive && wData.isWitherActive) {
+            if (!mData.areMinionsActive && getFinalAbilityActive(player)) {
                 fillPerSecondCooldown(player);
             }
         }
@@ -220,14 +221,14 @@ public class WitherImplode implements FinalAbility {
         if(getFinalAbilityActive(player)) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new SyncWitherData5Packet(data.abilityCooldown)
+                    new SyncAbility5Packet(data.abilityCooldown, false)
             );
         }
     }
 
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
-        return abilityData.chosenFinal.name().equals(getName());
+        return abilityData.chosenFinal.equals(getName());
     }
 
     private void handleNearbyEntities(Player player) {

@@ -1,7 +1,9 @@
 package net.kenji.kenjiscombatforms.api.handlers.power_data;
 
 import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.network.power_form.ClientPowerData;
+import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
@@ -24,16 +26,25 @@ public class PowerPlayerDataSets {
     public static class StrengthPlayerData extends AbstractAbilityData {
         public int tickCount = 0;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
 
         public StrengthPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY1_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY1_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
         }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
 
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
         @Override
         public boolean isAbilityActive() {
             return false;
@@ -43,14 +54,28 @@ public class PowerPlayerDataSets {
         public int tickCount = 0;
         public boolean isInflictActive = false;
         public int abilityCooldown = MAX_COOLDOWN;
+        public int clientAbilityCooldown = MAX_COOLDOWN;
 
         public PowerInflictPlayerData() {
-            super(KenjisCombatFormsCommon.ABILITY2_COOLDOWN.get());
+            super(EpicFightCombatFormsCommon.ABILITY2_COOLDOWN.get());
         }
 
         @Override
         public void resetAbility() {
 
+        }
+        @Override
+        public void setClientCooldown(Player player, int value) {
+            clientAbilityCooldown = value;
+        }
+
+        @Override
+        public int getClientAbilityCooldown() {
+            return clientAbilityCooldown;
+        }
+        @Override
+        public void setAbilityActive(boolean value) {
+            isInflictActive = value;
         }
 
         @Override

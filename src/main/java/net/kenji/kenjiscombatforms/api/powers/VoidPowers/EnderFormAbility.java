@@ -9,7 +9,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
-import net.kenji.kenjiscombatforms.config.KenjisCombatFormsCommon;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.custom.noAiEntities.EnderEntity;
 import net.kenji.kenjiscombatforms.event.CommonFunctions;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
@@ -18,6 +18,7 @@ import net.kenji.kenjiscombatforms.item.custom.fist_forms.EnderFormItem;
 import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
 import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.client_data.SyncClientFinalAbilitesPacket;
+import net.kenji.kenjiscombatforms.network.globalformpackets.SyncAbility3Packet;
 import net.kenji.kenjiscombatforms.network.particle_packets.EndParticlesTickPacket;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
@@ -78,9 +79,18 @@ public class EnderFormAbility implements Ability {
 
     @Override
     public String getName() {
-        return AbilityManager.AbilityOption3.VOID_FINAL.name();
+        return "VOID_FINAL";
     }
 
+    @Override
+    public int getGUIDrawPosY() {
+        return 155;
+    }
+
+    @Override
+    public int getGUIDrawPosX() {
+        return 186;
+    }
 
 
     @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -150,7 +160,7 @@ public class EnderFormAbility implements Ability {
                 EnderPlayerDataSets.EnderFormPlayerData data = getInstance().getPlayerData(player);
                 player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                     if (cap instanceof PlayerPatch<?> playerPatch){
-                        if(data.isEnderActive) {
+                        if(getInstance().getAbilityActive(player)) {
                             getInstance().setSkill(playerPatch, getInstance().getCurrentDodgeSkill());
                         }
                     }
@@ -221,7 +231,7 @@ public class EnderFormAbility implements Ability {
 
     public void jumpUp(Player player){
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
-        if(ClientVoidData.getCooldown3() == 0) {
+        if(data.getClientAbilityCooldown() == 0) {
             Vec3 velocity = player.getDeltaMovement();
             player.setDeltaMovement(velocity.x, 0.5, velocity.z);
         }
@@ -248,7 +258,7 @@ public class EnderFormAbility implements Ability {
                 Skill skillToSet = WOMSkills.ENDERSTEP;
                 CompoundTag nbt = serverPlayer.getPersistentData();
 
-                if (!data.isEnderActive && data.abilityCooldown == 0) {
+                if (!getAbilityActive(serverPlayer) && data.abilityCooldown == 0) {
 
 
                     setCurrentDodgeSkill(playerPatch, getSkill(playerPatch), nbt);
@@ -283,9 +293,9 @@ public class EnderFormAbility implements Ability {
 
 
         setFormItem(serverPlayer);
-        data.isEnderActive = true;
-        abilityData.ability4 = AbilityManager.AbilityOption4.ENDER_LEVITATION;
-        abilityData.ability5 = AbilityManager.AbilityOption5.VOID_GRAB;
+        data.setAbilityActive(true);
+        abilityData.ability4 = EnderLevitation.getInstance().getName();
+        abilityData.ability5 = VoidGrab.getInstance().getName();
             playSound(serverPlayer);
         syncDataToClient(serverPlayer);
     }
@@ -338,10 +348,6 @@ public class EnderFormAbility implements Ability {
         });
     }
 
-    public boolean getEnderFormActive(Player player){
-        EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
-        return data.isEnderActive;
-    }
 
     void addEnderEntityToTeam(Player currentPlayer, EnderEntity enderEntity){
         Scoreboard scoreboard = currentPlayer.level().getScoreboard();
@@ -365,7 +371,7 @@ public class EnderFormAbility implements Ability {
     @Override
     public void deactivateAbilityOptional(ServerPlayer serverPlayer) {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(serverPlayer);
-        data.isEnderActive = false;
+        data.setAbilityActive(false);
         serverPlayer.getAbilities().flying = false;
         serverPlayer.getAbilities().mayfly = false;
 
@@ -379,14 +385,14 @@ public class EnderFormAbility implements Ability {
         @Override
         public void fillDamageCooldown(Player player) {
             EnderPlayerDataSets.EnderFormPlayerData data = getInstance().getPlayerData(player);
-            if(KenjisCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
-               if(!data.isAbilityActive()) {
+            if(EpicFightCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
+               if(!getInstance().getAbilityActive(player)) {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get();
                    }
                } else {
                    if (data.abilityCooldown > 0) {
-                       data.abilityCooldown = data.abilityCooldown - KenjisCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get() / 2;
+                       data.abilityCooldown = data.abilityCooldown - EpicFightCombatFormsCommon.COMBAT_MODE_GAIN_AMOUNT.get() / 2;
                    }
                }
                 if(player instanceof ServerPlayer serverPlayer) {
@@ -403,14 +409,14 @@ public class EnderFormAbility implements Ability {
         if (isAbilityChosenOrEquipped(player)) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    if(!KenjisCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
-                        if (data.abilityCooldown > 0 && !data.isEnderActive) {
+                    if(!EpicFightCombatFormsCommon.ABILITY3_COMBAT_MODE.get()) {
+                        if (data.abilityCooldown > 0 && !getAbilityActive(player)) {
                                 fillPerSecondCooldown(player);
                         }
-                    }if (data.abilityCooldown < data.getMAX_COOLDOWN() && data.isEnderActive) {
+                    }if (data.abilityCooldown < data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                         drainPerSecondCooldown(player);
                     }
-                    if (data.abilityCooldown >= data.getMAX_COOLDOWN() && data.isEnderActive) {
+                    if (data.abilityCooldown >= data.getMAX_COOLDOWN() && getAbilityActive(player)) {
                         deactivateAbilityOptional(serverPlayer);
                         Entity existingShadow = data.playerEnderMap.remove(player.getUUID());
                         if (existingShadow != null) {
@@ -431,11 +437,11 @@ public class EnderFormAbility implements Ability {
         EnderPlayerDataSets.EnderFormPlayerData data = getPlayerData(player);
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(abilityData.chosenFinal.name().equals(getName())) {
+        if(abilityData.chosenFinal.equals(getName())) {
             getInstance().decrementCooldown(player);
 
             syncDataToClient(player);
-            if (data.isEnderActive || ClientVoidData.getIsEnderActive()) {
+            if (getAbilityActive(player)) {
                 player.getAbilities().mayfly = true;
                 player.getAbilities().flying = true;
                 player.getAbilities().setFlyingSpeed(0.05f);
@@ -462,11 +468,11 @@ public class EnderFormAbility implements Ability {
         EnderPlayerDataSets.EnderFormPlayerData data = getInstance().playerDataMap.computeIfAbsent(player.getUUID(), k -> new EnderPlayerDataSets.EnderFormPlayerData());
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        if(ClientFistData.getChosenAbility3().name().equals(getName())) {
+        if(ClientFistData.getChosenAbility3().equals(getName())) {
 
             getInstance().decrementCooldown(player);
 
-            if (ClientVoidData.getIsEnderActive() || data.isEnderActive) {
+            if (ClientVoidData.getIsEnderActive() || getAbilityActive(player)) {
                 //preventCombatActions(player);
                 player.getAbilities().mayfly = true;
                 player.getAbilities().flying = true;
@@ -487,7 +493,7 @@ public class EnderFormAbility implements Ability {
         //if(getAbilityActive(player)) {
            NetworkHandler.INSTANCE.send(
                    PacketDistributor.PLAYER.with(() -> player),
-                   new SyncVoidData3Packet(data.abilityCooldown, data.isEnderActive)
+                   new SyncAbility3Packet(data.abilityCooldown, getAbilityActive(player), false)
            );
            NetworkHandler.INSTANCE.send(
                    PacketDistributor.PLAYER.with(() -> player),
@@ -499,7 +505,7 @@ public class EnderFormAbility implements Ability {
     public boolean isAbilityChosenOrEquipped(Player player){
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
 
-        return abilityData.chosenFinal.name().equals(getName());
+        return abilityData.chosenFinal.equals(getName());
     }
 
 
@@ -542,7 +548,6 @@ public class EnderFormAbility implements Ability {
 
     @OnlyIn(Dist.CLIENT)
     public void spawnParticles(Player player) {
-        int currentVoidCooldown = ClientVoidData.getCooldown3();
         BlockParticleOption whiteFallingDust = new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.WHITE_WOOL.defaultBlockState());
 
 
