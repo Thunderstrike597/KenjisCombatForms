@@ -9,6 +9,8 @@ import net.kenji.kenjiscombatforms.api.interfaces.form.FormAbilityStrategy;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.gameasset.CombatFistCapabilityPresets;
+import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
@@ -20,13 +22,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class BasicForm implements Form {
     public final Map<UUID, BasicFormData> playerDataMap = new ConcurrentHashMap<>();
@@ -124,6 +130,17 @@ public class BasicForm implements Form {
             }
 
         }
+    }
+
+    @Override
+    public ItemStack getFormItem(UUID playerId) {
+      switch (getFormData(playerId).getCurrentFormLevel()) {
+          case LEVEL2:
+              return ModItems.BASIC_FIST2_ITEM.get().getDefaultInstance();
+          case LEVEL3:
+              return ModItems.BASIC_FIST3_ITEM.get().getDefaultInstance();
+          default: return ModItems.BASIC_FIST_ITEM.get().getDefaultInstance();
+      }
     }
 
     public static class BasicFormData extends AbstractFormData {

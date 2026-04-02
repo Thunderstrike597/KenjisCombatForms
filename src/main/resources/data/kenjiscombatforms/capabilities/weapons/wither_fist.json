@@ -1,5 +1,5 @@
 {
-  "type": "kenjiscombatforms:wither_fist",
+  "type": "kenjiscombatforms:wither_form_1",
   "attributes": {
       "common":{
         "impact": 0.25,

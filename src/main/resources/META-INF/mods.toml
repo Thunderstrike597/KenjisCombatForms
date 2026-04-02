@@ -46,7 +46,7 @@ configuredBackground="minecraft:textures/block/cherry_leaves.png"
 modId="epicfight"
 mandatory=true
 
-versionRange="[20.7.4,)"
+versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
@@ -54,7 +54,7 @@ side="BOTH"
 modId="wom"
 mandatory=true
 
-versionRange="[20.1.7.40,)"
+versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 

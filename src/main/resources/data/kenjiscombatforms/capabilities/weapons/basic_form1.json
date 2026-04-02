@@ -1,10 +1,11 @@
 {
-  "type": "kenjiscombatforms:basic_form1",
+  "type": "kenjiscombatforms:basic_form_1",
   "attributes": {
       "common":{
         "armor_negation": 0.8,
-          "impact": 0.3,
-        "max_strikes": 1
+        "impact": 0.3,
+        "max_strikes": 1,
+        "speed_bonus": 2
       }
   }
 }

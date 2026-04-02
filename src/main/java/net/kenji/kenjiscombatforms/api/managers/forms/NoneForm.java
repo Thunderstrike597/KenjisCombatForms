@@ -6,6 +6,7 @@ import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,11 @@ public class NoneForm implements Form {
     @Override
     public void setCurrentForm(Player player, int slot) {
 
+    }
+
+    @Override
+    public ItemStack getFormItem(UUID playerId) {
+        return null;
     }
 
     public class FormData extends AbstractFormData{

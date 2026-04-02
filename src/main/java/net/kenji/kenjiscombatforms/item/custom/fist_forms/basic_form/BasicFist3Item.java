@@ -33,6 +33,12 @@ public class BasicFist3Item extends BaseBasicClass {
         }
     }
 
+    @Override
+    public double getFinalSpeedModifier() {
+        double baseSpeed = EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get();
+        double speedMultiplier = EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
+        return baseSpeed * speedMultiplier;
+    }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
@@ -44,9 +50,6 @@ public class BasicFist3Item extends BaseBasicClass {
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 
-            double baseSpeed = EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get();
-            double speedMultiplier = EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
-            double finalSpeed = baseSpeed * speedMultiplier;
 
             builder.put(Attributes.ATTACK_DAMAGE,
                     new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
@@ -54,7 +57,7 @@ public class BasicFist3Item extends BaseBasicClass {
 
             builder.put(Attributes.ATTACK_SPEED,
                     new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon speed modifier",
-                            finalSpeed - 4, AttributeModifier.Operation.ADDITION));
+                            getFinalSpeedModifier() - 4, AttributeModifier.Operation.ADDITION));
 
             return builder.build();
         }

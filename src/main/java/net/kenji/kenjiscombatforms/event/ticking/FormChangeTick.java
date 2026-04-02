@@ -7,7 +7,9 @@ import net.kenji.kenjiscombatforms.api.handlers.LevelHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
+import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.*;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
@@ -25,6 +27,12 @@ import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFist
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFistItem;
 import net.kenji.kenjiscombatforms.item.custom.forms.BaseFormClass;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +40,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jline.utils.Log;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,6 +56,7 @@ public class FormChangeTick {
     private static final Map<UUID, Boolean> playerGuiStates = new ConcurrentHashMap<>();
     private static final Map<UUID, Boolean> playerCombatStates = new ConcurrentHashMap<>();
 
+    private static final Map<UUID, Form> lastForm = new HashMap<>();
 
     public static boolean isGuiOpen(Player player) {
         return playerGuiStates.getOrDefault(player.getUUID(), false);
@@ -75,9 +89,7 @@ public class FormChangeTick {
                 EnderPlayerDataSets.EnderFormPlayerData eData = EnderPlayerDataSets.getInstance().getOrCreateEnderFormPlayerData(player);
                 boolean isWitherActive = wData.isAbilityActive();
                 boolean isEnderActive = eData.isAbilityActive();
-
                 boolean areFinalActive = isWitherActive || isEnderActive;
-
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, player.getBoundingBox().inflate(5.0));
@@ -89,6 +101,64 @@ public class FormChangeTick {
                     }
                 }
             }
+        }
+    }
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event){
+        Player player = event.player;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player).selectedForm;
+        Form currentForm = FormManager.getInstance().getForm(formName);
+
+        Form lastForm = FormChangeTick.lastForm.get(player.getUUID());
+
+        if(player instanceof ServerPlayer serverPlayer) {
+            if (currentForm != lastForm || lastForm == null) {
+                ServerPlayerPatch playerPatch = EpicFightCapabilities.getServerPlayerPatch(serverPlayer);
+                if (playerPatch == null) return;
+                if (currentForm != null) {
+                    playerPatch.modifyLivingMotionByCurrentItem();
+                    ItemStack itemStack = currentForm.getFormItem(player.getUUID());
+                    CapabilityItem capabilityItem = EpicFightCapabilities.getItemStackCapability(itemStack);
+                    WeaponCategory category = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory();
+                    boolean shouldApply = category == CapabilityItem.WeaponCategories.FIST
+                            || category == CapabilityItem.WeaponCategories.NOT_WEAPON;
+
+                    if (shouldApply) {
+                        // APPLY modifiers
+                        for (Attribute attribute : capabilityItem.getAttributeModifiers(EquipmentSlot.MAINHAND, playerPatch).keySet()) {
+                            if(attribute == null) continue;
+                           AttributeInstance instance = player.getAttribute(attribute);
+                            if (instance == null) continue;
+                            Log.info();
+                            for (AttributeModifier modifier : capabilityItem.getAttributeModifiers(EquipmentSlot.MAINHAND, playerPatch).get(attribute)) {
+                              if(modifier == null) continue;
+                              if (!instance.hasModifier(modifier)) {
+                                  instance.addTransientModifier(modifier);
+                                  Log.info("Adding Attribute: " + attribute.getDescriptionId());
+                              }
+                            }
+                        }
+                    } else {
+                        // REMOVE modifiers
+                        for (Attribute attribute : capabilityItem.getAttributeModifiers(EquipmentSlot.MAINHAND, playerPatch).keySet()) {
+                            if(attribute == null) continue;
+
+                            AttributeInstance instance = player.getAttribute(attribute);
+                            if (instance == null) continue;
+
+                            for (AttributeModifier modifier : capabilityItem.getAttributeModifiers(EquipmentSlot.MAINHAND, playerPatch).get(attribute)) {
+                                if(modifier == null) continue;
+
+                                instance.removeModifier(modifier.getId()); // ✅ key fix
+                                Log.info("Removing Attribute!");
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            FormChangeTick.lastForm.put(player.getUUID(), currentForm);
         }
     }
 

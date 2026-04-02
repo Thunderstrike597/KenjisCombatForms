@@ -1,8 +1,8 @@
 package net.kenji.kenjiscombatforms.api.interfaces.form;
 
-import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,4 +20,6 @@ public interface Form {
     void syncDataToClient(Player player);
 
     void setCurrentForm(Player player, int slot);
+    ItemStack getFormItem(UUID playerId);
+
 }

@@ -80,7 +80,7 @@ public class WitherFistItem extends BaseWitherClass {
 
 
     public void setWitherFormMainHand(Player player, int slot){
-        player.getInventory().setItem(slot, this.getDefaultInstance());
+        //player.getInventory().setItem(slot, this.getDefaultInstance());
         if(player instanceof ServerPlayer serverPlayer){
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> serverPlayer),

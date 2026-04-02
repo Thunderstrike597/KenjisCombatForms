@@ -33,7 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yesman.epicfight.client.ClientEngine;
-import yesman.epicfight.client.events.engine.ControllEngine;
+import yesman.epicfight.client.events.engine.ControlEngine;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEventHandler {
@@ -163,7 +163,7 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft mc = Minecraft.getInstance();
             Player clientPlayer = mc.player;
-            ControllEngine controllEngine = ClientEngine.getInstance().controllEngine;
+            ControlEngine controllEngine = ClientEngine.getInstance().controlEngine;
             if (clientPlayer != null) {
                 CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
                 int originalSlot = getInstance().getOriginalSlot(clientPlayer);

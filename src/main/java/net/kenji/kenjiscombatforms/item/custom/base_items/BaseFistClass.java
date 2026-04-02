@@ -40,4 +40,8 @@ public class BaseFistClass extends WeaponItem {
         return false;
     }
 
+    public double getFinalSpeedModifier(){
+        return 0;
+    }
+
 }

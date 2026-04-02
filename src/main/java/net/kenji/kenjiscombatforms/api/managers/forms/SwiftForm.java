@@ -10,6 +10,7 @@ import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseSwiftClass;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form.SwiftFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form.SwiftFist3Item;
@@ -21,13 +22,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class SwiftForm implements Form {
     public final Map<UUID, FormData> playerDataMap = new ConcurrentHashMap<>();
@@ -128,6 +133,18 @@ public class SwiftForm implements Form {
             else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
                 fist3Item.setFormMainHand(player, slot);
             }
+        }
+    }
+
+    @Override
+    public ItemStack getFormItem(UUID playerId) {
+        switch (getFormData(playerId).getCurrentFormLevel()) {
+            case LEVEL2:
+                return ModItems.SWIFT_FIST2_ITEM.get().getDefaultInstance();
+            case LEVEL3:
+                return ModItems.SWIFT_FIST3_ITEM.get().getDefaultInstance();
+            default: return ModItems.SWIFT_FIST_ITEM.get().getDefaultInstance();
+
         }
     }
 

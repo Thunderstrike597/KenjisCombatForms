@@ -440,7 +440,7 @@ public class WitherFormAbility implements Ability {
                     }
                     syncDataToClient(player);
                     if (getAbilityActive(player)) {
-                        if (playerPatch.getServerAnimator().animationPlayer.getAnimation().getRealAnimation() == WOMAnimations.SHADOWSTEP_FORWARD){
+                        if (playerPatch.getServerAnimator().animationPlayer.getAnimation().get() == WOMAnimations.SHADOWSTEP_FORWARD.get()){
                             data.isDashActive = true;
                         }else{
                             data.isDashActive = false;

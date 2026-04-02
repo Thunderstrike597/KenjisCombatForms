@@ -201,7 +201,7 @@ public class WitherDash implements Ability {
         if(data.abilityCooldown <= data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get()) {
             serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
-                    playerPatch.getAnimator().playAnimation(WOMAnimations.SHADOWSTEP_FORWARD.get(), 0);
+                    playerPatch.getAnimator().playAnimation(WOMAnimations.SHADOWSTEP_FORWARD.get().getAccessor(), 0);
                     data.abilityCooldown = data.abilityCooldown + data.getMAX_COOLDOWN() / EpicFightCombatFormsCommon.ABILITY1_COOLDOWN_DIVISION.get();
                     data.isDashActive = true;
                 }
@@ -224,7 +224,7 @@ public class WitherDash implements Ability {
 
             player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).ifPresent(cap -> {
                 if (cap instanceof PlayerPatch<?> playerPatch) {
-                    playerPatch.getAnimator().playAnimationInstantly(WOMAnimations.SHADOWSTEP_FORWARD.get());
+                    playerPatch.getAnimator().playAnimationInstantly(WOMAnimations.SHADOWSTEP_FORWARD.get().getAccessor());
                 }
             });
         }
@@ -256,7 +256,7 @@ public class WitherDash implements Ability {
                 if(cap instanceof LivingEntityPatch<?> livingEntityPatch) {
                     if (livingEntityPatch instanceof PlayerPatch<?> playerPatch) {
                         if (data.isDashActive) {
-                            if (playerPatch.getServerAnimator().animationPlayer.getAnimation().getRealAnimation() != WOMAnimations.SHADOWSTEP_FORWARD){
+                            if (playerPatch.getServerAnimator().animationPlayer.getAnimation().get() != WOMAnimations.SHADOWSTEP_FORWARD.get()){
                                 data.isDashActive = false;
                                data.canIgnoreCollide = false;
                             }

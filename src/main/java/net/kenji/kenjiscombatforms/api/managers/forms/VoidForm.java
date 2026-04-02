@@ -10,6 +10,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.form.FormLevelStrategy;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
+import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseVoidClass;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form.VoidFist2Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form.VoidFistItem;
@@ -20,13 +21,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class VoidForm implements Form {
     public final Map<UUID, FormData> playerDataMap = new ConcurrentHashMap<>();
@@ -126,6 +131,18 @@ public class VoidForm implements Form {
             } else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
                 voidFist3Item.setVoidFormMainHand(player, slot);
             }
+        }
+    }
+
+    @Override
+    public ItemStack getFormItem(UUID playerId) {
+        switch (getFormData(playerId).getCurrentFormLevel()) {
+            case LEVEL2:
+                return ModItems.VOID_FIST2_ITEM.get().getDefaultInstance();
+            case LEVEL3:
+                return ModItems.VOID_FIST3_ITEM.get().getDefaultInstance();
+            default: return ModItems.VOID_FIST_ITEM.get().getDefaultInstance();
+
         }
     }
 

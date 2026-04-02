@@ -1,5 +1,5 @@
 {
-  "type": "kenjiscombatforms:power_form2",
+  "type": "kenjiscombatforms:power_form_2",
   "attributes": {
       "common":{
         "armor_negation": 1.0,

@@ -1,5 +1,5 @@
 {
-  "type": "kenjiscombatforms:swift_form1",
+  "type": "kenjiscombatforms:swift_form_1",
   "attributes": {
       "one_hand":{
         "armor_negation": 0.6,

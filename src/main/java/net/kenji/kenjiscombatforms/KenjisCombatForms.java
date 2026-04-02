@@ -22,6 +22,7 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEntity;
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.gameasset.CombatFistCapabilityPresets;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.particles.ModParticles;
@@ -33,6 +34,7 @@ import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.kenji.kenjiscombatforms.tab.ModTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,6 +51,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
 
 import static net.kenji.kenjiscombatforms.entity.ModEntities.*;
 
@@ -96,6 +99,7 @@ public class KenjisCombatForms
 
         ModParticles.register(modEventBus);
 
+        modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -111,7 +115,32 @@ public class KenjisCombatForms
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
     }
+    public static void RegisterWeaponType(WeaponCapabilityPresetRegistryEvent event) {
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_1"), CombatFistCapabilityPresets.BASIC_FIST_TIER1);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_2"), CombatFistCapabilityPresets.BASIC_FIST_TIER2);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_3"), CombatFistCapabilityPresets.BASIC_FIST_TIER3);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "power_form_1"), CombatFistCapabilityPresets.POWER_FORM_1);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "power_form_2"), CombatFistCapabilityPresets.POWER_FORM_2);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "power_form_3"), CombatFistCapabilityPresets.POWER_FORM_3);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "swift_form_1"), CombatFistCapabilityPresets.SWIFT_FORM_1);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "swift_form_2"), CombatFistCapabilityPresets.SWIFT_FORM_2);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "swift_form_3"), CombatFistCapabilityPresets.SWIFT_FORM_3);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "void_form_1"), CombatFistCapabilityPresets.VOID_FORM_1);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "void_form_2"), CombatFistCapabilityPresets.VOID_FORM_2);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "void_form_3"), CombatFistCapabilityPresets.VOID_FORM_3);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "wither_form_1"), CombatFistCapabilityPresets.WITHER_FORM_1);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "wither_form_2"), CombatFistCapabilityPresets.WITHER_FORM_2);
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "wither_form_3"), CombatFistCapabilityPresets.WITHER_FORM_3);
 
+
+
+
+
+
+
+
+
+    }
 
     public class ClientEvents {
 
