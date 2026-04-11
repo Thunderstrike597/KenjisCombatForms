@@ -257,7 +257,7 @@ public class EpicFightCombatFormsCommon {
                 .defineInRange("Level 3 Damage Multiplier", 1.6, 1.0, 8.0);
 
         BASIC_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Basic Form'")
-                .defineInRange("Basic Form Base Attack Speed", 0.6, 0.1, 15);
+                .defineInRange("Basic Form Base Attack Speed", 0.85, 0.1, 15);
 
         SWIFT_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Swift Form'")
                 .defineInRange("Swift Form Base Attack Speed", 0.9, 0.1, 15);

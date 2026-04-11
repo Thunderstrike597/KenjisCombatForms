@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class WitherFistItem extends BaseWitherClass {
     private static WitherFistItem INSTANCE;
@@ -32,13 +33,13 @@ public class WitherFistItem extends BaseWitherClass {
             INSTANCE = this;
         }
     }
+    private static final UUID BASE_ATTACK_SPEED_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890"); // new unique UUID
 
 
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.putAll(super.getDefaultAttributeModifiers(slot));
 
             int baseDamage = EpicFightCombatFormsCommon.WITHER_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
@@ -53,8 +54,8 @@ public class WitherFistItem extends BaseWitherClass {
                             finalDamage - 1, AttributeModifier.Operation.ADDITION));
 
             builder.put(Attributes.ATTACK_SPEED,
-                    new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon speed modifier",
-                            finalSpeed - 4, AttributeModifier.Operation.ADDITION));
+                    new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon speed modifier",
+                            finalSpeed - 3, AttributeModifier.Operation.ADDITION));
 
             return builder.build();
         }

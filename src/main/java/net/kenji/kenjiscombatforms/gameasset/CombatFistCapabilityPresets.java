@@ -49,7 +49,7 @@ public class CombatFistCapabilityPresets {
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
                 .addStyleAttibutes(CapabilityItem.Styles.COMMON, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                                -2 + (EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL1_SPEED_MULTIPLIER.get()))
+                                0)
                 ));
         return builder;
 
@@ -79,8 +79,7 @@ public class CombatFistCapabilityPresets {
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
                 .addStyleAttibutes(CapabilityItem.Styles.COMMON, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL2_SPEED_MULTIPLIER.get()))
-                ));
+                        0)                ));
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> BASIC_FIST_TIER3 = (item) -> {
@@ -113,7 +112,7 @@ public class CombatFistCapabilityPresets {
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
                 .addStyleAttibutes(CapabilityItem.Styles.COMMON, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get()))
+                        0)
                 ));
         return builder;
     };
