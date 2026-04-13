@@ -162,7 +162,7 @@ public class VoidFistCombos extends BaseComboBuilder {
                 .setMaxProtectTime(22)
                 .setMaxPressTime(6)
                 .setReserveTime(16)
-                .setShouldDrawGui(true).setSkillTextureLocation(ResourceLocation.fromNamespaceAndPath(EpicFightMod.MODID, String.format("textures/gui/skills/weapon_innate/relentless_combo.png"))));
+                .setShouldDrawGui(false));
     }
 
 

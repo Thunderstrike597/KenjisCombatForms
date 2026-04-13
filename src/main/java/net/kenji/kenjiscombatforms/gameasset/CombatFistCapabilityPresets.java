@@ -573,12 +573,9 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .addStyleAttibutes(CapabilityItem.Styles.TWO_HAND, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL1_SPEED_MULTIPLIER.get()))
-                ))
-                .addStyleAttibutes(CapabilityItem.Styles.OCHS, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL1_SPEED_MULTIPLIER.get()))
-                ));
+                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_1);
+
+
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> WITHER_FORM_2 = (item) -> {
@@ -632,12 +629,8 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .addStyleAttibutes(CapabilityItem.Styles.TWO_HAND, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL2_SPEED_MULTIPLIER.get()))
-                ))
-                .addStyleAttibutes(CapabilityItem.Styles.OCHS, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL2_SPEED_MULTIPLIER.get()))
-                ));
+                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_2);
+
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> WITHER_FORM_3 = (item) -> {
@@ -703,12 +696,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .addStyleAttibutes(CapabilityItem.Styles.TWO_HAND, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get()))
-                ))
-                .addStyleAttibutes(CapabilityItem.Styles.OCHS, Pair.of((Attribute) Attributes.ATTACK_SPEED, EpicFightAttributes.getSpeedBonusModifier(
-                        -2 + (EpicFightCombatFormsCommon.WITHER_FORM_BASE_SPEED.get() * EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get()))
-                ));
+                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_3);
         return builder;
     };
 }

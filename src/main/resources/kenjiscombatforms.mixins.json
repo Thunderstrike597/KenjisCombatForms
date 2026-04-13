@@ -11,7 +11,8 @@
     "MixinPlayerPatch",
     "MixinPlayer",
     "MixinLivingEntity",
-    "MixinPatchedItemInHandLayer"
+    "MixinPatchedItemInHandLayer",
+    "MixinCancellableDodge"
   ],
   "client": [
     "MixinEntityRenderer"

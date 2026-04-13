@@ -5,6 +5,7 @@ import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
 import net.kenji.kenjiscombatforms.gameasset.skills.combo_skills.BasicFistCombos;
 import net.kenji.kenjiscombatforms.gameasset.skills.combo_skills.SwiftFistCombos;
 import net.kenji.kenjiscombatforms.gameasset.skills.combo_skills.VoidFistCombos;
+import net.kenji.kenjiscombatforms.gameasset.skills.combo_skills.WitherFistCombos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jline.utils.Log;
@@ -27,6 +28,9 @@ public class ModSkills {
     public static Skill VOID_COMBO_1;
     public static Skill VOID_COMBO_2;
     public static Skill VOID_COMBO_3;
+    public static Skill WITHER_COMBO_1;
+    public static Skill WITHER_COMBO_2;
+    public static Skill WITHER_COMBO_3;
     @SubscribeEvent
     public static void buildSkillEvent(SkillBuildEvent build){
         SkillBuildEvent.ModRegistryWorker modRegistry = build.createRegistryWorker(KenjisCombatForms.MOD_ID);
@@ -41,5 +45,8 @@ public class ModSkills {
         skills.add(VOID_COMBO_1 = VoidFistCombos.buildSkills("void_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
         skills.add(VOID_COMBO_2 = VoidFistCombos.buildSkills("void_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
         skills.add(VOID_COMBO_3 = VoidFistCombos.buildSkills("void_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
+        skills.add(WITHER_COMBO_1 = WitherFistCombos.buildSkills("wither_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
+        skills.add(WITHER_COMBO_2 = WitherFistCombos.buildSkills("wither_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
+        skills.add(WITHER_COMBO_3 = WitherFistCombos.buildSkills("wither_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
     }
 }

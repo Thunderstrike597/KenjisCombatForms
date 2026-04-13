@@ -135,7 +135,7 @@ public class BasicFistCombos extends BaseComboBuilder {
                 .setMaxProtectTime(22)
                 .setMaxPressTime(10)
                 .setReserveTime(16)
-                .setShouldDrawGui(true).setSkillTextureLocation(ResourceLocation.fromNamespaceAndPath(EpicFightMod.MODID, String.format("textures/gui/skills/weapon_innate/relentless_combo.png"))));
+                .setShouldDrawGui(false));
     }
 
 
