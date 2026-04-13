@@ -24,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
@@ -118,19 +120,6 @@ public class VoidForm implements Form {
 
         if(Objects.equals(currentForm, this.getName())){
 
-            VoidFistItem voidFistItem = VoidFistItem.getInstance();
-            VoidFist2Item voidFist2Item = VoidFist2Item.getInstance();
-            VoidFist2Item voidFist3Item = VoidFist2Item.getInstance();
-
-            AbstractFormData currentFormData = this.getFormData(player.getUUID());
-
-            if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                voidFistItem.setVoidFormMainHand(player, slot);
-            } else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                voidFist2Item.setVoidFormMainHand(player, slot);
-            } else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-                voidFist3Item.setVoidFormMainHand(player, slot);
-            }
         }
     }
 
@@ -144,6 +133,13 @@ public class VoidForm implements Form {
             default: return ModItems.VOID_FIST_ITEM.get().getDefaultInstance();
 
         }
+    }
+
+    @Override
+    public Skill getFormSkill(Player player) {
+        CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(getFormItem(player.getUUID()));
+
+        return formCap.getInnateSkill(EpicFightCapabilities.getPlayerPatch(player), getFormItem(player.getUUID()));
     }
 
     public static class FormData extends AbstractFormData {

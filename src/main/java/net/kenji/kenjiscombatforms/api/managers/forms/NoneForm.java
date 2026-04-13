@@ -7,6 +7,7 @@ import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import yesman.epicfight.skill.Skill;
 
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,11 @@ public class NoneForm implements Form {
 
     @Override
     public ItemStack getFormItem(UUID playerId) {
+        return null;
+    }
+
+    @Override
+    public Skill getFormSkill(Player player) {
         return null;
     }
 

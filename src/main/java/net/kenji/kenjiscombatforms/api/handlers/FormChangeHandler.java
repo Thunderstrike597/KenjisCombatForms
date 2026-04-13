@@ -107,7 +107,7 @@ public class FormChangeHandler {
                 data.form3 = formOption;
             }
 
-
+            syncDataToClient(player);
             updateSavedData(serverPlayer);
         }
     }
@@ -195,7 +195,7 @@ public class FormChangeHandler {
         List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
         Form currentForm = FormManager.getInstance().getForm(formValue.get(0).getName());
 
-           currentForm.setCurrentForm(player, slot);
+        currentForm.setCurrentForm(player, slot);
     }
     public void removeCurrentFormItem(Player player, int slot){
         player.getMainHandItem().isEmpty();

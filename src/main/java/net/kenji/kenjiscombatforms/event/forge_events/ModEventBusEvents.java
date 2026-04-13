@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.event.forge_events;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
@@ -21,6 +22,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public class ModEventBusEvents {
@@ -75,5 +77,8 @@ import net.minecraftforge.fml.common.Mod;
             Minecraft.getInstance().particleEngine.register(ModParticles.VOID_RIFT_PARTICLE.get(),
                     VoidRiftParticle.Provider::new);
         }
-
+    @SubscribeEvent
+    public static void onLoadComplete(FMLLoadCompleteEvent event) {
+        event.enqueueWork(BaseComboBuilder::initializeComboSkills);
+    }
 }

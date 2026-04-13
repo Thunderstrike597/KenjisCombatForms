@@ -25,6 +25,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
@@ -118,21 +120,7 @@ public class SwiftForm implements Form {
         String currentForm = formValue.get(0).getName();
 
         if(Objects.equals(currentForm, this.getName())){
-            SwiftFistItem fistItem = SwiftFistItem.getInstance();
-            SwiftFist2Item fist2Item = SwiftFist2Item.getInstance();
-            SwiftFist3Item fist3Item = SwiftFist3Item.getInstance();
 
-            AbstractFormData currentFormData = this.getFormData(player.getUUID());
-
-            if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                fistItem.setFormMainHand(player, slot);
-            }
-            else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                fist2Item.setFormMainHand(player, slot);
-            }
-            else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-                fist3Item.setFormMainHand(player, slot);
-            }
         }
     }
 
@@ -146,6 +134,13 @@ public class SwiftForm implements Form {
             default: return ModItems.SWIFT_FIST_ITEM.get().getDefaultInstance();
 
         }
+    }
+
+    @Override
+    public Skill getFormSkill(Player player) {
+        CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(getFormItem(player.getUUID()));
+
+        return formCap.getInnateSkill(EpicFightCapabilities.getPlayerPatch(player), getFormItem(player.getUUID()));
     }
 
     public static class FormData extends AbstractFormData {

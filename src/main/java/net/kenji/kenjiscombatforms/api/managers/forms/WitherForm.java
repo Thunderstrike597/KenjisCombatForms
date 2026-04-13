@@ -25,6 +25,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
@@ -115,19 +117,7 @@ public class WitherForm implements Form {
 
         if(Objects.equals(currentForm, this.getName())){
 
-            WitherFistItem witherFistItem = WitherFistItem.getInstance();
-            WitherFist2Item witherFist2Item = WitherFist2Item.getInstance();
-            WitherFist3Item witherFist3Item = WitherFist3Item.getInstance();
 
-            AbstractFormData currentFormData = this.getFormData(player.getUUID());
-
-            if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                witherFistItem.setWitherFormMainHand(player, slot);
-            } else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL2) {
-                witherFist2Item.setWitherFormMainHand(player, slot);
-            } else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-                witherFist3Item.setWitherFormMainHand(player, slot);
-            }
         }
     }
 
@@ -141,6 +131,13 @@ public class WitherForm implements Form {
             default: return ModItems.WITHER_FIST_ITEM.get().getDefaultInstance();
 
         }
+    }
+
+    @Override
+    public Skill getFormSkill(Player player) {
+        CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(getFormItem(player.getUUID()));
+
+        return formCap.getInnateSkill(EpicFightCapabilities.getPlayerPatch(player), getFormItem(player.getUUID()));
     }
 
     public static class FormData extends AbstractFormData {

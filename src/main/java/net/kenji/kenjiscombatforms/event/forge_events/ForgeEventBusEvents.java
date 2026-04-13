@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEventBusEvents {
-
-
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         KenjisCombatForms.registerCommands(event);

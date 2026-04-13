@@ -257,19 +257,19 @@ public class EpicFightCombatFormsCommon {
                 .defineInRange("Level 3 Damage Multiplier", 1.6, 1.0, 8.0);
 
         BASIC_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Basic Form'")
-                .defineInRange("Basic Form Base Attack Speed", 0.85, 0.1, 15);
+                .defineInRange("Basic Form Base Attack Speed", 1, 0.1, 15);
 
         SWIFT_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Swift Form'")
-                .defineInRange("Swift Form Base Attack Speed", 0.9, 0.1, 15);
+                .defineInRange("Swift Form Base Attack Speed", 1, 0.1, 15);
 
         POWER_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Power Form'")
-                .defineInRange("Power Form Base Attack Speed", 0.5, 0.1, 15);
+                .defineInRange("Power Form Base Attack Speed", 1, 0.1, 15);
 
         VOID_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Void Form'")
-                .defineInRange("Void Form Base Attack Speed", 0.68, 0.1, 15);
+                .defineInRange("Void Form Base Attack Speed", 1, 0.1, 15);
 
         WITHER_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Wither Form'")
-                .defineInRange("Wither Form Base Attack Speed", 0.7, 0.1, 15);
+                .defineInRange("Wither Form Base Attack Speed", 1, 0.1, 15);
 
         LEVEL1_SPEED_MULTIPLIER = BUILDER.comment("This defines the amount of attack speed any Level 1 form is multiplied by")
                 .defineInRange("Level 1 Speed Multiplier", 1.18, 1,5.0);

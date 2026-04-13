@@ -18,6 +18,7 @@ import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form2SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.Form3SwapPacket;
 import net.kenji.kenjiscombatforms.network.fist_forms.form_swap.FormToSwapPacket;
 import net.kenji.kenjiscombatforms.network.globalformpackets.*;
+import net.kenji.kenjiscombatforms.network.misc.ItemUsePacket;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.*;
 import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
@@ -464,6 +465,12 @@ public class NetworkHandler {
                 .decoder(SyncAbility5Packet::new)
                 .consumerMainThread((msg, ctx) -> {
                     SyncAbility5Packet.handle(msg, ctx.get());
+                }).add();
+        INSTANCE.messageBuilder(ItemUsePacket.class, packetId++)
+                .encoder(ItemUsePacket::encode)
+                .decoder(ItemUsePacket::new)
+                .consumerMainThread((msg, ctx) -> {
+                    ItemUsePacket.handle(msg, ctx.get());
                 }).add();
 
     }

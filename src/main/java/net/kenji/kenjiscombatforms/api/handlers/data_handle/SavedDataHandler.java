@@ -223,14 +223,15 @@ public class SavedDataHandler extends SavedData {
 
 
         if (abilityData != null) {
-
                 tag.putString(CHOSEN_ABILITY1_DATA, abilityData.chosenAbility1);
                 tag.putString(CHOSEN_ABILITY2_DATA, abilityData.chosenAbility2);
                 tag.putString(CHOSEN_ABILITY3_DATA, abilityData.chosenFinal);
         }
-        if(!tag.getString(CHOSEN_FORM_DATA).isEmpty()) {
+        if(formData.selectedForm != null) {
             tag.putString(CHOSEN_FORM_DATA, formData.selectedForm);
-        }else{tag.putString(CHOSEN_FORM_DATA, BasicForm.getInstance().getName());}
+        }else{
+            tag.putString(CHOSEN_FORM_DATA, BasicForm.getInstance().getName());
+        }
     }
     private static void saveFormData(UUID player, Form form, CompoundTag tag, String formPrefix) {
         if (!Objects.equals(formPrefix, "NONE")) {

@@ -1,5 +1,5 @@
 {
-  "refmap": "mixins.kenjiscombatforms.refmap.json",
+  "refmap": "kenjiscombatforms.refmap.json",
   "required": true,
   "package": "net.kenji.kenjiscombatforms.mixins",
   "compatibilityLevel": "JAVA_17",
@@ -7,7 +7,11 @@
     "MixinBlockCollision",
     "MixinEpicFightFist",
     "WeaponCapabilityAccessor",
-    "MixinServerPlayerPatch"
+    "MixinServerPlayerPatch",
+    "MixinPlayerPatch",
+    "MixinPlayer",
+    "MixinLivingEntity",
+    "MixinPatchedItemInHandLayer"
   ],
   "client": [
     "MixinEntityRenderer"

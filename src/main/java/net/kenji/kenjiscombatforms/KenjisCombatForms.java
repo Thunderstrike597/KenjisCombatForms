@@ -23,6 +23,7 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFistCapabilityPresets;
+import net.kenji.kenjiscombatforms.gameasset.ModSkills;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.particles.ModParticles;
@@ -101,6 +102,7 @@ public class KenjisCombatForms
 
         modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
 
+        modEventBus.addListener(ModSkills::buildSkillEvent);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EpicFightCombatFormsCommon.SPEC, "kenjiscombatforms-Common.toml");

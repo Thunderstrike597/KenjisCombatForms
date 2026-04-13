@@ -1,0 +1,217 @@
+package net.kenji.kenjiscombatforms.gameasset.skills.combo_skills;
+
+import com.p1nero.invincible.api.events.BaseEvent;
+import com.p1nero.invincible.api.events.TimeStampedEvent;
+import com.p1nero.invincible.api.skill.ComboNode;
+import com.p1nero.invincible.client.InputManager;
+import com.p1nero.invincible.conditions.*;
+import com.p1nero.invincible.skill.ComboBasicAttack;
+import net.kenji.kenjiscombatforms.api.basegameassets.condition.CooldownCounterCondition;
+import net.kenji.kenjiscombatforms.api.basegameassets.condition.InAirCondition;
+import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.minecraft.resources.ResourceLocation;
+import reascer.wom.gameasset.WOMAnimations;
+import reascer.wom.gameasset.animations.weapons.AnimsEnderblaster;
+import reascer.wom.gameasset.animations.weapons.AnimsMoonless;
+import yesman.epicfight.api.animation.AnimationManager;
+import yesman.epicfight.api.animation.property.AnimationProperty;
+import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.forgeevent.SkillBuildEvent;
+import yesman.epicfight.api.utils.TimePairList;
+import yesman.epicfight.api.utils.math.ValueModifier;
+import yesman.epicfight.gameasset.Animations;
+import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.main.EpicFightMod;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.world.damagesource.StunType;
+
+public class BasicFistCombos extends BaseComboBuilder {
+
+    public static Skill buildSkills(String skillName, SkillBuildEvent.ModRegistryWorker registryWorker, FistTier tier) {
+
+        ComboNode root = ComboNode.create();
+        ComboNode basicAttack = ComboNode.createNode(Animations.DAGGER_DUAL_AUTO1)
+                .setStunTypeModifier(StunType.HOLD)
+                .setDamageMultiplier(ValueModifier.multiplier(0.5F))
+                .setCanBeInterrupt(false);
+
+
+        /// Tier 1
+        ComboNode basic1 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
+        ComboNode basic2 = createComboNode(Animations.DAGGER_DUAL_AUTO2);
+        ComboNode basic3 = createComboNode(WOMAnimations.STAFF_AUTO_2);
+        ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+
+        ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
+        ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.5F).setPlaySpeed(1.5F);
+        ComboNode basicLeft3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.75F);
+        ComboNode basicLeft4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+
+        ComboNode basicRight1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.5F);
+        ComboNode basicRight2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.5F);
+        ComboNode basicRight3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
+        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+
+        /// Tier 2
+        ComboNode basic5 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
+        ComboNode basic6 = createComboNode(Animations.DAGGER_DUAL_AUTO2);
+        ComboNode basic7 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
+        ComboNode basic8 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, 1.5F);
+        /// Tier 3
+        ComboNode basic9 = createComboNode(Animations.DAGGER_DUAL_AUTO2, 1.5F);
+        ComboNode basic10 = createComboNode(WOMAnimations.STAFF_AUTO_2, 1.5F);
+        ComboNode basic11 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+        ComboNode basic12 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+        ComboNode basic13 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2);
+
+
+
+        ComboNode dash = createComboNode(Animations.SPEAR_DASH).addCondition(new SprintingCondition());
+        ComboNode airSlash = createAirComboNode(WOMAnimations.STAFF_KINKONG).addCondition(new InAirCondition());
+
+        ComboNode leftDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_LEFT, basicLeft1).addCondition(new LeftCondition());
+        leftDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
+
+        ComboNode rightDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_RIGHT, basicRight1).addCondition(new RightCondition());
+        rightDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
+
+        ComboNode downDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_BACKWARD, basicRight1).addCondition(new DownCondition());
+        downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
+
+        createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+
+        ComboNode rootDecision = createMovementCombo(basicAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+
+
+        createMovementCombo(basic1, basic2, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basic2, basic3, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basic3, basic4, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+
+        createMovementCombo(basicLeft1, basicLeft2, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicLeft2, basicLeft3, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicLeft3, basicLeft4, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicLeft4, basic1, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, airSlash, dash));
+
+        createMovementCombo(basicRight1, basicRight2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicRight2, basicRight3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+
+
+        if(tier.value >= 1){
+            createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+            createMovementCombo(basic6, basic7, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+            createMovementCombo(basic7, basic8, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));}
+            createMovementCombo(basic8, basic9, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        if(tier.value >= 2){
+            createMovementCombo(basic9, basic10, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+            createMovementCombo(basic10, basic11, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+            createMovementCombo(basic11, basic12, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+            createMovementCombo(basic12, basic13, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        }
+
+        createMovementCombo(leftDodgeAttack, basic2, new ComboNodeWrapper(rightDodgeAttack, airSlash, dash));
+        createMovementCombo(rightDodgeAttack, basic2, new ComboNodeWrapper(leftDodgeAttack, airSlash, dash));
+
+
+
+        switch (tier.value){
+            case 0: basic5.key1(rootDecision);
+            break;
+            case 1: basic9.key1(rootDecision);
+            break;
+            case 2: basic13.key1(rootDecision);
+            break;
+        }
+
+
+        return registryWorker.build(skillName, ComboBasicAttack::new, ComboBasicAttack
+                .createComboBasicAttack()
+                .setCombo(root)
+                .setMaxProtectTime(22)
+                .setMaxPressTime(10)
+                .setReserveTime(16)
+                .setShouldDrawGui(true).setSkillTextureLocation(ResourceLocation.fromNamespaceAndPath(EpicFightMod.MODID, String.format("textures/gui/skills/weapon_innate/relentless_combo.png"))));
+    }
+
+
+    private static ComboNode createComboNode(AnimationManager.AnimationAccessor<? extends StaticAnimation> animation){
+        ComboNode node = ComboNode.createNode(animation);
+
+        // Defer the addTimeEvent call until animation.get() is non-null
+        DEFERRED_SETUP.add(() -> {
+            StaticAnimation anim = animation.get();
+            if(anim instanceof AttackAnimation attackAnimation){
+                for(AttackAnimation.Phase phase : attackAnimation.phases){
+                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                }
+
+            }
+            return null;
+        });
+
+        return node;
+    }
+    private static ComboNode createComboNode(AnimationManager.AnimationAccessor<? extends StaticAnimation> animation, float playSpeed){
+        ComboNode node = ComboNode.createNode(animation).setPlaySpeed(playSpeed);
+
+        // Defer the addTimeEvent call until animation.get() is non-null
+        DEFERRED_SETUP.add(() -> {
+            StaticAnimation anim = animation.get();
+            if(anim instanceof AttackAnimation attackAnimation){
+                for(AttackAnimation.Phase phase : attackAnimation.phases){
+                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                }
+
+            }
+            return null;
+        });
+
+        return node;
+    }
+    private static ComboNode createDodgeComboNode(AnimationManager.AnimationAccessor<? extends StaticAnimation> animation, ComboNode followUpCombo){
+        ComboNode node = ComboNode.createNode(animation);
+
+        // Defer the addTimeEvent call until animation.get() is non-null
+        DEFERRED_SETUP.add(() -> {
+            StaticAnimation anim = animation.get();
+            float end = anim.getTotalTime() - 0.2F;
+            node.addTimeEvent(new TimeStampedEvent(end,
+                    ((entityPatch, target, invinciblePlayer) -> {
+                        ComboBasicAttack comboAttack = InputManager.getComboBasicSkill();
+
+                        if(comboAttack != null){
+                            SkillContainer container = entityPatch.getSkill(FormManager.getCurrentFormSkill(entityPatch.getOriginal()));
+
+                            if(container != null){
+                                comboAttack.executeNodeOnServer(container, followUpCombo, 1, 1);
+                            }
+                        }
+                    })));
+            return null;
+        });
+
+        return node;
+    }
+    private static ComboNode createAirComboNode(AnimationManager.AnimationAccessor<? extends AttackAnimation> animation){
+        ComboNode node = ComboNode.createNode(animation);
+
+        // Defer the addTimeEvent call until animation.get() is non-null
+        DEFERRED_SETUP.add(() -> {
+            AttackAnimation anim = animation.get();
+            float contact = anim.phases[anim.phases.length - 1].contact;
+            float recovery = anim.phases[anim.phases.length - 1].end;
+            ((AttackAnimation)anim).addProperty(
+                    AnimationProperty.AttackAnimationProperty.NO_GRAVITY_TIME,
+                    TimePairList.create(new float[]{0.1F, recovery})
+            );
+            return null;
+        });
+
+        return node;
+    }
+}

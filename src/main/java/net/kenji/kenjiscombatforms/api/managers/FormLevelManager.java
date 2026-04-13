@@ -28,7 +28,14 @@ public class FormLevelManager {
     }
 
     public enum FormLevel {
-        LEVEL1, LEVEL2, LEVEL3
+        LEVEL1(0),
+        LEVEL2(1),
+        LEVEL3(2);
+        public final int value;
+
+        FormLevel(int value){
+            this.value = value;
+        }
     }
 
 

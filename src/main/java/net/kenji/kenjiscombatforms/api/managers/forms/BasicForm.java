@@ -25,6 +25,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
@@ -112,24 +114,6 @@ public class BasicForm implements Form {
         List<Form> formValue = FormManager.getInstance().getCurrentForms(player);
         String currentForm = formValue.get(0).getName();
 
-        if(Objects.equals(currentForm, this.getName())){
-            BasicFistItem basicFistItem = BasicFistItem.getInstance();
-            BasicFist2Item basicFist2Item = BasicFist2Item.getInstance();
-            BasicFist3Item basicFist3Item = BasicFist3Item.getInstance();
-
-            AbstractFormData currentFormData = this.getFormData(player.getUUID());
-
-            if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL1) {
-                basicFistItem.setFormMainHand(player, slot);
-            }
-            else if (currentFormData.getCurrentFormLevel()  == FormLevelManager.FormLevel.LEVEL2) {
-                basicFist2Item.setFormMainHand(player, slot);
-            }
-            else if (currentFormData.getCurrentFormLevel() == FormLevelManager.FormLevel.LEVEL3) {
-                basicFist3Item.setFormMainHand(player, slot);
-            }
-
-        }
     }
 
     @Override
@@ -141,6 +125,13 @@ public class BasicForm implements Form {
               return ModItems.BASIC_FIST3_ITEM.get().getDefaultInstance();
           default: return ModItems.BASIC_FIST_ITEM.get().getDefaultInstance();
       }
+    }
+
+    @Override
+    public Skill getFormSkill(Player player) {
+        CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(getFormItem(player.getUUID()));
+
+        return formCap.getInnateSkill(EpicFightCapabilities.getPlayerPatch(player), getFormItem(player.getUUID()));
     }
 
     public static class BasicFormData extends AbstractFormData {

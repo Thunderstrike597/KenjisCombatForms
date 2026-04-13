@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 
 public class SkillUtils {
 
-    // Method to get a skill by name dynamically using reflection
+    // Method to get a condition by name dynamically using reflection
     public static Skill getSkillByName(String skillName) {
         try {
             // Get all fields from the EpicFightSkills class
@@ -21,9 +21,9 @@ public class SkillUtils {
                 if (Skill.class.isAssignableFrom(field.getType())) {
                     field.setAccessible(true); // Make sure the field is accessible
                     Skill skill = (Skill) field.get(null); // Get the static field value
-                    // Compare the name (or ID) of the skill
+                    // Compare the name (or ID) of the condition
                     if (skill != null && skill.toString().equalsIgnoreCase(skillName)) {
-                        return skill; // Return the matching skill
+                        return skill; // Return the matching condition
                     }
                 }
             }
@@ -34,9 +34,9 @@ public class SkillUtils {
                 if (Skill.class.isAssignableFrom(field.getType())) {
                     field.setAccessible(true); // Make sure the field is accessible
                     Skill skill = (Skill) field.get(null); // Get the static field value
-                    // Compare the name (or ID) of the skill
+                    // Compare the name (or ID) of the condition
                     if (skill != null && skill.toString().equalsIgnoreCase(skillName)) {
-                        return skill; // Return the matching skill
+                        return skill; // Return the matching condition
                     }
                 }
             }

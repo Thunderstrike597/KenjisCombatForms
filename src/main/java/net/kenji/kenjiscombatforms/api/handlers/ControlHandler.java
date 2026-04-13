@@ -27,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -35,13 +36,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ControlHandler {
     private static final long PRESS_COOLDOWN = 4;
+    public static Map<UUID, Boolean> useKeyMap = new HashMap<>();
+
+    public static void updateUseKey(UUID uuid, boolean value){
+        useKeyMap.put(uuid, value);
+    }
+
     @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT)
     public static class controlRelatedEvents {
-
         public Map<UUID, PlayerData> playerDataMap = new ConcurrentHashMap<>();
         private static final int INITIAL_PRESS_COUNTER = 90;// Adjust as needed
         WitherPlayerDataSets dataSets = WitherPlayerDataSets.getInstance();
         private static final controlRelatedEvents INSTANCE = new controlRelatedEvents();
+
 
         public static controlRelatedEvents getInstance() {
             return INSTANCE;

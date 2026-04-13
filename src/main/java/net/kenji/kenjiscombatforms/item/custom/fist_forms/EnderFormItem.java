@@ -71,7 +71,7 @@ public class EnderFormItem extends BaseFinalFormClass {
 
 
     public void setFormMainHand(Player player, int slot){
-             player.getInventory().setItem(slot, this.getDefaultInstance());
+        player.getInventory().setItem(slot, this.getDefaultInstance());
     }
 }
 

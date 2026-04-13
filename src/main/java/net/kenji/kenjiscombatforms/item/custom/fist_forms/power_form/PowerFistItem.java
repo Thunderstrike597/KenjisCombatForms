@@ -91,13 +91,5 @@ public class PowerFistItem extends BasePowerClass {
     }
 
 
-    public void setFormMainHand(Player player, int slot) {
-       // player.getInventory().setItem(slot, this.getDefaultInstance());
-        if(player instanceof ServerPlayer serverPlayer){
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new SyncNBTPacket(this.getDefaultInstance(), slot));
-        }
-    }
 }
 

@@ -14,6 +14,7 @@ import net.kenji.kenjiscombatforms.network.NetworkHandler;
 import net.kenji.kenjiscombatforms.network.UpdateInventoryOpenPacket;
 import net.kenji.kenjiscombatforms.network.capability.SyncNBTPacket;
 import net.kenji.kenjiscombatforms.network.capability.SyncRemovedNBTPacket;
+import net.kenji.kenjiscombatforms.network.misc.ItemUsePacket;
 import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ClientVoidData;
 import net.kenji.kenjiscombatforms.network.witherform.ClientWitherData;
@@ -35,13 +36,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.events.engine.ControlEngine;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEventHandler {
 
     private static long lastPressTime = 0;
     private static final long PRESS_COOLDOWN = 100;
     private boolean canCrash = false;
-
 
     private static final ClientEventHandler INSTANCE = new ClientEventHandler();
     public Player currentPlayer;
@@ -99,6 +103,10 @@ public class ClientEventHandler {
         CommonEventHandler commonEventHandler = CommonEventHandler.getInstance();
 
         if (player == null) return;
+
+        NetworkHandler.INSTANCE.sendToServer(new ItemUsePacket(Minecraft.getInstance().options.keyUse.isDown()));
+        ControlHandler.updateUseKey(player.getUUID(),Minecraft.getInstance().options.keyUse.isDown());
+
 
         if (ModKeybinds.TOGGLE_HAND_COMBAT_KEY.consumeClick()) {
             long currentTime = System.currentTimeMillis();

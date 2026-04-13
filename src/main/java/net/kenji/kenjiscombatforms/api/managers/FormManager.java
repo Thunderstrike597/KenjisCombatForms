@@ -1,20 +1,22 @@
 package net.kenji.kenjiscombatforms.api.managers;
 
-import net.kenji.kenjiscombatforms.api.interfaces.ability.Ability;
-import net.kenji.kenjiscombatforms.api.interfaces.ability.AbstractAbilityData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
-import net.kenji.kenjiscombatforms.api.managers.forms.NoneForm;
-import net.kenji.kenjiscombatforms.api.powers.EmptyAbility;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FormManager {
     public final Map<UUID, PlayerFormData> playerDataMap = new ConcurrentHashMap<>();
+    public static final Map<UUID, Form> lastForm = new HashMap<>();
 
     private static final FormManager INSTANCE = new FormManager();
     public static FormManager getInstance(){
@@ -43,6 +45,15 @@ public class FormManager {
         public String form3 = "NONE";
     }
 
+    public static Form getLastForm(Player player){
+        return lastForm.getOrDefault(player.getUUID(), getCurrentForm(player));
+    }
+    public static void updateLastForm(Player player){
+        lastForm.put(player.getUUID(), getCurrentForm(player));
+    }
+    public static boolean isFormChanged(Player player){
+        return getLastForm(player) != getCurrentForm(player);
+    }
 
     public List<String> getCurrentFormsValues(Player player){
         if (!player.level().isClientSide) {
@@ -102,7 +113,25 @@ public class FormManager {
                 form3.getFormData(player.getUUID()));
     }
 
+    public static Form getCurrentForm(Player player){
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player).selectedForm;
+        return FormManager.getInstance().getForm(formName);
+    }
+    public static Skill getCurrentFormSkill(Player player){
+        Form form = getCurrentForm(player);
+        return form.getFormSkill(player);
+    }
+    public static ItemStack getCurrentFormItem(Player player){
+        Form form = getCurrentForm(player);
+        return form.getFormItem(player.getUUID());
+    }
+    public static boolean isHeldCategoryValid(Player player){
+       ItemStack held = player.getInventory().getSelected();
+       CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(held);
+       WeaponCategory category = capItem.getWeaponCategory();
 
+       return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON;
+    }
 
 
     public PlayerFormData getOrCreatePlayerFormData(Player player){
