@@ -31,7 +31,6 @@ public class MixinPlayer {
         if(currentForm == null || currentFormItem.isEmpty()) return;
         if(!FormManager.isHeldCategoryValid(player, player.getInventory().getSelected())) return;
         ItemStack originalReturnValue = cir.getReturnValue();
-        Log.info("LOGGING MAIN HAND MIXIN");
 
         cir.setReturnValue(currentFormItem);
 

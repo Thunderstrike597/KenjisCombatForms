@@ -34,23 +34,8 @@ import java.util.Objects;
 @Mixin(value = CapabilityItem.class, remap = false)
 public class MixinEpicFightFist {
 
-    @Inject(method = "getAutoAttackMotion", at = @At("HEAD"), cancellable = true, remap = false)
-    private void getCustomAutoAttackMotion(PlayerPatch<?> playerPatch, CallbackInfoReturnable<List<AnimationManager.AnimationAccessor<? extends AttackAnimation>>> cir) {
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal()).selectedForm;
-        Form currentForm = FormManager.getInstance().getForm(formName);
-        ItemStack formItem = currentForm.getFormItem(playerPatch.getOriginal().getUUID());
-        if(formItem == null) return;
-        CapabilityItem capItem = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
-        WeaponCategory category = capItem.getWeaponCategory();
-        if(category != CapabilityItem.WeaponCategories.FIST && category != CapabilityItem.WeaponCategories.NOT_WEAPON) return;
 
-        CapabilityItem formCapItem = EpicFightCapabilities.getItemStackCapability(formItem);
-
-        if(formCapItem instanceof WeaponCapability weaponCapability){
-            cir.setReturnValue(weaponCapability.getAutoAttackMotion(playerPatch));
-        }
-    }
-    @Inject(method = "getLivingMotionModifier", at = @At("RETURN"), cancellable = true, remap = false)
+    @Inject(method = "getLivingMotionModifier", at = @At("HEAD"), cancellable = true, remap = false)
     private void getCustomLivingMotion(LivingEntityPatch<?> patch, InteractionHand hand, CallbackInfoReturnable<Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>>> cir) {
         if(patch instanceof PlayerPatch<?> playerPatch) {
             String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal()).selectedForm;
@@ -68,32 +53,7 @@ public class MixinEpicFightFist {
             }
         }
     }
-    @Inject(method = "getAttributeModifiers(Lnet/minecraft/world/entity/EquipmentSlot;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;)Lcom/google/common/collect/Multimap;", at =@At("RETURN"), cancellable = true)
-    public void onGetAttributes(EquipmentSlot equipmentSlot, LivingEntityPatch<?> entitypatch, CallbackInfoReturnable<Multimap<Attribute, AttributeModifier>> cir) {
-        if (!(entitypatch instanceof PlayerPatch<?> playerPatch)) return;
 
-
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal()).selectedForm;
-        Form currentForm = FormManager.getInstance().getForm(formName);
-        ItemStack formItem = currentForm.getFormItem(playerPatch.getOriginal().getUUID());
-        if (formItem == null) return;
-        CapabilityItem capItem = playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND);
-        WeaponCategory category = capItem.getWeaponCategory();
-        if (category != CapabilityItem.WeaponCategories.FIST && category != CapabilityItem.WeaponCategories.NOT_WEAPON)
-            return;
-        CapabilityItem formCapItem = EpicFightCapabilities.getItemStackCapability(formItem);
-
-        if (formCapItem instanceof WeaponCapability weaponCapability) {
-            Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
-            Map<Attribute, AttributeModifier> modifierMap = weaponCapability.getDamageAttributesInCondition(weaponCapability.getStyle(entitypatch));
-            if (modifierMap != null) {
-                for (Map.Entry<Attribute, AttributeModifier> entry : modifierMap.entrySet()) {
-                    map.put((Attribute) entry.getKey(), (AttributeModifier) entry.getValue());
-                }
-            }
-            cir.setReturnValue(map);
-        }
-    }
     @Unique
     private Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>> kenjiscombatforms$getLivingMotions(PlayerPatch<?> playerPatch, WeaponCapability weaponCapability) {
         WeaponCapabilityAccessor accessor = (WeaponCapabilityAccessor) weaponCapability;

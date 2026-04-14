@@ -154,7 +154,8 @@ public class VoidFistCombos extends BaseComboBuilder {
             case 2: basic13.key1(rootDecision);
             break;
         }
-
+        dash.key1(rootDecision);
+        airSlash.key1(rootDecision);
 
         return registryWorker.build(skillName, ComboBasicAttack::new, ComboBasicAttack
                 .createComboBasicAttack()

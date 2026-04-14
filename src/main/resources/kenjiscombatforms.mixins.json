@@ -1,5 +1,5 @@
 {
-  "priority": 1500,
+  "priority": 2000,
   "refmap": "kenjiscombatforms.refmap.json",
   "required": true,
   "package": "net.kenji.kenjiscombatforms.mixins",

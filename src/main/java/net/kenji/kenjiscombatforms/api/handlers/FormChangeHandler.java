@@ -36,6 +36,7 @@ public class FormChangeHandler {
     private static final FormChangeHandler INSTANCE = new FormChangeHandler();
     private final FormManager formManager = FormManager.getInstance();
 
+
     public static FormChangeHandler getInstance() {
         return INSTANCE;
     }
