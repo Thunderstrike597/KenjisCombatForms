@@ -215,7 +215,7 @@ public class PowerEffectInflict implements Ability {
 
     public void decrementCooldown(Player player) {
         PowerPlayerDataSets.PowerInflictPlayerData data = playerDataMap.computeIfAbsent(player.getUUID(), k -> new PowerPlayerDataSets.PowerInflictPlayerData());
-        System.out.println("Cooldown: " + data.abilityCooldown);
+        //System.out.println("Cooldown: " + data.abilityCooldown);
 
         if (player instanceof ServerPlayer serverPlayer) {
             if (EffectiveSide.get() == LogicalSide.SERVER) {

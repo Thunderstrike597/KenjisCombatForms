@@ -4,7 +4,11 @@ import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseBasicClass;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import yesman.epicfight.skill.Skill;
@@ -138,7 +142,24 @@ public class NoneForm implements Form {
         public void setCurrentFormXp(int amount) {
 
         }
+        @Override
+        public boolean isHoldingForm(ServerPlayer player) {
+            return player.getMainHandItem().getItem() instanceof BaseBasicClass;
+        }
 
+        @Override
+        public void gainFormXp(ServerPlayer player, Entity entity) {
+            AbstractFormData formData = getInstance().getFormData(player.getUUID());
+            if (entity instanceof Monster || entity instanceof Player) {
+
+                if (isHoldingForm(player)) {
+                    if (formData.getCurrentFormXp() < formData.getCurrentFormXpMAX()) {
+                        formData.setCurrentFormXp(formData.getCurrentFormXp() + 1);
+                        getInstance().syncDataToClient(player);
+                    }
+                }
+            }
+        }
         @Override
         public void setCurrentFormXpMAX(int amount) {
 

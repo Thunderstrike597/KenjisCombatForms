@@ -27,10 +27,10 @@ public class FormToSwapPacket {
 
     public static void handle(FormToSwapPacket msg, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-               System.out.println("HAS RECEIVED PACKET");
+                //System.out.println("HAS RECEIVED PACKET");
                 if(ctx.getDirection().getReceptionSide().isClient()){
                 setSwapFormScreen(msg);
-                System.out.println("HAS ATTEMPTED TO SET SCREEN");
+                //System.out.println("HAS ATTEMPTED TO SET SCREEN");
             }
         });
         ctx.setPacketHandled(true);

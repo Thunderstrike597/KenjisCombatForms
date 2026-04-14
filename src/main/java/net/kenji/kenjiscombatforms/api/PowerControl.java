@@ -105,7 +105,7 @@ public class PowerControl {
                 FinalAbility ability5 = AbilityManager.getInstance().getCurrentFinalAbilities(clientPlayer).get(1);
 
                 if(ability1 != null) {
-                    System.out.println(" Ability1 Cooldown: " + ability1.getAbilityData(clientPlayer).getClientAbilityCooldown());
+                  //  System.out.println(" Ability1 Cooldown: " + ability1.getAbilityData(clientPlayer).getClientAbilityCooldown());
                 }
 
                 if(ModKeybinds.SWITCH_CURRENT_ABILITY_KEY.isDown()){
@@ -123,7 +123,7 @@ public class PowerControl {
                     //    }
                     }
                     clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-                    System.out.println("CurrentAbilityIndex: " + data.currentAbilityIndex);
+                   // System.out.println("CurrentAbilityIndex: " + data.currentAbilityIndex);
                 }
 
                 if(!EpicFightCombatFormsCommon.ABILITY_SELECTION_MODE.get()) {

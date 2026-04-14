@@ -125,9 +125,8 @@ public class FormManager {
         Form form = getCurrentForm(player);
         return form.getFormItem(player.getUUID());
     }
-    public static boolean isHeldCategoryValid(Player player){
-       ItemStack held = player.getInventory().getSelected();
-       CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(held);
+    public static boolean isHeldCategoryValid(Player player, ItemStack stack){
+       CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
        WeaponCategory category = capItem.getWeaponCategory();
 
        return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON;

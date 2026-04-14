@@ -137,7 +137,6 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenLocal()
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
@@ -160,6 +159,7 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    mavenLocal()
     flatDir {
         dir 'libs'
     }
@@ -174,13 +174,22 @@ dependencies {
 
     implementation fg.deobf("curse.maven:oculus-581495:6020952")
     implementation fg.deobf("curse.maven:epic-fight-mod-405076:7734075")
+    implementation fg.deobf("curse.maven:ydms-weapon-master-608235:5022313")
+
+    implementation fg.deobf("curse.maven:epicfight-resurrection-1151542:6931390")
     implementation fg.deobf("curse.maven:weapons-of-miracles-epicfight-918614:7517612")
     implementation fg.deobf("curse.maven:epic-fight-invincible-1184379:7679941")
+    implementation fg.deobf("curse.maven:packet-fixer-689467:7221527")
+
+    implementation fg.deobf("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
 
     //implementation fg.deobf("curse.maven:epicfight-resurrection-1151542:6931390")
 
     //implementation fg.deobf("curse.maven:corpse-316582:7018272")
 
+    implementation(fg.deobf("net.kenji:weapons_of_harmony-efm-20-14-4:1.4.0")) {
+        transitive = false
+    }
     implementation fg.deobf("curse.maven:packet-fixer-689467:7221527")
 
     implementation fg.deobf("curse.maven:jei-238222:5533463")

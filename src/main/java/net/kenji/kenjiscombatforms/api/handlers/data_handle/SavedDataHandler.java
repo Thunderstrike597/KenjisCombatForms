@@ -194,7 +194,7 @@ public class SavedDataHandler extends SavedData {
     private static void savePlayerData(UUID playerUUID, AbilityManager.PlayerAbilityData abilityData, FormLevelManager.PlayerFormLevelData formLevelData, FormManager.PlayerFormData formData, CompoundTag tag) {
         saveFormData(playerUUID, BasicForm.getInstance(), tag, "BASIC");
 
-        System.out.println(" Player Tag: " + tag);
+        //System.out.println(" Player Tag: " + tag);
 
 
         if(formData.form1 != null) {
@@ -236,13 +236,13 @@ public class SavedDataHandler extends SavedData {
     private static void saveFormData(UUID player, Form form, CompoundTag tag, String formPrefix) {
         if (!Objects.equals(formPrefix, "NONE")) {
             if (player == null) {
-                System.out.println("Attempted to save form data for null player");
+                //System.out.println("Attempted to save form data for null player");
                 return;
             }
 
             AbstractFormData formData = form.getFormData(player);
             if (formData == null) {
-                System.out.println("No form data found for player {} and form {}" + form.getName());
+               // System.out.println("No form data found for player {} and form {}" + form.getName());
                 return;
             }
 

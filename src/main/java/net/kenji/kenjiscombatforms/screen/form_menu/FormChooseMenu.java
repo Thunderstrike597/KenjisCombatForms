@@ -254,7 +254,7 @@ public class FormChooseMenu extends Screen {
 
     private String getForm1Name(){
         if(ClientFistData.getForm1Option() != null){
-            System.out.println(" Client Form 1 Option: " + ClientFistData.getForm1Option());
+            //System.out.println(" Client Form 1 Option: " + ClientFistData.getForm1Option());
             return ClientFistData.getForm1Option();
         }
         return "NONE";

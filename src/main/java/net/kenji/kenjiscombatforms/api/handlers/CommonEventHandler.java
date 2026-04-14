@@ -86,13 +86,13 @@ public class CommonEventHandler {
             ItemStack storedItem = container.getStoredItem();
             int originalSlot = container.getOriginalSlot();
             if (getInstance().getOriginalSlot(player) != -1 && container.getOriginalSlot() != -1) {
-                System.out.println("Stored Item before dimension change: " + storedItem);
-                System.out.println("slot before dimension change: " + originalSlot);
+               // System.out.println("Stored Item before dimension change: " + storedItem);
+                //System.out.println("slot before dimension change: " + originalSlot);
                 CompoundTag nbt = player.getPersistentData();
                 getInstance().setStoredItemNBT(player, storedItem);
                 getInstance().setOriginalSlot(player, originalSlot);
-                System.out.println("Stored Item after dimension change: " + getInstance().getStoredItem(player));
-                System.out.println("slot after dimension change: " + getInstance().getOriginalSlot(player));
+                //System.out.println("Stored Item after dimension change: " + getInstance().getStoredItem(player));
+                //System.out.println("slot after dimension change: " + getInstance().getOriginalSlot(player));
                 player.getInventory().setItem(getInstance().getOriginalSlot(player), ItemStack.EMPTY);
                 player.getInventory().setItem(getInstance().getOriginalSlot(player), getInstance().getStoredItem(player));
 
@@ -144,7 +144,7 @@ public class CommonEventHandler {
                         if (getInstance().getSkillValid(playerPatch)) {
                             playerPatch.getSkill(SkillSlots.DODGE).setSkill(skillToSet);
                             nbt.remove("storedDodgeSkill");
-                            System.out.println("storeDodgeSkill" + skillName);
+                            //System.out.println("storeDodgeSkill" + skillName);
                         }
                     }
                 });

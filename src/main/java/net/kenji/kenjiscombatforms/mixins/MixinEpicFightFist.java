@@ -103,7 +103,7 @@ public class MixinEpicFightFist {
         Style style = weaponCapability.getStyle(playerPatch);
 
         // DEBUG (you should log this)
-        System.out.println("Style: " + style);
+        //System.out.println("Style: " + style);
 
         Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>> styleMotions = allMotions.get(style);
         Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>> commonMotions = allMotions.get(CapabilityItem.Styles.COMMON);

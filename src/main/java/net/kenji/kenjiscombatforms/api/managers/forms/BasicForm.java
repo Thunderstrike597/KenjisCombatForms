@@ -192,7 +192,6 @@ public class BasicForm implements Form {
             this.basicFormLevel = currentFormLevel;
         }
 
-
         @Override
         public int getCurrentFormXp() {
             return this.basicFormXp;
@@ -205,20 +204,6 @@ public class BasicForm implements Form {
             }
             return this.basicFormXpMAX;
         }
-
-        @Override
-        public void setCurrentFormXp(int amount) {
-            this.basicFormXp = amount;
-        }
-
-        @Override
-        public void setCurrentFormXpMAX(int amount) {
-            this.basicFormXpMAX = amount;
-        }
-    }
-
-
-    public static class CurrentFormLevelStrategy implements FormLevelStrategy {
         @Override
         public boolean isHoldingForm(ServerPlayer player) {
             return player.getMainHandItem().getItem() instanceof BaseBasicClass;
@@ -231,11 +216,20 @@ public class BasicForm implements Form {
 
                 if (isHoldingForm(player)) {
                     if (formData.getCurrentFormXp() < formData.getCurrentFormXpMAX()) {
-                       formData.setCurrentFormXp(formData.getCurrentFormXp() + 1);
-                       getInstance().syncDataToClient(player);
+                        formData.setCurrentFormXp(formData.getCurrentFormXp() + 1);
+                        getInstance().syncDataToClient(player);
                     }
                 }
             }
+        }
+        @Override
+        public void setCurrentFormXp(int amount) {
+            this.basicFormXp = amount;
+        }
+
+        @Override
+        public void setCurrentFormXpMAX(int amount) {
+            this.basicFormXpMAX = amount;
         }
     }
 

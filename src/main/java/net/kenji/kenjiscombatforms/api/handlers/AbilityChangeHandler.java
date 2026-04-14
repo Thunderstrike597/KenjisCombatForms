@@ -190,14 +190,14 @@ public class AbilityChangeHandler {
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().getPlayerAbilityData(player);
         Form currentForm = FormManager.getInstance().getForm(formData.selectedForm);
         AbstractFormData currentFormData = currentForm.getFormData(player.getUUID());
-        System.out.println("Is Syncing To Client! Ability1: " + abilityData.chosenAbility1 + " Ability2: " + abilityData.chosenAbility2 + " Ability3 :" + abilityData.chosenFinal);
+        //System.out.println("Is Syncing To Client! Ability1: " + abilityData.chosenAbility1 + " Ability2: " + abilityData.chosenAbility2 + " Ability3 :" + abilityData.chosenFinal);
             currentForm.syncDataToClient(player);
 
     }
 
     public void storeFormAbility1(Player player, String ability) {
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
-        System.out.println("HasStoredAbility! Ability1: " + ability);
+        //System.out.println("HasStoredAbility! Ability1: " + ability);
         String form = formData.selectedForm;
         if (player instanceof ServerPlayer serverPlayer) {
             SavedDataHandler savedData = SavedDataHandler.get(serverPlayer.serverLevel());
@@ -209,7 +209,7 @@ public class AbilityChangeHandler {
     }
     public void storeFormAbility2(Player player, String ability) {
         FormManager.PlayerFormData formData = FormManager.getInstance().getFormData(player);
-        System.out.println("HasStoredAbility! Ability2: " + ability);
+        //System.out.println("HasStoredAbility! Ability2: " + ability);
         String form = formData.selectedForm;
         if (player instanceof ServerPlayer serverPlayer) {
             SavedDataHandler savedData = SavedDataHandler.get(serverPlayer.serverLevel());

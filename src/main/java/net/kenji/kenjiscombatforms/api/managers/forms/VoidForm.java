@@ -216,18 +216,6 @@ public class VoidForm implements Form {
             }
             return this.currentFormXpMAX;
         }
-
-        @Override
-        public void setCurrentFormXp(int amount) {
-            this.currentFormXp = amount;
-        }
-
-        @Override
-        public void setCurrentFormXpMAX(int amount) {
-            this.currentFormXpMAX = amount;
-        }
-    }
-    public static class CurrentFormLevelStrategy implements FormLevelStrategy {
         @Override
         public boolean isHoldingForm(ServerPlayer player) {
             return player.getMainHandItem().getItem() instanceof BaseVoidClass;
@@ -245,6 +233,15 @@ public class VoidForm implements Form {
                     }
                 }
             }
+        }
+        @Override
+        public void setCurrentFormXp(int amount) {
+            this.currentFormXp = amount;
+        }
+
+        @Override
+        public void setCurrentFormXpMAX(int amount) {
+            this.currentFormXpMAX = amount;
         }
     }
 

@@ -102,7 +102,7 @@ public class MixinServerPlayerPatch {
         PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
         if(patch == null) return;
 
-        if(!FormManager.isHeldCategoryValid(player)) return;
+        if(!FormManager.isHeldCategoryValid(player, player.getInventory().getSelected())) return;
 
         formCap.changeWeaponInnateSkill(patch, formItem);
         MinecraftForge.EVENT_BUS.post(new InnateSkillChangeEvent(self, from, fromCap, formItem, formCap, hand));

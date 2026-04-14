@@ -281,10 +281,10 @@ void isAfraidFunc(){
                isAfraidCacheLock = true;
                if (chance < EpicFightCombatFormsCommon.IS_AFRAID_CHANCE.get()) {
                    isAfraidCache = true;
-                   System.out.println("Scared Success");
+                   //System.out.println("Scared Success");
                } else if(chance > EpicFightCombatFormsCommon.IS_AFRAID_CHANCE.get()){
                    isAfraidCache = false;
-                   System.out.println("Scared Failed");
+                   //System.out.println("Scared Failed");
                }
            }
        }

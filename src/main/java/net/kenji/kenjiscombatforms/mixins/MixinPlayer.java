@@ -1,5 +1,6 @@
 package net.kenji.kenjiscombatforms.mixins;
 
+import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.ItemStack;
+import org.jline.utils.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = Player.class)
 public class MixinPlayer {
 
-
     @Inject(method = "getItemBySlot", at = @At("RETURN"), cancellable = true)
     private void maybeReplaceGetItemBySlot(EquipmentSlot equipmentSlot, CallbackInfoReturnable<ItemStack> cir) {
         Player player = (Player) (Object)this;
@@ -28,10 +29,12 @@ public class MixinPlayer {
         Form currentForm = FormManager.getCurrentForm(player);
         ItemStack currentFormItem = FormManager.getCurrentFormItem(player);
         if(currentForm == null || currentFormItem.isEmpty()) return;
-        if(!FormManager.isHeldCategoryValid(player)) return;
+        if(!FormManager.isHeldCategoryValid(player, player.getInventory().getSelected())) return;
         ItemStack originalReturnValue = cir.getReturnValue();
+        Log.info("LOGGING MAIN HAND MIXIN");
 
         cir.setReturnValue(currentFormItem);
+
     }
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)
     public void onUpdateHeldItem(EquipmentSlot par1, ItemStack par2, CallbackInfo ci) {

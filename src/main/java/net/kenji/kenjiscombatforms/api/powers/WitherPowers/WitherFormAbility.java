@@ -103,7 +103,6 @@ public class WitherFormAbility implements Ability {
 
         @SubscribeEvent
         public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-            System.out.println("Player Joined");
 
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 getInstance().getPlayerData(serverPlayer);

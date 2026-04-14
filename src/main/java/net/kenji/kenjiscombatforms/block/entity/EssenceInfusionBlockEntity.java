@@ -172,7 +172,7 @@ boolean canContinue = false;
 
 private void clientSideLogic(Level level){
     if (hasRecipe() && this.handler.getStackInSlot(FUEL_SLOT).getCount() != 0) {
-            System.out.println("isTriggeringSoundMethod");
+            //System.out.println("isTriggeringSoundMethod");
         }
     }
 

@@ -51,6 +51,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
 
@@ -63,7 +64,9 @@ public class KenjisCombatForms
     public static final String MOD_ID = "kenjiscombatforms";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-
+    public static boolean isLoaded(String modid) {
+        return FMLLoader.getLoadingModList().getModFileById(modid) != null;
+    }
 
     public static void registerCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(LevelUpCurrentForm.register());

@@ -364,7 +364,7 @@ public class EnderFormAbility implements Ability {
             scoreboard.addPlayerToTeam(playerUUID.toString(), team);
             scoreboard.addPlayerToTeam(enderEntity.getUUID().toString(), team);
 
-        System.out.println("Is adding enderEntity To Team");
+        //System.out.println("Is adding enderEntity To Team");
         }
     }
 

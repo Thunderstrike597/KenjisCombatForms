@@ -2,6 +2,8 @@ package net.kenji.kenjiscombatforms.api.interfaces.form;
 
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public abstract class AbstractFormData {
     protected String storedAbility1;
@@ -27,6 +29,7 @@ public abstract class AbstractFormData {
     public abstract void setCurrentFormXp(int amount);
     public abstract void setCurrentFormXpMAX(int amount);
     public abstract void setCurrentFormLevel(FormLevelManager.FormLevel currentFormLevel);
-
+    public abstract boolean isHoldingForm(ServerPlayer player);
+    public abstract void gainFormXp(ServerPlayer player, Entity entity);
 
 }

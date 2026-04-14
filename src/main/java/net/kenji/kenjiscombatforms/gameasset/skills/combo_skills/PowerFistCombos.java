@@ -5,24 +5,23 @@ import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.api.skill.ComboNode;
 import com.p1nero.invincible.client.InputManager;
 import com.p1nero.invincible.client.particles.InvincibleParticles;
-import com.p1nero.invincible.conditions.*;
+import com.p1nero.invincible.conditions.DownCondition;
+import com.p1nero.invincible.conditions.LeftCondition;
+import com.p1nero.invincible.conditions.RightCondition;
+import com.p1nero.invincible.conditions.SprintingCondition;
 import com.p1nero.invincible.skill.ComboBasicAttack;
 import net.kenji.kenjiscombatforms.api.basegameassets.condition.CooldownCounterCondition;
-import net.kenji.kenjiscombatforms.api.basegameassets.condition.FormLevelCondition;
 import net.kenji.kenjiscombatforms.api.basegameassets.condition.InAirCondition;
 import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import org.jline.utils.Log;
 import reascer.wom.gameasset.WOMAnimations;
 import reascer.wom.gameasset.animations.weapons.AnimsAgony;
 import reascer.wom.gameasset.animations.weapons.AnimsEnderblaster;
 import reascer.wom.gameasset.animations.weapons.AnimsMoonless;
-import reascer.wom.gameasset.animations.weapons.AnimsSatsujin;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.AttackAnimation;
@@ -32,12 +31,11 @@ import yesman.epicfight.api.utils.TimePairList;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.world.damagesource.StunType;
 
-public class SwiftFistCombos extends BaseComboBuilder {
+public class PowerFistCombos extends BaseComboBuilder {
 
     public static Skill buildSkills(String skillName, SkillBuildEvent.ModRegistryWorker registryWorker, FistTier tier) {
 
@@ -49,10 +47,10 @@ public class SwiftFistCombos extends BaseComboBuilder {
 
 
         /// Tier 1
-        ComboNode basic1 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
-        ComboNode basic2 = createComboNode(AnimsAgony.AGONY_AUTO_2);
-        ComboNode basic3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
-        ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
+        ComboNode basic1 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2);
+        ComboNode basic2 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3);
+        ComboNode basic3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+        ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
@@ -65,23 +63,23 @@ public class SwiftFistCombos extends BaseComboBuilder {
         ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
 
         /// Tier 2
-        ComboNode basic5 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
-        ComboNode basic6 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2, 1.6F);
-        ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3);
-        ComboNode basic8 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 1.5F);
+        ComboNode basic6 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 1.6F);
+        ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1);
+        ComboNode basic8 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 1.5F);
         /// Tier 3
         ComboNode basic9 = createComboNode(Animations.SPEAR_DASH, 1.5F);
         ComboNode basic10 = createComboNode(Animations.SPEAR_DASH, 1.5F);
         ComboNode basic11 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
         ComboNode basic12 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
         ComboNode basic13 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO);
-        ComboNode basic14 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3);
+        ComboNode basic14 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2);
 
         ComboNode dash = switch (tier.value) {
-            default -> createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH).addCondition(new SprintingCondition());
+            default -> createComboNode(AnimsMoonless.MOONLESS_AUTO_1).addCondition(new SprintingCondition());
         };
         ComboNode airSlash = switch (tier.value) {
-            default -> createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_4).addCondition(new InAirCondition());
+            default -> createComboNode(AnimsMoonless.MOONLESS_CRESCENT).addCondition(new InAirCondition());
         };
         ComboNode leftDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_LEFT, basicLeft1).setPlaySpeed(1.35F).addCondition(new LeftCondition());
         leftDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
@@ -129,6 +127,7 @@ public class SwiftFistCombos extends BaseComboBuilder {
             createMovementCombo(basic11, basic12, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
             createMovementCombo(basic12, basic13, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
             createMovementCombo(basic13, basic14, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+
         }
 
         createMovementCombo(leftDodgeAttack, basic2, new ComboNodeWrapper(rightDodgeAttack, airSlash, dash));
