@@ -3,8 +3,10 @@ package net.kenji.kenjiscombatforms.mixins;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -48,8 +50,10 @@ public class MixinEpicFightFist {
 
             CapabilityItem formCapItem = EpicFightCapabilities.getItemStackCapability(formItem);
 
-            if(formCapItem instanceof WeaponCapability weaponCapability){
-                cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
+            if(EpicFightCombatFormsCommon.ALTER_FIST_LIVING_MOTION.get()) {
+                if (formCapItem instanceof WeaponCapability weaponCapability) {
+                    cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
+                }
             }
         }
     }

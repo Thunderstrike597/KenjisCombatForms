@@ -21,10 +21,10 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, KenjisCombatForms.MOD_ID);
 
     public static final RegistryObject<Block> ESSENCE_CHANNELING_STATION =
-            registerblock("essence_infusion_station", () -> new EssenceInfusionBlock(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(4)));
+            registerblock("essence_infusion_station", () -> new EssenceInfusionBlock(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> SCROLL_FORMING_STATION =
-            registerblock("scroll_forming_table", () -> new ScrollFormingBlock(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(4)));
+            registerblock("scroll_forming_table", () -> new ScrollFormingBlock(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> VOID_RIFT =
             registerblock("void_rift", () -> new VoidRiftBlock(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(4)));

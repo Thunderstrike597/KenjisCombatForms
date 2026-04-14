@@ -12,6 +12,9 @@ public class EpicFightCombatFormsCommon {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
+    public static final ForgeConfigSpec.ConfigValue<Boolean> ALTER_FIST_LIVING_MOTION;
+
+
     public static final ForgeConfigSpec.ConfigValue<Integer> EXILED_SENSEI_HEALTH;
     public static final ForgeConfigSpec.ConfigValue<Integer> TAMED_EXILED_SENSEI_HEALTH;
     public static final ForgeConfigSpec.ConfigValue<Integer> EXILED_DEVIL_HEALTH;
@@ -219,6 +222,9 @@ public class EpicFightCombatFormsCommon {
 
         ABILITY_SELECTION_MODE = BUILDER.comment("This allows you to use one key to activate a chosen ability, without using several keys")
                 .define("Ability Selection Mode", true);
+
+        ALTER_FIST_LIVING_MOTION = BUILDER.comment("This Setting Allows Combat Forms To Have It's Own Living Animations (Like Idle, Walk, Run ect.), If False You Will Always Have The Default Living Animations When in Hand-To-Hand Combat")
+                .define("Alter Fist Living Motion", true);
         BUILDER.pop();
 
         BUILDER.push("Compatibility");
