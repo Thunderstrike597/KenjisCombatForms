@@ -26,6 +26,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ControlHandler {
     private static final long PRESS_COOLDOWN = 4;
     public static Map<UUID, Boolean> useKeyMap = new HashMap<>();
+    public static Map<UUID, Boolean> toggleHandCombatMap = new HashMap<>();
+
 
     public static void updateUseKey(UUID uuid, boolean value){
         useKeyMap.put(uuid, value);
@@ -127,6 +130,11 @@ public class ControlHandler {
                     }
                 }
 
+                if(ModKeybinds.TOGGLE_HAND_COMBAT_KEY.consumeClick()){
+                    boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(clientPlayer.getUUID(), true);
+                    ControlHandler.toggleHandCombatMap.put(clientPlayer.getUUID(), !isToggled);
+                    clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
+                }
 
                 if (ModKeybinds.QUICK_FORM_CHANGE_KEY.consumeClick()) {
                     String currentForm1 = ClientFistData.getForm1Option();
@@ -143,7 +151,7 @@ public class ControlHandler {
                             // Increment the state
                             data.currentState = (data.currentState + 1) % 4;  // Cycle through 0, 1, 2, 3
 
-                            if (clientPlayer.getMainHandItem().getItem() instanceof BaseFistClass) {
+                            if (FormManager.isHeldCategoryValid(clientPlayer, clientPlayer.getMainHandItem())) {
 
                                 clientPlayer.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
 

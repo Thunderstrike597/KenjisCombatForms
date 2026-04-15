@@ -98,7 +98,7 @@ public class WitherFistCombos extends BaseComboBuilder {
         ComboNode downDodgeAttack = createDodgeComboNode(WOMAnimations.SHADOWSTEP_BACKWARD, basicRight1).addCondition(new DownCondition());
         downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
 
-        ComboNode shootAttack = createComboNode(WOMAnimations.ANTITHEUS_SHOOT).addCondition(new PressedTimeCondition(6)).addCondition(new FormLevelCondition(FistTier.TIER_2));
+        ComboNode shootAttack = ComboNode.createNode(WOMAnimations.ANTITHEUS_SHOOT).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_2));
 
         createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
 
@@ -156,7 +156,7 @@ public class WitherFistCombos extends BaseComboBuilder {
                 .createComboBasicAttack()
                 .setCombo(root)
                 .setMaxProtectTime(22)
-                .setMaxPressTime(6)
+                .setMaxPressTime(10)
                 .setReserveTime(16)
                 .setShouldDrawGui(false));
     }

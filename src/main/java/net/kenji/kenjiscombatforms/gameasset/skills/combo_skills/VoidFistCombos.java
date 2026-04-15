@@ -45,7 +45,7 @@ public class VoidFistCombos extends BaseComboBuilder {
     public static Skill buildSkills(String skillName, SkillBuildEvent.ModRegistryWorker registryWorker, FistTier tier) {
 
         ComboNode root = ComboNode.create();
-        ComboNode basicAttack = ComboNode.createNode(Animations.DAGGER_DUAL_AUTO1)
+        ComboNode basicAttack = ComboNode.createNode(Animations.DAGGER_AUTO1)
                 .setStunTypeModifier(StunType.HOLD)
                 .setDamageMultiplier(ValueModifier.multiplier(0.5F))
                 .setCanBeInterrupt(false);
@@ -53,9 +53,11 @@ public class VoidFistCombos extends BaseComboBuilder {
 
         /// Tier 1
         ComboNode basic1 = createComboNode(AnimsAgony.AGONY_AUTO_1);
-        ComboNode basic2 = createComboNode(AnimsAgony.AGONY_AUTO_2);
+        ComboNode basic2 = createComboNode(AnimsAgony.AGONY_COUNTER);
         ComboNode basic3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
         ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
+        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3);
+        ComboNode basic6 = createComboNode(AnimsMoonless.MOONLESS_AUTO_1_VERSO);
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
@@ -68,16 +70,15 @@ public class VoidFistCombos extends BaseComboBuilder {
         ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
 
         /// Tier 2
-        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_1, 1.5F);
-        ComboNode basic6 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, 1.6F);
-        ComboNode basic7 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
-        ComboNode basic8 = createComboNode(AnimsAgony.AGONY_AUTO_2, 1.5F);
+        ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, 1.6F);
+        ComboNode basic8 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
+        ComboNode basic9 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2);
+        ComboNode basic10 = createComboNode(AnimsAgony.AGONY_AUTO_2);
         /// Tier 3
-        ComboNode basic9 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2, 1.5F);
-        ComboNode basic10 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 1.5F);
-        ComboNode basic11 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 1.5F);
-        ComboNode basic12 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3, 1.5F);
-        ComboNode basic13 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2);
+        ComboNode basic11 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3);
+        ComboNode basic12 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO);
+        ComboNode basic13 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3);
+        ComboNode basic14 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2);
 
         ComboNode dash = switch (tier.value) {
             case 0, 1 -> createComboNode(AnimsMoonless.MOONLESS_AUTO_3).addCondition(new SprintingCondition());
@@ -97,9 +98,9 @@ public class VoidFistCombos extends BaseComboBuilder {
         ComboNode downDodgeAttack = createDodgeComboNode(WOMAnimations.ENDERSTEP_BACKWARD, basicRight1).addCondition(new DownCondition());
         downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
 
-        ComboNode shootAttack = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_1).addCondition(new PressedTimeCondition(6)).addCondition(new FormLevelCondition(FistTier.TIER_2));
-        ComboNode shootAttack2 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_2).addCondition(new PressedTimeCondition(6)).addCondition(new FormLevelCondition(FistTier.TIER_3));
-        ComboNode shootAttack3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3).addCondition(new PressedTimeCondition(6)).addCondition(new FormLevelCondition(FistTier.TIER_3));
+        ComboNode shootAttack = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_1).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_2));
+        ComboNode shootAttack2 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_2).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_3));
+        ComboNode shootAttack3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_3));
 
 
         createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
@@ -112,6 +113,8 @@ public class VoidFistCombos extends BaseComboBuilder {
         createMovementCombo(basic2, basic3, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
         createMovementCombo(basic3, basic4, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
         createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+
 
         createMovementCombo(basicLeft1, basicLeft2, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
         createMovementCombo(basicLeft2, basicLeft3, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
@@ -125,19 +128,20 @@ public class VoidFistCombos extends BaseComboBuilder {
 
 
         if(tier.value >= 1) {
-            createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic6, basic7, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic7, basic8, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic8, basic9, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+            createMovementCombo(basic9, basic10, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
 
             createMovementCombo(shootAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack2));
         }
 
         if(tier.value >= 2){
-            createMovementCombo(basic9, basic10, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic10, basic11, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic11, basic12, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
             createMovementCombo(basic12, basic13, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+            createMovementCombo(basic13, basic14, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+
             createMovementCombo(shootAttack2, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack3));
         }
 
@@ -147,11 +151,11 @@ public class VoidFistCombos extends BaseComboBuilder {
 
 
         switch (tier.value){
-            case 0: basic5.key1(rootDecision);
+            case 0: basic6.key1(rootDecision);
             break;
-            case 1: basic9.key1(rootDecision);
+            case 1: basic10.key1(rootDecision);
             break;
-            case 2: basic13.key1(rootDecision);
+            case 2: basic14.key1(rootDecision);
             break;
         }
         dash.key1(rootDecision);
@@ -161,8 +165,8 @@ public class VoidFistCombos extends BaseComboBuilder {
                 .createComboBasicAttack()
                 .setCombo(root)
                 .setMaxProtectTime(22)
-                .setMaxPressTime(6)
                 .setReserveTime(16)
+                .setMaxPressTime(10)
                 .setShouldDrawGui(false));
     }
 

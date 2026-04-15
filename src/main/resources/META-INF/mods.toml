@@ -57,7 +57,13 @@ mandatory=true
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
+[[dependencies.kenjiscombatforms]]
+modId="invincible"
+mandatory=true
 
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
 
 #[features.kenjiscombatforms]
 #openGLVersion="[3.2,)"

@@ -42,17 +42,18 @@ public class SwiftFistCombos extends BaseComboBuilder {
     public static Skill buildSkills(String skillName, SkillBuildEvent.ModRegistryWorker registryWorker, FistTier tier) {
 
         ComboNode root = ComboNode.create();
-        ComboNode basicAttack = ComboNode.createNode(Animations.DAGGER_DUAL_AUTO1)
+        ComboNode basicAttack = createComboNode(Animations.DAGGER_DUAL_AUTO1)
                 .setStunTypeModifier(StunType.HOLD)
                 .setDamageMultiplier(ValueModifier.multiplier(0.5F))
                 .setCanBeInterrupt(false);
 
 
         /// Tier 1
-        ComboNode basic1 = createComboNode(Animations.DAGGER_DUAL_AUTO1);
-        ComboNode basic2 = createComboNode(AnimsAgony.AGONY_AUTO_2);
-        ComboNode basic3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
+        ComboNode basic1 = createComboNode(Animations.DAGGER_AUTO1);
+        ComboNode basic2 = createComboNode(AnimsAgony.AGONY_COUNTER);
+        ComboNode basic3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO);
         ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1, 1.5F);
+        ComboNode basic6 = createComboNode(AnimsAgony.AGONY_AUTO_1);
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
@@ -65,12 +66,12 @@ public class SwiftFistCombos extends BaseComboBuilder {
         ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
 
         /// Tier 2
-        ComboNode basic5 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
-        ComboNode basic6 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2, 1.6F);
         ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3);
         ComboNode basic8 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+        ComboNode basic9 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, 1.5F);
+        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 1.5F);
+
         /// Tier 3
-        ComboNode basic9 = createComboNode(Animations.SPEAR_DASH, 1.5F);
         ComboNode basic10 = createComboNode(Animations.SPEAR_DASH, 1.5F);
         ComboNode basic11 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
         ComboNode basic12 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
@@ -102,7 +103,7 @@ public class SwiftFistCombos extends BaseComboBuilder {
         createMovementCombo(basic1, basic2, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basic2, basic3, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basic3, basic4, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
-        createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
 
         createMovementCombo(basicLeft1, basicLeft2, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basicLeft2, basicLeft3, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
@@ -116,11 +117,10 @@ public class SwiftFistCombos extends BaseComboBuilder {
 
 
         if(tier.value >= 1) {
-            createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
             createMovementCombo(basic6, basic7, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
             createMovementCombo(basic7, basic8, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
             createMovementCombo(basic8, basic9, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
-
+            createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
         }
 
         if(tier.value >= 2){
@@ -137,7 +137,7 @@ public class SwiftFistCombos extends BaseComboBuilder {
 
 
         switch (tier.value){
-            case 0: basic5.key1(rootDecision);
+            case 0: basic6.key1(rootDecision);
             break;
             case 1: basic9.key1(rootDecision);
             break;
@@ -152,7 +152,7 @@ public class SwiftFistCombos extends BaseComboBuilder {
                 .setCombo(root)
                 .setMaxProtectTime(22)
                 .setMaxPressTime(10)
-                .setReserveTime(16)
+                .setReserveTime(10)
                 .setShouldDrawGui(false));
     }
 

@@ -32,7 +32,9 @@ public class MixinLivingEntityCombatHotbar {
                     ItemStack stack = handler.getStackInSlot(selectedSlot);
 
                     if(FormManager.isHeldCategoryValid(player, stack)) {
-                        cir.setReturnValue(FormManager.getCurrentFormItem(player));
+                        boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(player.getUUID(), true);
+                        if(isToggled)
+                            cir.setReturnValue(FormManager.getCurrentFormItem(player));
                         return;
                     }
                     cir.setReturnValue(stack);

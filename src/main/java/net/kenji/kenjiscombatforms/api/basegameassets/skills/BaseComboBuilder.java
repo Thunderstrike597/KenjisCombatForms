@@ -67,6 +67,24 @@ public abstract class BaseComboBuilder {
 
         return decision;
     }
+    public static ComboNode createMovementCombo(ComboNode currentCombo, ComboNode nextCombo, ComboNode innateAnimation,ComboNodeWrapper combos){
+        ComboNode decision = ComboNode.create();
+
+        currentCombo.keyWeaponInnate(innateAnimation);
+        for(ComboNode comboNode : combos.combos) {
+            if(comboNode != null)
+                decision.addConditionNode(comboNode);
+        }
+        if(nextCombo != null)
+            decision.addConditionNode(nextCombo);
+
+
+
+
+        currentCombo.key1(decision);
+
+        return decision;
+    }
     public static void collectConditions(ComboNode node) {
         for (Condition condition : node.getConditions()) {
             if (condition instanceof CooldownCounterCondition iCooldown) {

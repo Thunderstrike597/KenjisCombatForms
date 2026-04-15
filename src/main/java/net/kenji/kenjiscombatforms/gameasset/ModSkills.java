@@ -46,9 +46,9 @@ public class ModSkills {
         skills.add(SWIFT_COMBO_2 = SwiftFistCombos.buildSkills("swift_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
         skills.add(SWIFT_COMBO_3 = SwiftFistCombos.buildSkills("swift_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
 
-        skills.add(POWER_COMBO_1 = PowerFistCombos.buildSkills("swift_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
-        skills.add(POWER_COMBO_2 = PowerFistCombos.buildSkills("swift_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
-        skills.add(POWER_COMBO_3 = PowerFistCombos.buildSkills("swift_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
+        skills.add(POWER_COMBO_1 = PowerFistCombos.buildSkills("power_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
+        skills.add(POWER_COMBO_2 = PowerFistCombos.buildSkills("power_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
+        skills.add(POWER_COMBO_3 = PowerFistCombos.buildSkills("power_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
 
         skills.add(VOID_COMBO_1 = VoidFistCombos.buildSkills("void_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
         skills.add(VOID_COMBO_2 = VoidFistCombos.buildSkills("void_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));

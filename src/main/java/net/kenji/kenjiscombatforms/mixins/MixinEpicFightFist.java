@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
@@ -52,7 +53,9 @@ public class MixinEpicFightFist {
 
             if(EpicFightCombatFormsCommon.ALTER_FIST_LIVING_MOTION.get()) {
                 if (formCapItem instanceof WeaponCapability weaponCapability) {
-                    cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
+                    boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(patch.getOriginal().getUUID(), true);
+                    if(isToggled)
+                        cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
                 }
             }
         }

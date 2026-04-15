@@ -95,7 +95,7 @@ public class ClientEventHandler {
     public int getOriginalSlot(Player player) {
         return CommonEventHandler.getInstance().getOriginalSlot(player);
     }
-    // Handle key press to store the item
+  /*  // Handle key press to store the item
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         Player player = Minecraft.getInstance().player;
@@ -159,7 +159,7 @@ public class ClientEventHandler {
                 });
             }
         }
-    }
+    }*/
 
     public int getSelectedExtraSlot(Player player) {
         return player.getInventory().selected;
@@ -206,7 +206,7 @@ public class ClientEventHandler {
                         }
                     }
 
-                if (originalSlot != -1 && clientPlayer.getInventory().selected != originalSlot) {
+               /* if (originalSlot != -1 && clientPlayer.getInventory().selected != originalSlot) {
                     clientPlayer.getCapability(ExtraContainerCapability.EXTRA_CONTAINER_CAP).ifPresent(container -> {
                         ItemStack storedItem = commonEventHandler.getStoredItem(clientPlayer);
                         if (!storedItem.isEmpty()) {
@@ -226,7 +226,7 @@ public class ClientEventHandler {
 
                             }
                     });
-                }
+                }*/
             }
             if(getInstance().getCanCrash()){
                 getInstance().crash();
@@ -268,7 +268,7 @@ public class ClientEventHandler {
         return player.getMainHandItem().getItem() instanceof BaseFistClass;
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onInventoryOpen(ScreenEvent.Init event) {
         Player player = Minecraft.getInstance().player;
         if (player != null) {
@@ -278,8 +278,10 @@ public class ClientEventHandler {
                 if (player.getMainHandItem().getItem() instanceof BaseFistClass) {
                     if (event.getScreen() instanceof InventoryScreen) {
                         if(!storedItem.isEmpty()) {
-                            player.getInventory().setItem(getInstance().getOriginalSlot(player), storedItem);
-                            NetworkHandler.INSTANCE.sendToServer(new SyncNBTPacket(storedItem, getInstance().getOriginalSlot(player)));
+                            if(getInstance().getOriginalSlot(player) != -1) {
+                                player.getInventory().setItem(getInstance().getOriginalSlot(player), storedItem);
+                                NetworkHandler.INSTANCE.sendToServer(new SyncNBTPacket(storedItem, getInstance().getOriginalSlot(player)));
+                            }
 
                         }
                         CommonEventHandler.getInstance().setStoredItemNBT(player, ItemStack.EMPTY);
@@ -291,7 +293,7 @@ public class ClientEventHandler {
                 }
             });
         }
-    }
+    }*/
 
 
 

@@ -51,6 +51,7 @@ public class PowerFistCombos extends BaseComboBuilder {
         ComboNode basic2 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3);
         ComboNode basic3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
         ComboNode basic4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
+        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 0.8F);
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
@@ -63,7 +64,6 @@ public class PowerFistCombos extends BaseComboBuilder {
         ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
 
         /// Tier 2
-        ComboNode basic5 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 1.5F);
         ComboNode basic6 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 1.6F);
         ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1);
         ComboNode basic8 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 1.5F);

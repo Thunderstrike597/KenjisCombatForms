@@ -31,8 +31,9 @@ public class MixinPlayer {
         if(currentForm == null || currentFormItem.isEmpty()) return;
         if(!FormManager.isHeldCategoryValid(player, player.getInventory().getSelected())) return;
         ItemStack originalReturnValue = cir.getReturnValue();
-
-        cir.setReturnValue(currentFormItem);
+        boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(player.getUUID(), true);
+        if(isToggled)
+            cir.setReturnValue(currentFormItem);
 
     }
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)

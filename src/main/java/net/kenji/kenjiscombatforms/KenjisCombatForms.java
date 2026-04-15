@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms;
 
 import com.mojang.logging.LogUtils;
+import com.p1nero.invincible.InvincibleMod;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.*;
 import net.kenji.kenjiscombatforms.api.powers.EmptyAbility;
