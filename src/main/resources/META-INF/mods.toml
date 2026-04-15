@@ -9,7 +9,7 @@ license="All Right's Reserved"
 
 
 modId="kenjiscombatforms"
-version="1.4.0" #mandatory
+version="${mod_version}" #mandatory
 displayName="Epic Fight: KenjisCombatForms"
 authors="Kenji" #optional
 
