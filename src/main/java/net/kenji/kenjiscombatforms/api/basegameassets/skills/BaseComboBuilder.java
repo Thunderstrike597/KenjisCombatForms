@@ -85,16 +85,4 @@ public abstract class BaseComboBuilder {
 
         return decision;
     }
-    public static void collectConditions(ComboNode node) {
-        for (Condition condition : node.getConditions()) {
-            if (condition instanceof CooldownCounterCondition iCooldown) {
-                CooldownCounterCondition.conditions.add(iCooldown);
-                Log.info("added Condition!");
-            }
-        }
-
-        for (ComboNode child : node.getChildren()) {
-            collectConditions(child);
-        }
-    }
 }

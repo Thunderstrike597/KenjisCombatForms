@@ -26,6 +26,7 @@ import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.StunType;
 
 public class BasicFistCombos extends BaseComboBuilder {
@@ -147,11 +148,14 @@ public class BasicFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
-            if(anim instanceof AttackAnimation attackAnimation){
-                for(AttackAnimation.Phase phase : attackAnimation.phases){
-                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
-                }
+            if(anim != null) {
+                if (anim instanceof AttackAnimation attackAnimation) {
+                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
+                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                    }
 
+
+                }
             }
             return null;
         });
@@ -164,11 +168,12 @@ public class BasicFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
-            if(anim instanceof AttackAnimation attackAnimation){
-                for(AttackAnimation.Phase phase : attackAnimation.phases){
-                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+            if(anim != null) {
+                if (anim instanceof AttackAnimation attackAnimation) {
+                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
+                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                    }
                 }
-
             }
             return null;
         });
@@ -180,18 +185,11 @@ public class BasicFistCombos extends BaseComboBuilder {
 
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
-            StaticAnimation anim = animation.get();
-            float end = anim.getTotalTime() - 0.2F;
+            float end = 0.2F;
             node.addTimeEvent(new TimeStampedEvent(end,
-                    ((entityPatch, target, invinciblePlayer) -> {
-                        ComboBasicAttack comboAttack = InputManager.getComboBasicSkill();
-
-                        if(comboAttack != null){
-                            SkillContainer container = entityPatch.getSkill(FormManager.getCurrentFormSkill(entityPatch.getOriginal()));
-
-                            if(container != null){
-                                comboAttack.executeNodeOnServer(container, followUpCombo, 1, 1);
-                            }
+                    ((entityPatch, target, invinciblePlayer) -> {;
+                        if(entityPatch instanceof ServerPlayerPatch serverPlayerPatch){
+                            ComboBasicAttack.executeNodeOnServer(serverPlayerPatch, followUpCombo, 1, 1);
                         }
                     })));
             return null;
@@ -205,12 +203,14 @@ public class BasicFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             AttackAnimation anim = animation.get();
-            float contact = anim.phases[anim.phases.length - 1].contact;
-            float recovery = anim.phases[anim.phases.length - 1].end;
-            ((AttackAnimation)anim).addProperty(
-                    AnimationProperty.AttackAnimationProperty.NO_GRAVITY_TIME,
-                    TimePairList.create(new float[]{0.1F, recovery})
-            );
+           if(anim != null) {
+               float contact = anim.phases[anim.phases.length - 1].contact;
+               float recovery = anim.phases[anim.phases.length - 1].end;
+               ((AttackAnimation) anim).addProperty(
+                       AnimationProperty.AttackAnimationProperty.NO_GRAVITY_TIME,
+                       TimePairList.create(new float[]{0.1F, recovery})
+               );
+           }
             return null;
         });
 

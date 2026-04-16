@@ -42,6 +42,7 @@ import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.StunType;
 
 public class WitherFistCombos extends BaseComboBuilder {
@@ -168,11 +169,12 @@ public class WitherFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
-            if(anim instanceof AttackAnimation attackAnimation){
-                for(AttackAnimation.Phase phase : attackAnimation.phases){
-                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+            if(anim != null) {
+                if (anim instanceof AttackAnimation attackAnimation) {
+                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
+                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                    }
                 }
-
             }
             return null;
         });
@@ -185,11 +187,12 @@ public class WitherFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
-            if(anim instanceof AttackAnimation attackAnimation){
-                for(AttackAnimation.Phase phase : attackAnimation.phases){
-                    phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+            if(anim != null) {
+                if (anim instanceof AttackAnimation attackAnimation) {
+                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
+                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
+                    }
                 }
-
             }
             return null;
         });
@@ -202,18 +205,11 @@ public class WitherFistCombos extends BaseComboBuilder {
         // Defer the addTimeEvent call until animation.get() is non-null
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
-            float end = anim.getTotalTime() - 0.95F;
 
             node.addTimeEvent(new TimeStampedEvent(0.125F,
                     ((entityPatch, target, invinciblePlayer) -> {
-                        ComboBasicAttack comboAttack = InputManager.getComboBasicSkill();
-
-                        if(comboAttack != null){
-                            SkillContainer container = entityPatch.getSkill(FormManager.getCurrentFormSkill(entityPatch.getOriginal()));
-
-                            if(container != null){
-                                comboAttack.executeNodeOnServer(container, followUpCombo, 1, 1);
-                            }
+                        if(entityPatch instanceof ServerPlayerPatch serverPlayerPatch){
+                            ComboBasicAttack.executeNodeOnServer(serverPlayerPatch, followUpCombo, 1, 1);
                         }
                     })));
             node.addBeginEvent(new BaseEvent(

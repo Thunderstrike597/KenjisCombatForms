@@ -23,40 +23,26 @@ import net.kenji.kenjiscombatforms.network.movers.WitherInputPacket;
 import net.kenji.kenjiscombatforms.network.particle_packets.*;
 import net.kenji.kenjiscombatforms.network.playerData.SkillPlayerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability1.StrengthBoostPacket;
-import net.kenji.kenjiscombatforms.network.power_form.ability1.SyncPowerDataPacket;
 import net.kenji.kenjiscombatforms.network.power_form.ability2.PowerEffectInflictPacket;
-import net.kenji.kenjiscombatforms.network.power_form.ability2.SyncPowerData2Packet;
 import net.kenji.kenjiscombatforms.network.slots.PutItemInSlotPacket;
 import net.kenji.kenjiscombatforms.network.slots.RemoveItemPacket;
 import net.kenji.kenjiscombatforms.network.slots.SwitchItemPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability1.SpeedBoostPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability1.SyncSwiftDataPacket;
 import net.kenji.kenjiscombatforms.network.swift_form.ability2.SwiftEffectInflictPacket;
-import net.kenji.kenjiscombatforms.network.swift_form.ability2.SyncSwiftData2Packet;
 import net.kenji.kenjiscombatforms.network.voidform.*;
-import net.kenji.kenjiscombatforms.network.voidform.ability1.SyncVoidDataPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ability1.TeleportPlayerPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ability2.SyncVoidData2Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ability2.TeleportPlayerBehindPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ability2.VoidRiftPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ability3.SyncVoidData3Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ability3.ToggleEnderPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.TeleportEnderEntityPacket;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.EnderLevitationPacket;
-import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability4.SyncVoidData4Packet;
-import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.SyncVoidData5Packet;
 import net.kenji.kenjiscombatforms.network.voidform.ender_abilities.ability5.VoidGrabPacket;
 import net.kenji.kenjiscombatforms.network.witherform.WitherFormDashPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ability1.SyncWitherDataPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherDashPacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability1.WitherPausePacket;
 import net.kenji.kenjiscombatforms.network.witherform.ability2.SoulDriftPacket;
-import net.kenji.kenjiscombatforms.network.witherform.ability2.SyncWitherData2Packet;
-import net.kenji.kenjiscombatforms.network.witherform.ability3.SyncWitherData3Packet;
 import net.kenji.kenjiscombatforms.network.witherform.ability3.ToggleWitherFormPacket;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SummonWitherMinionsPacket;
-import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability4.SyncWitherData4Packet;
-import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.SyncWitherData5Packet;
 import net.kenji.kenjiscombatforms.network.witherform.wither_abilites.ability5.WitherImplodePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
@@ -472,6 +458,5 @@ public class NetworkHandler {
                 .consumerMainThread((msg, ctx) -> {
                     ItemUsePacket.handle(msg, ctx.get());
                 }).add();
-
     }
 }
