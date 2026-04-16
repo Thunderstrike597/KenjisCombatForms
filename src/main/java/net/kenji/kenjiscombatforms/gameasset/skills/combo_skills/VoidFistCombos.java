@@ -1,6 +1,7 @@
 package net.kenji.kenjiscombatforms.gameasset.skills.combo_skills;
 
 import com.p1nero.invincible.api.events.BaseEvent;
+import com.p1nero.invincible.api.events.TimePeriodEvent;
 import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.api.skill.ComboNode;
 import com.p1nero.invincible.client.InputManager;
@@ -12,13 +13,18 @@ import net.kenji.kenjiscombatforms.api.basegameassets.condition.FormLevelConditi
 import net.kenji.kenjiscombatforms.api.basegameassets.condition.InAirCondition;
 import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jline.utils.Log;
+import org.joml.Vector3f;
 import reascer.wom.gameasset.WOMAnimations;
 import reascer.wom.gameasset.WOMSounds;
 import reascer.wom.gameasset.animations.weapons.AnimsAgony;
@@ -225,10 +231,19 @@ public class VoidFistCombos extends BaseComboBuilder {
                     ((entityPatch, target, invinciblePlayer) -> {
                        if(entityPatch.getOriginal().level() instanceof ServerLevel serverLevel) {
                            Vec3 pos = entityPatch.getOriginal().position();
-                           serverLevel.sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), entityPatch.getOriginal().getX(), entityPatch.getOriginal().getY(), entityPatch.getOriginal().getZ(), 1, entityPatch.getOriginal().getId(), 1, 1, entityPatch.getOriginal().getId());
+                           serverLevel.sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), entityPatch.getOriginal().getX(), entityPatch.getOriginal().getY(), entityPatch.getOriginal().getZ(), 1, entityPatch.getOriginal().getId(), 1, 1, entityPatch.getOriginal().getId());
                        }
                     })));
-
+            node.addTimePeriodEvent(new TimePeriodEvent(0.1F, 0.3F,
+                    ((entityPatch, target, invinciblePlayer) -> {
+                        if(entityPatch.getOriginal().level() instanceof ServerLevel serverLevel) {
+                            Vec3 pos = entityPatch.getOriginal().position();
+                            serverLevel.sendParticles(new DustParticleOptions(new Vector3f(0.616F, 0.0F, 1.0F), 0.8F),
+                                    entityPatch.getOriginal().getX(), entityPatch.getOriginal().getY(), entityPatch.getOriginal().getZ(), 10, 0.45, 0.75, 0.45, 0.05);
+                            serverLevel.sendParticles(ParticleTypes.REVERSE_PORTAL,
+                                    entityPatch.getOriginal().getX(), entityPatch.getOriginal().getY(), entityPatch.getOriginal().getZ(), 16, 0.6, 0.6, 0.6, 0.5);
+                        }
+                    })));
             node.addTimeEvent(new TimeStampedEvent(0.1F,
                     ((entityPatch, target, invinciblePlayer) -> {
                       entityPatch.getOriginal().level().playSound(null, entityPatch.getOriginal().blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F,1.5F);

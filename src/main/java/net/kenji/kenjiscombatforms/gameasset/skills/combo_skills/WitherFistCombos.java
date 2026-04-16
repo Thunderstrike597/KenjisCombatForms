@@ -217,6 +217,7 @@ public class WitherFistCombos extends BaseComboBuilder {
                        if(entityPatch.getOriginal().level() instanceof ServerLevel serverLevel) {
                            Vec3 pos = entityPatch.getOriginal().position();
                            serverLevel.sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), entityPatch.getOriginal().getX(), entityPatch.getOriginal().getY(), entityPatch.getOriginal().getZ(), 1, entityPatch.getOriginal().getId(), 1, 1, entityPatch.getOriginal().getId());
+
                        }
                     })));
 
