@@ -106,7 +106,7 @@ public class DataLoadHandler {
     private static void loadPlayerData(ServerPlayer player, CompoundTag savedData) {
         UUID playerUUID = player.getUUID();
         AbilityManager.PlayerAbilityData playerAbilityData = AbilityManager.getInstance().getOrCreatePlayerAbilityData(player);
-        FormManager.PlayerFormData playerFormData = FormManager.getInstance().getOrCreatePlayerFormData(player);
+        FormManager.PlayerFormData playerFormData = FormManager.getInstance().getOrCreatePlayerFormData(player.getUUID());
         FormLevelManager.PlayerFormLevelData formLevelData = FormLevelManager.getInstance().getOrCreatePlayerLevelData(player);
 
             SavedDataHandler.triggerPlayerDataLoad(playerUUID, playerAbilityData, playerFormData, savedData);

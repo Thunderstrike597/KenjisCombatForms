@@ -51,7 +51,7 @@ public class SavedDataHandler extends SavedData {
     public void updatePlayerData(UUID playerUUID) {
         CompoundTag playerData = new CompoundTag();
         AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().playerDataMap.get(playerUUID);
-        FormManager.PlayerFormData formData = FormManager.getInstance().playerDataMap.get(playerUUID);
+        FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(playerUUID);
 
         FormLevelManager.PlayerFormLevelData formLevelData = FormLevelManager.getInstance().playerDataMap.get(playerUUID);
         savePlayerData(playerUUID, abilityData, formLevelData, formData, playerData);
@@ -148,7 +148,7 @@ public class SavedDataHandler extends SavedData {
         for (UUID uuid : allUUIDs) {
             CompoundTag playerTag = new CompoundTag();
             AbilityManager.PlayerAbilityData abilityData = AbilityManager.getInstance().playerDataMap.get(uuid);
-            FormManager.PlayerFormData formData = FormManager.getInstance().playerDataMap.get(uuid);
+            FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(uuid);
 
             FormLevelManager.PlayerFormLevelData formLevelData = FormLevelManager.getInstance().playerDataMap.get(uuid);
             savePlayerData(uuid, abilityData, formLevelData, formData, playerTag);

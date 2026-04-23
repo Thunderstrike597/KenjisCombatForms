@@ -108,7 +108,7 @@ public class FormChangeTick {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player).selectedForm;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player.getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
 
         Form lastForm = FormManager.lastForm.get(player.getUUID());

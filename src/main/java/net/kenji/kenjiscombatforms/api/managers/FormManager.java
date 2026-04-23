@@ -57,7 +57,7 @@ public class FormManager {
 
     public List<String> getCurrentFormsValues(Player player){
         if (!player.level().isClientSide) {
-            FormManager.PlayerFormData formData = getInstance().getOrCreatePlayerFormData(player);
+            FormManager.PlayerFormData formData = getInstance().getOrCreatePlayerFormData(player.getUUID());
 
             return Arrays.asList(
                   Objects.requireNonNullElse(formData.selectedForm, "NONE"),
@@ -114,7 +114,7 @@ public class FormManager {
     }
 
     public static Form getCurrentForm(Player player){
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player).selectedForm;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(player.getUUID()).selectedForm;
         return FormManager.getInstance().getForm(formName);
     }
     public static Skill getCurrentFormSkill(Player player){
@@ -133,10 +133,10 @@ public class FormManager {
     }
 
 
-    public PlayerFormData getOrCreatePlayerFormData(Player player){
-        return playerDataMap.computeIfAbsent(player.getUUID(), k -> new PlayerFormData());
+    public PlayerFormData getOrCreatePlayerFormData(UUID playerUuid){
+        return playerDataMap.computeIfAbsent(playerUuid, k -> new PlayerFormData());
     }
     public FormManager.PlayerFormData getFormData(Player player){
-        return getOrCreatePlayerFormData(player);
+        return getOrCreatePlayerFormData(player.getUUID());
     }
 }

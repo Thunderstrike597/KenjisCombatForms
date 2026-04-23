@@ -31,7 +31,7 @@ public class MixinPlayerPatch {
         PlayerPatch<?> self = (PlayerPatch<?>) (Object)this;
         if (self.getOriginal() == null) return;
         if (((Player) self.getOriginal()).getInventory() == null) return;
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal()).selectedForm;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal().getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
         ItemStack formItem = currentForm.getFormItem(self.getOriginal().getUUID());
         if (formItem == null) return;

@@ -33,7 +33,7 @@ public class LevelUpCurrentForm {
     private static int resetFormLevels(CommandSourceStack source) throws CommandSyntaxException {
         Player player = source.getPlayer();
         if (player != null) {
-            FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(player);
+            FormManager.PlayerFormData formData = FormManager.getInstance().getOrCreatePlayerFormData(player.getUUID());
             String currentForm = formData.selectedForm;
             Form form = FormManager.getInstance().getForm(currentForm);
             AbstractFormData currentFormData = form.getFormData(player.getUUID());

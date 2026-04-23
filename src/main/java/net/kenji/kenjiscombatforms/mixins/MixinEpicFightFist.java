@@ -41,7 +41,7 @@ public class MixinEpicFightFist {
     @Inject(method = "getLivingMotionModifier", at = @At("HEAD"), cancellable = true, remap = false)
     private void getCustomLivingMotion(LivingEntityPatch<?> patch, InteractionHand hand, CallbackInfoReturnable<Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>>> cir) {
         if(patch instanceof PlayerPatch<?> playerPatch) {
-            String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal()).selectedForm;
+            String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal().getUUID()).selectedForm;
             Form currentForm = FormManager.getInstance().getForm(formName);
             ItemStack formItem = currentForm.getFormItem(playerPatch.getOriginal().getUUID());
             if(formItem == null) return;

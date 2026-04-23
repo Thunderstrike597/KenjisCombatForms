@@ -33,7 +33,7 @@ public class MixinCombatHotbarServerPlayerPatch {
     public void onUpdateHeldItemTail(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack _to, InteractionHand hand, CallbackInfo ci) {
         ServerPlayerPatch self = (ServerPlayerPatch) (Object) this;
 
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal()).selectedForm;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal().getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
         ItemStack formItem = currentForm.getFormItem(self.getOriginal().getUUID());
         if (formItem == null) return;
