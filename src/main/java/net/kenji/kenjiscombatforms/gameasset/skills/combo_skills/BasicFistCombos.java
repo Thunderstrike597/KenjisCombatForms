@@ -53,8 +53,13 @@ public class BasicFistCombos extends BaseComboBuilder {
 
         ComboNode basicRight1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.5F);
         ComboNode basicRight2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.5F);
-        ComboNode basicRight3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
-        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+        ComboNode basicRight3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_1, 1.5F);
+        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_4, 1.5F);
+
+        ComboNode basicDown1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.75F);
+        ComboNode basicDown2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.75F);
+        ComboNode basicDown3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 0.8F);
+        ComboNode basicDown4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.25F);
 
         /// Tier 2
         ComboNode basic5 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
@@ -79,7 +84,7 @@ public class BasicFistCombos extends BaseComboBuilder {
         ComboNode rightDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_RIGHT, basicRight1).addCondition(new RightCondition());
         rightDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
 
-        ComboNode downDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_BACKWARD, basicRight1).addCondition(new DownCondition());
+        ComboNode downDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_BACKWARD, basicDown1).addCondition(new DownCondition());
         downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
 
         createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
@@ -102,6 +107,10 @@ public class BasicFistCombos extends BaseComboBuilder {
         createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
 
+        createMovementCombo(basicDown1, basicDown2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown2, basicDown3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown3, basicDown4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, airSlash, dash));
 
         if(tier.value >= 1){
             createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash));
@@ -149,13 +158,6 @@ public class BasicFistCombos extends BaseComboBuilder {
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
             if(anim != null) {
-                if (anim instanceof AttackAnimation attackAnimation) {
-                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
-                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
-                    }
-
-
-                }
             }
             return null;
         });

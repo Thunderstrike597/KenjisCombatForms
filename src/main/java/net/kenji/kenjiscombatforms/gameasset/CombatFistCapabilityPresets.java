@@ -42,6 +42,7 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -69,6 +70,8 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -93,6 +96,8 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -142,9 +147,13 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -195,10 +204,11 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
-
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -258,9 +268,12 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -305,9 +318,13 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, AnimsSatsujin.SATSUJIN_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -356,9 +373,12 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, AnimsSatsujin.SATSUJIN_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -419,9 +439,12 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, AnimsSatsujin.SATSUJIN_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
@@ -449,6 +472,8 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -478,6 +503,8 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -508,6 +535,8 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -553,9 +582,13 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.TORMENT_BERSERK_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS,  LivingMotions.BLOCK, AnimsHerrscher.HERRSCHER_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -609,9 +642,13 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.TORMENT_BERSERK_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS,  LivingMotions.BLOCK, AnimsHerrscher.HERRSCHER_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -676,9 +713,13 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.TORMENT_BERSERK_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.OCHS,  LivingMotions.BLOCK, AnimsHerrscher.HERRSCHER_GUARD)
+
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)

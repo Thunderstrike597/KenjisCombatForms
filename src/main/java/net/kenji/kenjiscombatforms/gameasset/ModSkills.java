@@ -2,12 +2,14 @@ package net.kenji.kenjiscombatforms.gameasset;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.basegameassets.skills.BaseComboBuilder;
+import net.kenji.kenjiscombatforms.gameasset.skills.KaishuGuardSkill;
 import net.kenji.kenjiscombatforms.gameasset.skills.combo_skills.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jline.utils.Log;
 import yesman.epicfight.api.forgeevent.SkillBuildEvent;
 import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.guard.GuardSkill;
+import yesman.epicfight.skill.passive.PassiveSkill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,8 @@ public class ModSkills {
     public static Skill WITHER_COMBO_1;
     public static Skill WITHER_COMBO_2;
     public static Skill WITHER_COMBO_3;
+
+    public static Skill KAISHU_GUARD;
     @SubscribeEvent
     public static void buildSkillEvent(SkillBuildEvent build){
         SkillBuildEvent.ModRegistryWorker modRegistry = build.createRegistryWorker(KenjisCombatForms.MOD_ID);
@@ -57,5 +61,7 @@ public class ModSkills {
         skills.add(WITHER_COMBO_1 = WitherFistCombos.buildSkills("wither_fist_1", modRegistry, BaseComboBuilder.FistTier.TIER_1));
         skills.add(WITHER_COMBO_2 = WitherFistCombos.buildSkills("wither_fist_2", modRegistry, BaseComboBuilder.FistTier.TIER_2));
         skills.add(WITHER_COMBO_3 = WitherFistCombos.buildSkills("wither_fist_3", modRegistry, BaseComboBuilder.FistTier.TIER_3));
+
+        skills.add(KAISHU_GUARD = modRegistry.build("kaishu_guard", KaishuGuardSkill::new, KaishuGuardSkill.createGuardBuilder()));
     }
 }

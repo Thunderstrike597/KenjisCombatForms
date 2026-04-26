@@ -68,13 +68,19 @@ public class VoidFistCombos extends BaseComboBuilder {
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
-        ComboNode basicLeft3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
-        ComboNode basicLeft4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+        ComboNode basicLeft3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 0.8F);
+        ComboNode basicLeft4 = createComboNode(AnimsMoonless.MOONLESS_AUTO_1_VERSO, 0.8F);
 
         ComboNode basicRight1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.75F);
         ComboNode basicRight2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.75F);
-        ComboNode basicRight3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
-        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+        ComboNode basicRight3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2, 0.8F);
+        ComboNode basicRight4 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 0.8F);
+
+        ComboNode basicDown1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.75F);
+        ComboNode basicDown2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.75F);
+        ComboNode basicDown3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 0.8F);
+        ComboNode basicDown4 = createComboNode(AnimsMoonless.MOONLESS_AUTO_1, 0.8F);
+
 
         /// Tier 2
         ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, 1.6F);
@@ -102,7 +108,7 @@ public class VoidFistCombos extends BaseComboBuilder {
         ComboNode rightDodgeAttack = createDodgeComboNode(WOMAnimations.ENDERSTEP_RIGHT, basicRight1).addCondition(new RightCondition());
         rightDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
 
-        ComboNode downDodgeAttack = createDodgeComboNode(WOMAnimations.ENDERSTEP_BACKWARD, basicRight1).addCondition(new DownCondition());
+        ComboNode downDodgeAttack = createDodgeComboNode(WOMAnimations.ENDERSTEP_BACKWARD, basicDown1).addCondition(new DownCondition());
         downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
 
         ComboNode shootAttack = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_1).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_2));
@@ -132,6 +138,12 @@ public class VoidFistCombos extends BaseComboBuilder {
         createMovementCombo(basicRight2, basicRight3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
         createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
         createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+
+
+        createMovementCombo(basicDown1, basicDown2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicDown2, basicDown3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicDown3, basicDown4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicDown4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
 
 
         if(tier.value >= 1) {
@@ -185,11 +197,6 @@ public class VoidFistCombos extends BaseComboBuilder {
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
             if(anim != null) {
-                if (anim instanceof AttackAnimation attackAnimation) {
-                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
-                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
-                    }
-                }
             }
             return null;
         });

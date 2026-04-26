@@ -58,13 +58,18 @@ public class SwiftFistCombos extends BaseComboBuilder {
 
         ComboNode basicLeft1 = createComboNode(WOMAnimations.KICK_AUTO_2, 1.5F);
         ComboNode basicLeft2 = createComboNode(WOMAnimations.KICK_AUTO_3, 1.75F);
-        ComboNode basicLeft3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
-        ComboNode basicLeft4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3, 1.5F);
+        ComboNode basicLeft3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2, 1.75F);
+        ComboNode basicLeft4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_4, 1.5F);
 
         ComboNode basicRight1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.75F);
         ComboNode basicRight2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.75F);
-        ComboNode basicRight3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1, 1.5F);
-        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2, 1.5F);
+        ComboNode basicRight3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3, 0.8F);
+        ComboNode basicRight4 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_4, 1F);
+
+        ComboNode basicDown1 = createComboNode(WOMAnimations.KICK_AUTO_1).setPlaySpeed(1.75F);
+        ComboNode basicDown2 = createComboNode(WOMAnimations.KICK_AUTO_3).setPlaySpeed(1.75F);
+        ComboNode basicDown3 = createComboNode(AnimsMoonless.MOONLESS_AUTO_3_VERSO, 0.8F);
+        ComboNode basicDown4 = createComboNode(AnimsAgony.AGONY_COUNTER, 0.8F);
 
         /// Tier 2
         ComboNode basic7 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3);
@@ -91,7 +96,7 @@ public class SwiftFistCombos extends BaseComboBuilder {
         ComboNode rightDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_RIGHT, basicRight1).setPlaySpeed(1.35F).addCondition(new RightCondition());
         rightDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
 
-        ComboNode downDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_BACKWARD, basicRight1).setPlaySpeed(1.35F).addCondition(new DownCondition());
+        ComboNode downDodgeAttack = createDodgeComboNode(Animations.BIPED_STEP_BACKWARD, basicDown1).setPlaySpeed(1.35F).addCondition(new DownCondition());
         downDodgeAttack.addCondition(new CooldownCounterCondition(downDodgeAttack, 60));
 
 
@@ -115,6 +120,12 @@ public class SwiftFistCombos extends BaseComboBuilder {
         createMovementCombo(basicRight2, basicRight3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
         createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
+
+        createMovementCombo(basicDown1, basicDown2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown2, basicDown3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown3, basicDown4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
+        createMovementCombo(basicDown4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash));
+
 
 
         if(tier.value >= 1) {
@@ -183,12 +194,6 @@ public class SwiftFistCombos extends BaseComboBuilder {
         DEFERRED_SETUP.add(() -> {
             StaticAnimation anim = animation.get();
             if(anim != null) {
-                if (anim instanceof AttackAnimation attackAnimation) {
-                    for (AttackAnimation.Phase phase : attackAnimation.phases) {
-                        phase.addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH.get());
-                    }
-
-                }
             }
             return null;
         });

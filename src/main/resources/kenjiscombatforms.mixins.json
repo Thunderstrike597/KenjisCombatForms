@@ -15,6 +15,7 @@
     "MixinPatchedItemInHandLayer",
     "MixinCancellableDodge",
     "MixinPlayer",
+    "MixinAttackAnimation",
     "compat.MixinCombatHotbarPlayer",
     "compat.MixinCombatHotbarServerPlayerPatch",
     "compat.MixinLivingEntityCombatHotbar"
