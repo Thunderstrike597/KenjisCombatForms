@@ -259,7 +259,15 @@ return new MerchantOffer(
         );
     }
 
-
+    public static boolean checkSpawnRules(ServerLevelAccessor level, BlockPos pos) {
+        double chance = RANDOM.nextDouble();
+        if (level instanceof ServerLevel && ((ServerLevel)level).dimension() == Level.OVERWORLD) {
+            if (chance < EpicFightCombatFormsCommon.ABILITY_TRADER_SPAWN_CHANCE.get()) {
+                return level.getBrightness(LightLayer.SKY, pos) > 1;
+            }
+        }
+        return false;
+    }
 
     public static boolean checkSpawnRules(EntityType<? extends ScrollTraderEntity> entityType, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         double chance = RANDOM.nextDouble();

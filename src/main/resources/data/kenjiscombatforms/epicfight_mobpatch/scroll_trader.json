@@ -1,7 +1,7 @@
 {
-  "model": "epicfight:entity/biped",
+  "model": "epicfight:entity/zombie_villager",
   "armature": "epicfight:entity/biped",
-  "renderer": "minecraft:vindicator",
+  "renderer": "kenjiscombatforms:scroll_trader",
   "isHumanoid": true,
   "faction": "neutral",
   "attributes": {
@@ -26,7 +26,7 @@
         "block": "epicfight:biped/skill/guard_spear",
         "idle": "wom:biped/living/herrscher_idle",
         "run" : "epicfight:biped/living/run",
-        "walk": "wom:biped/living/moonless_walk",
+        "walk": "epicfight:biped/living/walk",
         "chase": "epicfight:biped/living/run"
       }
     }

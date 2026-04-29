@@ -164,7 +164,7 @@ public class EpicFightCombatFormsCommon {
         EXILED_DEVIL_SPAWN_CHANCE = BUILDER.comment("The overall chance for the exiled devil to spawn (Default is 0.22)")
                 .defineInRange("Exiled Devil Spawn Chance", 0.22, 0, 1);
         ABILITY_TRADER_SPAWN_CHANCE = BUILDER.comment("The overall chance for the ability trader to spawn (Default is 0.10)")
-                .defineInRange("Ability Trader Spawn Chance", 0.10, 0, 1);
+                .defineInRange("Ability Trader Spawn Chance", 0.185, 0, 1);
         BUILDER.pop();
 
         BUILDER.push("Ability Cooldowns");

@@ -1,7 +1,6 @@
 package net.kenji.kenjiscombatforms;
 
 import com.mojang.logging.LogUtils;
-import com.p1nero.invincible.InvincibleMod;
 import net.kenji.kenjiscombatforms.api.managers.AbilityManager;
 import net.kenji.kenjiscombatforms.api.managers.forms.*;
 import net.kenji.kenjiscombatforms.api.powers.EmptyAbility;
@@ -18,6 +17,7 @@ import net.kenji.kenjiscombatforms.commands.*;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsClient;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
+import net.kenji.kenjiscombatforms.entity.client.EntityRenderers.patched_renderers.ScrollTraderPatchRenderer;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEntity;
@@ -52,8 +52,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import org.slf4j.Logger;
+import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
 
 import static net.kenji.kenjiscombatforms.entity.ModEntities.*;
@@ -103,6 +105,8 @@ public class KenjisCombatForms
 
 
         ModParticles.register(modEventBus);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            modEventBus.addListener(KenjisCombatForms::registerPatchedEntityRenderers);        }
 
         modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
 
@@ -192,7 +196,14 @@ public class KenjisCombatForms
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
     }
-
+    @SubscribeEvent
+    public static void registerPatchedEntityRenderers(PatchedRenderersEvent.Add event) {
+        event.addPatchedEntityRenderer(SCROLL_TRADER.get(), entityType -> new ScrollTraderPatchRenderer(
+                        event.getContext(),
+                        entityType
+                )
+        );
+    }
 
     public static void init() {
         FormManager formManager = FormManager.getInstance();
