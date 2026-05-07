@@ -18,7 +18,8 @@
     "MixinAttackAnimation",
     "compat.MixinCombatHotbarPlayer",
     "compat.MixinCombatHotbarServerPlayerPatch",
-    "compat.MixinLivingEntityCombatHotbar"
+    "compat.MixinLivingEntityCombatHotbar",
+    "compat.MixinCombatHotbarPatchedItemInHandLayer"
   ],
   "client": [
     "MixinEntityRenderer"

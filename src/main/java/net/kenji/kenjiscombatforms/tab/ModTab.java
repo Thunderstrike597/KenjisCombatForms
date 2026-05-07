@@ -19,6 +19,8 @@ public class ModTab {
             .icon(() -> new ItemStack(ModItems.SWIFTFORM1.get()))
             .displayItems((itemDisplayParameters, output) -> {
 
+                output.accept(ModItems.COMBAT_DAGGER.get());
+
                 output.accept(ModItems.TYPE1_COMPONENT.get());
                 output.accept(ModItems.TYPE2_COMPONENT.get());
                 output.accept(ModItems.TYPE3_COMPONENT.get());

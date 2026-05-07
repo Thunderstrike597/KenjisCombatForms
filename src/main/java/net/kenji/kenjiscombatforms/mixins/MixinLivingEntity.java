@@ -4,6 +4,7 @@ import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategories;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +18,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 @Mixin(value = LivingEntity.class)
 public class MixinLivingEntity {
@@ -43,6 +48,8 @@ public class MixinLivingEntity {
     private void maybeReplaceGetItemBySlot(InteractionHand pHand, CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if(self instanceof Player player) {
+            PlayerPatch<?> playerPatch = EpicFightCapabilities.getPlayerPatch(player);
+            if(playerPatch == null) return;
             if (self.getMainHandItem().getItem() instanceof BaseFistClass) {
                 cir.setReturnValue(player.getInventory().getSelected());
             }

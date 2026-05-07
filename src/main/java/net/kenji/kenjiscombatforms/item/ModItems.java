@@ -34,6 +34,7 @@ import net.kenji.kenjiscombatforms.item.custom.forms.*;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.*;
 import net.kenji.kenjiscombatforms.item.custom.materials.SlotLiner;
 import net.kenji.kenjiscombatforms.item.custom.scrolls.form_scrolls.WitherScroll;
+import net.kenji.kenjiscombatforms.item.custom.weapons.CombatDagger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
@@ -43,6 +44,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import yesman.epicfight.world.item.EpicFightItemTier;
+import yesman.epicfight.world.item.GloveItem;
 
 public class ModItems {
 
@@ -171,6 +174,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> VOID_FORM_ITEM = ITEMS.register("ender_form_fist", () -> new EnderFormItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> WITHER_FORM_ITEM = ITEMS.register("wither_form_fist", () -> new WitherFormItem(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<Item> COMBAT_DAGGER = ITEMS.register("combat_dagger", () -> new CombatDagger(new Item.Properties(), EpicFightItemTier.GLOVE));
 
 
 

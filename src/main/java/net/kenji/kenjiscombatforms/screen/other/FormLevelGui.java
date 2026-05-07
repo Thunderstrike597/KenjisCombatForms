@@ -53,13 +53,6 @@ public class FormLevelGui {
             boolean hideGUIWhenNotActive = SimpleAbilityHandler.hideAbilityGUIWhenNotActive(player);
             ControlHandler.controlRelatedEvents.PlayerData data = ControlHandler.controlRelatedEvents.getInstance().getOrCreatePlayerData(player);
 
-            String BASIC = BasicForm.getInstance().getName();
-            String VOID = VoidForm.getInstance().getName();
-            String WITHER = WitherForm.getInstance().getName();
-            String SWIFT = SwiftForm.getInstance().getName();
-            String POWER = PowerForm.getInstance().getName();
-
-
             int voidScreenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int voidScreenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 

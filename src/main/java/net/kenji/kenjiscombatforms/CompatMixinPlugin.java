@@ -37,6 +37,9 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
             if (mixinClassName.endsWith("MixinLivingEntityCombatHotbar")) {
                 return false;
             }
+            if (mixinClassName.endsWith("MixinCombatHotbarPatchedItemInHandLayer")) {
+                return false;
+            }
         } else {
             if (mixinClassName.endsWith("MixinPlayer")) {
                 return false;

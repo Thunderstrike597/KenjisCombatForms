@@ -117,12 +117,9 @@ public class FormChangeTick {
         WeaponCategory currentStackCategory = EpicFightCapabilities.getItemStackCapability(currentStack).getWeaponCategory();
 
         WeaponCategory lastStackCategory = EpicFightCapabilities.getItemStackCapability(lastStack.getOrDefault(player.getUUID(), currentStack)).getWeaponCategory();
-        boolean isCurrentCategoryValid = currentStackCategory == CapabilityItem.WeaponCategories.FIST
-                || currentStackCategory == CapabilityItem.WeaponCategories.NOT_WEAPON;
+        boolean isCurrentCategoryValid = FormManager.isHeldCategoryValid(player, currentStack);
 
         if (player instanceof ServerPlayer serverPlayer) {
-            boolean categoryChanged = isCurrentCategoryValid != (lastStackCategory == CapabilityItem.WeaponCategories.FIST
-                    || lastStackCategory == CapabilityItem.WeaponCategories.NOT_WEAPON);
             ServerPlayerPatch playerPatch = EpicFightCapabilities.getServerPlayerPatch(serverPlayer);
             if (playerPatch == null) return;
             if(currentForm == null) return;

@@ -24,6 +24,7 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFistCapabilityPresets;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategories;
 import net.kenji.kenjiscombatforms.gameasset.ModSkills;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
@@ -34,18 +35,25 @@ import net.kenji.kenjiscombatforms.screen.EssenceInfusingScreen;
 import net.kenji.kenjiscombatforms.screen.ModMenuTypes;
 import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.kenji.kenjiscombatforms.tab.ModTab;
+import net.kenji.woh.WeaponsOfHarmony;
+import net.kenji.woh.gameasset.WohWeaponCategories;
+import net.kenji.woh.registry.WohItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -54,9 +62,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
+import yesman.epicfight.api.client.forgeevent.WeaponCategoryIconRegisterEvent;
 import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
+import yesman.epicfight.main.EpicFightMod;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 import static net.kenji.kenjiscombatforms.entity.ModEntities.*;
 
@@ -108,6 +121,9 @@ public class KenjisCombatForms
         if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.addListener(KenjisCombatForms::registerPatchedEntityRenderers);        }
 
+        WeaponCategory.ENUM_MANAGER.registerEnumCls(MOD_ID, WohWeaponCategories.class);
+        modEventBus.addListener(KenjisCombatForms::regIcon);
+
         modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
 
         modEventBus.addListener(ModSkills::buildSkillEvent);
@@ -120,12 +136,13 @@ public class KenjisCombatForms
         MinecraftForge.EVENT_BUS.register(this);
 
 
-
         modEventBus.addListener(this::buildContents);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
     }
     public static void RegisterWeaponType(WeaponCapabilityPresetRegistryEvent event) {
+        event.getTypeEntry().put(new ResourceLocation(MOD_ID, "combat_dagger"), CombatFistCapabilityPresets.BASE_COMBAT_WEAPON);
+
         event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_1"), CombatFistCapabilityPresets.BASIC_FIST_TIER1);
         event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_2"), CombatFistCapabilityPresets.BASIC_FIST_TIER2);
         event.getTypeEntry().put(new ResourceLocation(MOD_ID, "basic_form_3"), CombatFistCapabilityPresets.BASIC_FIST_TIER3);
@@ -203,6 +220,13 @@ public class KenjisCombatForms
                         entityType
                 )
         );
+    }
+        @OnlyIn(Dist.CLIENT)
+        public static void regIcon(WeaponCategoryIconRegisterEvent event) {
+            event.registerCategory(CapabilityItem.WeaponCategories.FIST, new ItemStack((ItemLike) ModItems.COMBAT_DAGGER.get()));
+        }
+    public static @NotNull ResourceLocation identifier(@NotNull String path) {
+        return ResourceLocation.fromNamespaceAndPath("kenjiscombatforms", path);
     }
 
     public static void init() {

@@ -38,8 +38,8 @@ public class MixinPlayerPatch {
         CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(formItem);
         CapabilityItem originalStack = EpicFightCapabilities.getItemStackCapability(self.getOriginal().getMainHandItem());
 
-        boolean isCorrectCategory = originalStack.getWeaponCategory() == CapabilityItem.WeaponCategories.NOT_WEAPON
-                || originalStack.getWeaponCategory() == CapabilityItem.WeaponCategories.FIST;
+        boolean isCorrectCategory = FormManager.isHeldCategoryValid(self.getOriginal(), self.getOriginal().getMainHandItem());
+
         if(!isCorrectCategory) return;
         if(slot != SkillSlots.WEAPON_INNATE) return;
 

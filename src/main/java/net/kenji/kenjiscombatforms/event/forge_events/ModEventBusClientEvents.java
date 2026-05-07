@@ -6,6 +6,9 @@ import net.kenji.kenjiscombatforms.entity.client.EntityModels.*;
 import net.kenji.kenjiscombatforms.entity.client.EntityRenderers.*;
 import net.kenji.kenjiscombatforms.entity.client.ModModelLayers;
 import net.kenji.kenjiscombatforms.keybinds.ModKeybinds;
+import net.kenji.kenjiscombatforms.render.CombatDaggerRender;
+import net.kenji.woh.WeaponsOfHarmony;
+import net.kenji.woh.render.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -13,6 +16,7 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 
 @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModEventBusClientEvents {
@@ -51,5 +55,8 @@ public class ModEventBusClientEvents {
         event.register(ModKeybinds.ACTIVATE_CURRENT_ABILITY_KEY);
         event.register(ModKeybinds.SWITCH_CURRENT_ABILITY_KEY);
     }
-
+    @SubscribeEvent
+    public static void registerRenderer(PatchedRenderersEvent.RegisterItemRenderer event) {
+        event.addItemRenderer(KenjisCombatForms.identifier("combat_dagger"), CombatDaggerRender::new);
+    }
 }

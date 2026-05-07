@@ -4,6 +4,7 @@ import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategories;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import yesman.epicfight.skill.Skill;
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FormManager {
     public final Map<UUID, PlayerFormData> playerDataMap = new ConcurrentHashMap<>();
     public static final Map<UUID, Form> lastForm = new HashMap<>();
+    public static final Map<UUID, ItemStack> trueStackMap = new HashMap<>();
 
     private static final FormManager INSTANCE = new FormManager();
     public static FormManager getInstance(){
@@ -129,7 +131,7 @@ public class FormManager {
        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
        WeaponCategory category = capItem.getWeaponCategory();
 
-       return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON;
+       return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category == CombatFormWeaponCategories.COMBAT_DAGGER;
     }
 
 

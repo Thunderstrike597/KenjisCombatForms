@@ -26,7 +26,28 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class CombatFistCapabilityPresets {
+    public static final Function<Item, CapabilityItem.Builder> BASE_COMBAT_WEAPON = (item) -> {
+        WeaponCapability.Builder builder = WeaponCapability.builder()
+                .category(CombatFormWeaponCategories.COMBAT_DAGGER)
+                .styleProvider((playerPatch) -> {
+                    return CapabilityItem.Styles.COMMON;
+                })
+                .newStyleCombo(CapabilityItem.Styles.COMMON,
+                        Animations.FIST_AUTO1,
+                        Animations.FIST_AUTO2,
+                        Animations.FIST_AUTO3,
+                        Animations.FIST_DASH, Animations.FIST_AIR_SLASH
+                )
+                .canBePlacedOffhand(true)
+                .offHandAlone(true)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD);
 
+        return builder;
+
+    };
     public static final Function<Item, CapabilityItem.Builder> BASIC_FIST_TIER1 = (item) -> {
         WeaponCapability.Builder builder = WeaponCapability.builder()
                 .category(CapabilityItem.WeaponCategories.FIST)
@@ -118,9 +139,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3,
                         Animations.SPEAR_DASH,
@@ -144,10 +165,10 @@ public class CombatFistCapabilityPresets {
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_1,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                         )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
@@ -158,7 +179,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.POWER_COMBO_1);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.POWER_COMBO_1);
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> POWER_FORM_2 = (item) -> {
@@ -171,9 +192,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3,
                         Animations.SPEAR_DASH,
@@ -201,10 +222,10 @@ public class CombatFistCapabilityPresets {
                         AnimsMoonless.MOONLESS_CRESCENT,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
@@ -212,7 +233,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.POWER_COMBO_2);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.POWER_COMBO_2);
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> POWER_FORM_3 = (item) -> {
@@ -225,9 +246,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_3,
                         Animations.SPEAR_DASH,
@@ -265,10 +286,10 @@ public class CombatFistCapabilityPresets {
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, WOMAnimations.STAFF_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, WOMAnimations.STAFF_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
@@ -278,7 +299,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.POWER_COMBO_3);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.POWER_COMBO_3);
 
         return builder;
     };
@@ -292,9 +313,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         Animations.DAGGER_DUAL_AUTO1,
                         Animations.DAGGER_DUAL_AUTO1,
                         AnimsAgony.AGONY_AUTO_2,
@@ -315,10 +336,10 @@ public class CombatFistCapabilityPresets {
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_AUTO_4,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
@@ -329,7 +350,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.SWIFT_COMBO_1);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.SWIFT_COMBO_1);
 
         return builder;
     };
@@ -343,9 +364,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         Animations.DAGGER_DUAL_AUTO1,
                         Animations.DAGGER_DUAL_AUTO1,
                         AnimsAgony.AGONY_AUTO_2,
@@ -370,10 +391,10 @@ public class CombatFistCapabilityPresets {
                         AnimsMoonless.MOONLESS_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
@@ -383,7 +404,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.SWIFT_COMBO_2);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.SWIFT_COMBO_2);
 
         return builder;
     };
@@ -397,9 +418,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         Animations.DAGGER_DUAL_AUTO1,
                         Animations.DAGGER_DUAL_AUTO1,
                         AnimsAgony.AGONY_AUTO_2,
@@ -436,10 +457,10 @@ public class CombatFistCapabilityPresets {
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_DASH, AnimsAgony.AGONY_AIR_ATTACK_1
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsMoonless.MOONLESS_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, Animations.SPEAR_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsHerrscher.HERRSCHER_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, AnimsMoonless.MOONLESS_WALK)
@@ -449,16 +470,16 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.SWIFT_COMBO_3);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.SWIFT_COMBO_3);
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> VOID_FORM_1 = (item) -> {
         WeaponCapability.Builder builder = WeaponCapability.builder()
                 .category(CapabilityItem.WeaponCategories.FIST)
                 .styleProvider((playerPatch) -> {
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsAgony.AGONY_AUTO_1,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1,
@@ -469,15 +490,15 @@ public class CombatFistCapabilityPresets {
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsMoonless.MOONLESS_AUTO_3, AnimsSatsujin.SATSUJIN_TSUKUYOMI
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
-
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+                .canBePlacedOffhand(true)
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.VOID_COMBO_1);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.VOID_COMBO_1);
 
         return builder;
     };
@@ -485,9 +506,9 @@ public class CombatFistCapabilityPresets {
         WeaponCapability.Builder builder = WeaponCapability.builder()
                 .category(CapabilityItem.WeaponCategories.FIST)
                 .styleProvider((playerPatch) -> {
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsAgony.AGONY_AUTO_1,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1,
@@ -500,24 +521,24 @@ public class CombatFistCapabilityPresets {
                         AnimsMoonless.MOONLESS_AUTO_3,
                         AnimsMoonless.MOONLESS_AUTO_3,  AnimsEnderblaster.ENDERBLASTER_TWOHAND_AIRSHOOT
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
-
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+                .canBePlacedOffhand(true)
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.VOID_COMBO_2);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.VOID_COMBO_2);
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> VOID_FORM_3 = (item) -> {
         WeaponCapability.Builder builder = WeaponCapability.builder()
                 .category(CapabilityItem.WeaponCategories.FIST)
                 .styleProvider((playerPatch) -> {
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsAgony.AGONY_AUTO_1,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsEnderblaster.ENDERBLASTER_TWOHAND_AUTO_1,
@@ -532,15 +553,15 @@ public class CombatFistCapabilityPresets {
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3,
                         AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_DASH, AnimsEnderblaster.ENDERBLASTER_TWOHAND_AIRSHOOT
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
-
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsAgony.AGONY_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsAgony.AGONY_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, AnimsAgony.AGONY_RUN)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsSatsujin.SATSUJIN_GUARD)
+                .canBePlacedOffhand(true)
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.VOID_COMBO_3);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.VOID_COMBO_3);
         return builder;
     };
     public static final Function<Item, CapabilityItem.Builder> WITHER_FORM_1 = (item) -> {
@@ -553,9 +574,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsMoonless.MOONLESS_AUTO_1_VERSO,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsAgony.AGONY_AUTO_1,
@@ -579,10 +600,10 @@ public class CombatFistCapabilityPresets {
 
                         AnimsMoonless.MOONLESS_REWINDER, AnimsEnderblaster.ENDERBLASTER_TWOHAND_TISHNAW
                         )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
@@ -592,7 +613,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_1);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.WITHER_COMBO_1);
 
 
         return builder;
@@ -607,9 +628,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsMoonless.MOONLESS_AUTO_1_VERSO,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsAgony.AGONY_AUTO_1,
@@ -639,10 +660,10 @@ public class CombatFistCapabilityPresets {
 
                         AnimsMoonless.MOONLESS_REWINDER, AnimsEnderblaster.ENDERBLASTER_TWOHAND_TISHNAW
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
@@ -652,7 +673,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_2);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.WITHER_COMBO_2);
 
         return builder;
     };
@@ -666,9 +687,9 @@ public class CombatFistCapabilityPresets {
                                 return CapabilityItem.Styles.OCHS;
                         }
                     }
-                    return CapabilityItem.Styles.TWO_HAND;
+                    return CombatFormStyles.COMBAT_FORM;
                 })
-                .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                .newStyleCombo(CombatFormStyles.COMBAT_FORM,
                         AnimsMoonless.MOONLESS_AUTO_1_VERSO,
                         AnimsAgony.AGONY_AUTO_2,
                         AnimsAgony.AGONY_AUTO_1,
@@ -710,10 +731,10 @@ public class CombatFistCapabilityPresets {
 
                         AnimsMoonless.MOONLESS_REWINDER, AnimsEnderblaster.ENDERBLASTER_TWOHAND_TISHNAW
                 )
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
-                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.IDLE, AnimsSatsujin.SATSUJIN_IDLE)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.WALK, AnimsEnderblaster.ENDERBLASTER_ONEHAND_WALK)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM, LivingMotions.RUN, Animations.BIPED_RUN_DUAL)
+                .livingMotionModifier(CombatFormStyles.COMBAT_FORM,  LivingMotions.BLOCK, AnimsRuine.RUINE_GUARD)
 
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.IDLE, AnimsSolar.SOLAR_OBSCURIDAD_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.OCHS, LivingMotions.WALK, WOMAnimations.ANTITHEUS_ASCENDED_WALK)
@@ -723,7 +744,7 @@ public class CombatFistCapabilityPresets {
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
-                .innateSkill(CapabilityItem.Styles.TWO_HAND, itemStack -> ModSkills.WITHER_COMBO_3);
+                .innateSkill(CombatFormStyles.COMBAT_FORM, itemStack -> ModSkills.WITHER_COMBO_3);
         return builder;
     };
 }

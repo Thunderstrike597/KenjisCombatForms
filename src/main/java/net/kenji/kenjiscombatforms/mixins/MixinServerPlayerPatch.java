@@ -94,17 +94,13 @@ public class MixinServerPlayerPatch {
     public void onUpdateHeldItemTail(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack _to, InteractionHand hand, CallbackInfo ci) {
         ServerPlayerPatch self = (ServerPlayerPatch) (Object) this;
 
+        if(hand != InteractionHand.MAIN_HAND) return;
         String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal().getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
         ItemStack formItem = currentForm.getFormItem(self.getOriginal().getUUID());
         if (formItem == null) return;
         CapabilityItem formCap = EpicFightCapabilities.getItemStackCapability(formItem);
         ServerPlayer player = (ServerPlayer) self.getOriginal();
-
-        boolean fromIsFist = fromCap.getWeaponCategory() == CapabilityItem.WeaponCategories.FIST
-                || fromCap.getWeaponCategory() == CapabilityItem.WeaponCategories.NOT_WEAPON;
-        boolean toIsFist = toCap.getWeaponCategory() == CapabilityItem.WeaponCategories.FIST
-                || toCap.getWeaponCategory() == CapabilityItem.WeaponCategories.NOT_WEAPON;
 
         PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
         if(patch == null) return;
