@@ -62,20 +62,20 @@
     "ground": {
       "parent": "item/generated",
       "textures": {
-        "layer0": "woh:item/weapon/odachi"
+        "layer0": "kenjiscombatforms:item/combat_dagger"
       }
     },
     "gui": {
       "parent": "item/generated",
       "textures": {
-        "layer0": "woh:item/weapon/odachi"
+        "layer0": "kenjiscombatforms:item/combat_dagger"
       },
       "gui_light": "front"
     },
     "fixed": {
       "parent": "item/generated",
       "textures": {
-        "layer0": "woh:item/weapon/odachi"
+        "layer0": "kenjiscombatforms:item/combat_dagger"
       }
     }
   }
