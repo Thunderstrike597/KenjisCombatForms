@@ -40,6 +40,12 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
             if (mixinClassName.endsWith("MixinCombatHotbarPatchedItemInHandLayer")) {
                 return false;
             }
+            if (mixinClassName.endsWith("MixinLivingEntityPatchCombatHotbar")) {
+                return false;
+            }
+            if (mixinClassName.endsWith("MixinAnimationHotbarTrailParticle")) {
+                return false;
+            }
         } else {
             if (mixinClassName.endsWith("MixinPlayer")) {
                 return false;
@@ -48,6 +54,12 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
                 return false;
             }
             if (mixinClassName.endsWith("MixinServerPlayerPatch")) {
+                return false;
+            }
+            if (mixinClassName.endsWith("MixinLivingEntity")) {
+                return false;
+            }
+            if (mixinClassName.endsWith("MixinAnimationTrailParticle")) {
                 return false;
             }
         }

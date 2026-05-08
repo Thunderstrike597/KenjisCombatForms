@@ -6,8 +6,9 @@
   "plugin": "net.kenji.kenjiscombatforms.CompatMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinAnimationTrailParticle",
     "MixinBlockCollision",
-    "MixinEpicFightFist",
+    "MixinCapabilityItem",
     "WeaponCapabilityAccessor",
     "MixinServerPlayerPatch",
     "MixinPlayerPatch",
@@ -19,7 +20,9 @@
     "compat.MixinCombatHotbarPlayer",
     "compat.MixinCombatHotbarServerPlayerPatch",
     "compat.MixinLivingEntityCombatHotbar",
-    "compat.MixinCombatHotbarPatchedItemInHandLayer"
+    "compat.MixinCombatHotbarPatchedItemInHandLayer",
+    "compat.MixinLivingEntityPatchCombatHotbar",
+    "compat.MixinAnimationHotbarTrailParticle"
   ],
   "client": [
     "MixinEntityRenderer"

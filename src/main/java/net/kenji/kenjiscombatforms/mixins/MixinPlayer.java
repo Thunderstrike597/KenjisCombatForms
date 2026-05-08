@@ -4,8 +4,10 @@ import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 @Mixin(value = Player.class)
 public class MixinPlayer {
@@ -30,12 +35,22 @@ public class MixinPlayer {
         ItemStack currentFormItem = FormManager.getCurrentFormItem(player);
         if(currentForm == null || currentFormItem.isEmpty()) return;
         if(!FormManager.isHeldCategoryValid(player, player.getInventory().getSelected())) return;
-        ItemStack originalReturnValue = cir.getReturnValue();
         boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(player.getUUID(), true);
         if(isToggled) {
             ItemStack stack = cir.getReturnValue();
+            ItemStack lastStack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
+
+            int lastSelected = FormManager.lastSelectedMap.getOrDefault(player.getUUID(), player.getInventory().selected);
+            if(player.getInventory().selected != lastSelected) {
+                FormManager.trueLastStackMap.put(player.getUUID(), lastStack);
+
+                FormManager.trueStackMap.put(player.getUUID(), stack);
+            }
+            FormManager.lastSelectedMap.put(player.getUUID(), player.getInventory().selected);
+
             if(stack != null)
                 FormManager.trueStackMap.put(player.getUUID(), stack);
+
             cir.setReturnValue(currentFormItem);
         }
 
@@ -43,8 +58,9 @@ public class MixinPlayer {
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)
     public void onUpdateHeldItem(EquipmentSlot par1, ItemStack par2, CallbackInfo ci) {
         Player self = (Player) (Object) this;
+        CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(self.getMainHandItem());
 
-        if(par2.getItem() instanceof BaseFistClass)
+        if(par2.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory))
             ci.cancel();
     }
 }

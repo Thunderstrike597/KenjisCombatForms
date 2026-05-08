@@ -35,7 +35,7 @@ public class EnderFormItem extends BaseFinalFormClass {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
             builder.putAll(super.getDefaultAttributeModifiers(slot));
 
-            int baseDamage = EpicFightCombatFormsCommon.BASIC_FORM_BASE_DAMAGE.get();
+            double baseDamage = EpicFightCombatFormsCommon.BASIC_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 

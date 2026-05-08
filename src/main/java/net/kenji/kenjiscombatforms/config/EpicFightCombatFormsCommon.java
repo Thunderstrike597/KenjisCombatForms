@@ -73,11 +73,11 @@ public class EpicFightCombatFormsCommon {
     public static final ForgeConfigSpec.ConfigValue<Integer> COMPAT_MODE_UNDEAD_SENSEI_HEALTH;
     public static final ForgeConfigSpec.ConfigValue<Integer> COMPAT_MODE_EXILED_DEVIL_HEALTH;
 
-    public static final ForgeConfigSpec.ConfigValue<Integer> BASIC_FORM_BASE_DAMAGE;
-    public static final ForgeConfigSpec.ConfigValue<Integer> SWIFT_FORM_BASE_DAMAGE;
-    public static final ForgeConfigSpec.ConfigValue<Integer> POWER_FORM_BASE_DAMAGE;
-    public static final ForgeConfigSpec.ConfigValue<Integer> VOID_FORM_BASE_DAMAGE;
-    public static final ForgeConfigSpec.ConfigValue<Integer> WITHER_FORM_BASE_DAMAGE;
+    public static final ForgeConfigSpec.ConfigValue<Double> BASIC_FORM_BASE_DAMAGE;
+    public static final ForgeConfigSpec.ConfigValue<Double> SWIFT_FORM_BASE_DAMAGE;
+    public static final ForgeConfigSpec.ConfigValue<Double> POWER_FORM_BASE_DAMAGE;
+    public static final ForgeConfigSpec.ConfigValue<Double> VOID_FORM_BASE_DAMAGE;
+    public static final ForgeConfigSpec.ConfigValue<Double> WITHER_FORM_BASE_DAMAGE;
 
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL1_DAMAGE_MULTIPLIER;
     public static final ForgeConfigSpec.ConfigValue<Double> LEVEL2_DAMAGE_MULTIPLIER;
@@ -244,23 +244,23 @@ public class EpicFightCombatFormsCommon {
         BUILDER.push("Form Damage & Speed");
 
         BASIC_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Basic Form'")
-                .defineInRange("Basic Form Base Damage", 3, 1, 20);
+                .defineInRange("Basic Form Base Damage", 1F, 1F, 20F);
         SWIFT_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Swift Form'")
-                .defineInRange("Swift Form Base Damage", 4, 1, 24);
+                .defineInRange("Swift Form Base Damage", 1.25, 1, 24);
         POWER_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Power Form'")
-                .defineInRange("Power Form Base Damage", 5, 1, 28);
+                .defineInRange("Power Form Base Damage", 1.5F, 1, 28);
         VOID_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Void Form'")
-                .defineInRange("Void Form Base Damage", 6, 1, 30);
+                .defineInRange("Void Form Base Damage", 1.75F, 1, 30);
         WITHER_FORM_BASE_DAMAGE = BUILDER.comment("The base damage for the 'Wither Form'")
-                .defineInRange("Wither Form Base Damage", 7, 1, 32);
+                .defineInRange("Wither Form Base Damage", 1.85F, 1, 32);
 
         LEVEL1_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 1 form is multiplied by")
                 .defineInRange("Level 1 Damage Multiplier", 1.0, 1.0,1.0);
 
         LEVEL2_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
-                .defineInRange("Level 2 Damage Multiplier", 1.4, 1.0, 6.0);
+                .defineInRange("Level 2 Damage Multiplier", 1.75, 1.0, 6.0);
         LEVEL3_DAMAGE_MULTIPLIER = BUILDER.comment("This defines the amount of damage any Level 2 form is multiplied by")
-                .defineInRange("Level 3 Damage Multiplier", 1.6, 1.0, 8.0);
+                .defineInRange("Level 3 Damage Multiplier", 2.15, 1.0, 8.0);
 
         BASIC_FORM_BASE_SPEED = BUILDER.comment("The base attack speed for the 'Basic Form'")
                 .defineInRange("Basic Form Base Attack Speed", 1, 0.1, 15);

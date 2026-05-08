@@ -39,6 +39,7 @@ import org.jline.utils.Log;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
@@ -129,55 +130,18 @@ public class FormChangeTick {
                 if (weaponInnate == null) return;
                 playerPatch.updateHeldItem(currentCap, currentCap, currentStack, currentStack, InteractionHand.MAIN_HAND);
             }
-            /*
+            ItemStack stack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
+            ItemStack previousStack = FormManager.trueLastStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
 
-            if (isCurrentCategoryValid) {
-                ItemStack heldItem = player.getMainHandItem();
-                if (!heldItem.isEmpty()) {
-                    heldItem.getAttributeModifiers(EquipmentSlot.MAINHAND).forEach((attribute, modifier) -> {
-                        AttributeInstance instance = player.getAttribute(attribute);
-                        if (instance != null) instance.removeModifier(modifier.getId());
-                    });
-                }
+            if (!ItemStack.isSameItemSameTags(stack, previousStack)) {
+                CapabilityItem lastCapItem = EpicFightCapabilities.getItemStackCapability(previousStack);
+                CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
 
-                Set<UUID> applied = appliedModifiers.computeIfAbsent(player.getUUID(), k -> new HashSet<>());
-                for (Attribute attribute : currentForm.getFormItem(player.getUUID()).getAttributeModifiers(EquipmentSlot.MAINHAND).keySet()) {
-                    if (attribute == null) continue;
-                    AttributeInstance instance = player.getAttribute(attribute);
-                    if (instance == null) continue;
-                    for (AttributeModifier modifier : currentForm.getFormItem(player.getUUID()).getAttributeModifiers(EquipmentSlot.MAINHAND).get(attribute)) {
-                        if (modifier == null) continue;
-                        if (!instance.hasModifier(modifier)) {
-                            instance.addTransientModifier(modifier);
-                            applied.add(modifier.getId()); // track it
-                        }
-                    }
-                }
-            } else {
-                Set<UUID> applied = appliedModifiers.getOrDefault(player.getUUID(), Collections.emptySet());
-                for (Attribute attribute : currentForm.getFormItem(player.getUUID()).getAttributeModifiers(EquipmentSlot.MAINHAND).keySet()) {
-                    if (attribute == null) continue;
-                    AttributeInstance instance = player.getAttribute(attribute);
-                    if (instance == null) continue;
-                    for (AttributeModifier modifier : currentForm.getFormItem(player.getUUID()).getAttributeModifiers(EquipmentSlot.MAINHAND).get(attribute)) {
-                        if (modifier == null) continue;
-                        if (applied.contains(modifier.getId()) && instance.hasModifier(modifier)) {
-                            instance.removeModifier(modifier.getId());
-                            applied.remove(modifier.getId());
-                        }
-                    }
-                }
-                ItemStack heldItem = player.getMainHandItem();
-                if (!heldItem.isEmpty()) {
-                    heldItem.getAttributeModifiers(EquipmentSlot.MAINHAND).forEach((attribute, modifier) -> {
-                        AttributeInstance instance = player.getAttribute(attribute);
-                        if (instance != null && !instance.hasModifier(modifier)) {
-                            instance.addTransientModifier(modifier);
-                        }
-                    });
-                }
+                playerPatch.updateHeldItem(lastCapItem, capItem, previousStack, stack, InteractionHand.MAIN_HAND);
+
+                // ← Critical: update the "last" map so the guard actually holds next tick
+                FormManager.trueLastStackMap.put(player.getUUID(), stack);
             }
-            */
 
             FormChangeTick.lastStack.put(player.getUUID(), currentStack);
         }

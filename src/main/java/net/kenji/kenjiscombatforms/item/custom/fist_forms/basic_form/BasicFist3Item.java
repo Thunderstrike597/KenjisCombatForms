@@ -38,7 +38,7 @@ public class BasicFist3Item extends BaseBasicClass {
     public double getFinalSpeedModifier() {
         double baseSpeed = EpicFightCombatFormsCommon.BASIC_FORM_BASE_SPEED.get();
         double speedMultiplier = EpicFightCombatFormsCommon.LEVEL3_SPEED_MULTIPLIER.get();
-        return baseSpeed * speedMultiplier;
+        return baseSpeed * speedMultiplier - 3;
     }
     private static final UUID BASE_ATTACK_SPEED_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890"); // new unique UUID
 
@@ -48,18 +48,18 @@ public class BasicFist3Item extends BaseBasicClass {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            int baseDamage = EpicFightCombatFormsCommon.BASIC_FORM_BASE_DAMAGE.get();
+            double baseDamage = EpicFightCombatFormsCommon.BASIC_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
-            double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
+            double finalDamage = baseDamage * damageMultiplier - 1; // Subtracting 2 because Minecraft adds it
 
 
             builder.put(Attributes.ATTACK_DAMAGE,
                     new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
-                            finalDamage - 1, AttributeModifier.Operation.ADDITION));
+                            finalDamage, AttributeModifier.Operation.ADDITION));
 
             builder.put(Attributes.ATTACK_SPEED,
                     new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon speed modifier",
-                            getFinalSpeedModifier() - 3, AttributeModifier.Operation.ADDITION));
+                            getFinalSpeedModifier(), AttributeModifier.Operation.ADDITION));
 
             return builder.build();
         }

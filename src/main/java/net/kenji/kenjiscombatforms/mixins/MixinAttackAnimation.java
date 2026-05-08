@@ -1,21 +1,16 @@
 package net.kenji.kenjiscombatforms.mixins;
 
-import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategories;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import reascer.wom.gameasset.WOMAnimations;
 import reascer.wom.gameasset.colliders.WOMWeaponColliders;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.AttackAnimation;
@@ -24,19 +19,10 @@ import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.particle.HitParticleType;
-import yesman.epicfight.skill.Skill;
-import yesman.epicfight.skill.SkillContainer;
-import yesman.epicfight.skill.SkillSlot;
-import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
-import yesman.epicfight.world.capabilities.item.WeaponCapability;
-import yesman.epicfight.world.capabilities.item.WeaponCategory;
-
-import java.util.Optional;
-import java.util.function.BiFunction;
 
 @Mixin(value = AttackAnimation.class, remap = false)
 public class MixinAttackAnimation {
@@ -49,14 +35,14 @@ public class MixinAttackAnimation {
         CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY));
 
         if(phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).isPresent()) {
-            if (capItem == null || !(capItem.getWeaponCategory() instanceof CombatFormWeaponCategories)) {
+            if (capItem == null || !(capItem.getWeaponCategory() instanceof CombatFormWeaponCategory)) {
                 if (phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).get() == EpicFightSounds.BLUNT_HIT.get())
                     return;
                 if (phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).get() == EpicFightSounds.BLUNT_HIT_HARD.get())
                     return;
             }
         }
-        if(capItem != null && capItem.getWeaponCategory() instanceof CombatFormWeaponCategories combatFormCategory){
+        if(capItem != null && capItem.getWeaponCategory() instanceof CombatFormWeaponCategory combatFormCategory){
             HumanoidArmature biped = Armatures.BIPED.get();
             boolean shouldCancelHitSound = false;
             for(AttackAnimation.JointColliderPair pair : phase.getColliders()) {
@@ -86,7 +72,24 @@ public class MixinAttackAnimation {
 
         ci.cancel();
         HitParticleType particle = EpicFightParticles.HIT_BLUNT.get();
-        particle.spawnParticleWithArgument(world, null, null, hit, attacker.getOriginal());
+        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY));
 
+        HitParticleType finalParticle = particle;
+        if(capItem != null && capItem.getWeaponCategory() instanceof CombatFormWeaponCategory combatFormCategory){
+            HumanoidArmature biped = Armatures.BIPED.get();
+
+            for(AttackAnimation.JointColliderPair pair : phase.getColliders()) {
+                if(pair.getFirst() == biped.legR || pair.getFirst() == biped.legL ||
+                        pair.getSecond() == WOMWeaponColliders.KICK ||
+                        pair.getSecond() == WOMWeaponColliders.KICK_HUGE ||
+                        pair.getSecond() == WOMWeaponColliders.KNEE) {
+                    if(combatFormCategory.hitParticle.get() != null)
+                        finalParticle = combatFormCategory.hitParticle.get().get();
+                    break;
+                }
+            }
+
+        }
+        finalParticle.spawnParticleWithArgument(world, null, null, hit, attacker.getOriginal());
     }
 }

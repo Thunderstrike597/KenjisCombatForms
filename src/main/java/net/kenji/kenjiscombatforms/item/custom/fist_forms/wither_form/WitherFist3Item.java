@@ -45,7 +45,7 @@ public class WitherFist3Item extends BaseWitherClass {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            int baseDamage = EpicFightCombatFormsCommon.WITHER_FORM_BASE_DAMAGE.get();
+            double baseDamage = EpicFightCombatFormsCommon.WITHER_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 

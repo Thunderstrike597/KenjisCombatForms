@@ -1,12 +1,7 @@
 package net.kenji.kenjiscombatforms.gameasset;
 
 import com.mojang.datafixers.util.Pair;
-import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
-import net.kenji.kenjiscombatforms.item.ModItems;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import reascer.wom.gameasset.WOMAnimations;
@@ -19,16 +14,14 @@ import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCapability;
-import yesman.epicfight.world.capabilities.item.WeaponCapabilityPresets;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
-import java.util.UUID;
 import java.util.function.Function;
 
 public class CombatFistCapabilityPresets {
     public static final Function<Item, CapabilityItem.Builder> BASE_COMBAT_WEAPON = (item) -> {
         WeaponCapability.Builder builder = WeaponCapability.builder()
-                .category(CombatFormWeaponCategories.COMBAT_DAGGER)
+                .category(CombatFormWeaponCategory.COMBAT_DAGGER)
                 .styleProvider((playerPatch) -> {
                     return CapabilityItem.Styles.COMMON;
                 })

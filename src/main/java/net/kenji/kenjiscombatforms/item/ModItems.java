@@ -2,6 +2,7 @@ package net.kenji.kenjiscombatforms.item;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormItemTier;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility1Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.WitherAbility2Component;
 import net.kenji.kenjiscombatforms.item.custom.crafting_components.VoidAbility1Component;
@@ -175,7 +176,7 @@ public class ModItems {
     public static final RegistryObject<Item> VOID_FORM_ITEM = ITEMS.register("ender_form_fist", () -> new EnderFormItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> WITHER_FORM_ITEM = ITEMS.register("wither_form_fist", () -> new WitherFormItem(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> COMBAT_DAGGER = ITEMS.register("combat_dagger", () -> new CombatDagger(new Item.Properties(), EpicFightItemTier.GLOVE));
+    public static final RegistryObject<Item> COMBAT_DAGGER = ITEMS.register("combat_dagger", () -> new CombatDagger(new Item.Properties(), CombatFormItemTier.COMBAT_DAGGER));
 
 
 

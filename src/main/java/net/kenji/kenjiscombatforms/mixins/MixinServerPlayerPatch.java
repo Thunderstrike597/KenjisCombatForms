@@ -3,13 +3,15 @@ package net.kenji.kenjiscombatforms.mixins;
 import com.google.common.collect.Multimap;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseCombatWeapon;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import org.jline.utils.Log;
@@ -19,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import yesman.epicfight.api.forgeevent.InnateSkillChangeEvent;
-import yesman.epicfight.client.renderer.patched.item.RenderItemBase;
-import yesman.epicfight.client.renderer.patched.layer.PatchedItemInHandLayer;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -35,60 +35,87 @@ public class MixinServerPlayerPatch {
     @Unique
     private static Map<UUID, ItemStack> lastHeldItem = new HashMap<>();
 
+    private static final UUID WEAPON_DAMAGE_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
 
-   /* @Inject(method = "updateHeldItem", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "updateHeldItem", at = @At("HEAD"), cancellable = true, remap = false)
     public void onUpdateHeldItem(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack _to, InteractionHand hand, CallbackInfo ci) {
         ServerPlayerPatch self = (ServerPlayerPatch) (Object) this;
 
-        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal()).selectedForm;
+        String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal().getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
         ItemStack formItem = currentForm.getFormItem(self.getOriginal().getUUID());
         if (formItem == null) return;
-
         ServerPlayer player = (ServerPlayer) self.getOriginal();
 
-        boolean fromIsFist = fromCap.getWeaponCategory() == CapabilityItem.WeaponCategories.FIST
-                || fromCap.getWeaponCategory() == CapabilityItem.WeaponCategories.NOT_WEAPON;
-        boolean toIsFist = toCap.getWeaponCategory() == CapabilityItem.WeaponCategories.FIST
-                || toCap.getWeaponCategory() == CapabilityItem.WeaponCategories.NOT_WEAPON;
+        ItemStack heldStack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
+
+
+        Log.info("ToStack: " + _to);
+        Log.info("FromStack: " + from);
+        boolean fromIsCombatWeapon = fromCap != null && fromCap.getWeaponCategory() instanceof CombatFormWeaponCategory;
+        boolean toIsCombatWeapon = toCap != null && toCap.getWeaponCategory() instanceof CombatFormWeaponCategory;
+
 
         Multimap<Attribute, AttributeModifier> modifiers =
                 formItem.getItem().getDefaultAttributeModifiers(EquipmentSlot.MAINHAND);
         // Was fist, now switching to weapon → remove form modifiers
-        if (fromIsFist && !toIsFist) {
-            modifiers.forEach((attribute, modifier) -> {
-                AttributeInstance instance = player.getAttribute(attribute);
-                if (instance != null && instance.hasModifier(modifier)) {
-                    instance.removeModifier(modifier.getId());
-                }
-            });
+        if (fromIsCombatWeapon && !toIsCombatWeapon) {
+            AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
+            if (instance != null) {
+                instance.removeModifier(WEAPON_DAMAGE_UUID);
+            }
         }
 
         // Was weapon, now switching to fist → add form modifiers
-        if (!fromIsFist && toIsFist) {
-            modifiers.forEach((attribute, modifier) -> {
-                AttributeInstance instance = player.getAttribute(attribute);
-                if (instance == null) return;
-                // Remove first regardless — ensure no stale/conflicting modifier
-                instance.removeModifier(modifier.getId());
-                instance.addTransientModifier(modifier);
-            });
+        if (!fromIsCombatWeapon && toIsCombatWeapon) {
+
+            if (heldStack.getItem() instanceof BaseCombatWeapon weapon) {
+
+                AttributeModifier damageModifier = new AttributeModifier(
+                        WEAPON_DAMAGE_UUID,
+                        "weapon_damage_modifier",
+                        weapon.getDamage(),
+                        AttributeModifier.Operation.ADDITION
+                );                AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
+                if(instance != null) {
+                    instance.addTransientModifier(damageModifier);
+                }
+                /*modifiers.forEach((attribute, modifier) -> {
+                    AttributeInstance instance = player.getAttribute(attribute);
+                    if (instance == null) return;
+                    // Remove first regardless — ensure no stale/conflicting modifier
+                    instance.removeModifier(modifier.getId());
+                    instance.addTransientModifier(modifier);
+                });*/
+
+            }
         }
 
         // Both fist (e.g. first-tick setup call) → ensure modifiers are applied
-        if (fromIsFist && toIsFist) {
-            modifiers.forEach((attribute, modifier) -> {
-                AttributeInstance instance = player.getAttribute(attribute);
-                if (instance != null && !instance.hasModifier(modifier)) {
-                    instance.addTransientModifier(modifier);
-                }
-            });
+        if (fromIsCombatWeapon && toIsCombatWeapon) {
+            if (heldStack.getItem() instanceof BaseCombatWeapon weapon) {
+                AttributeModifier damageModifier = new AttributeModifier(
+                        WEAPON_DAMAGE_UUID,
+                        "weapon_damage_modifier",
+                        weapon.getDamage(),
+                        AttributeModifier.Operation.ADDITION
+                );                AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
+                if (instance != null)
+                    instance.addTransientModifier(damageModifier);
+
+                /*modifiers.forEach((attribute, modifier) -> {
+                    AttributeInstance instance = player.getAttribute(attribute);
+                    if (instance != null && !instance.hasModifier(modifier)) {
+                        instance.addTransientModifier(modifier);
+                    }
+                });*/
+            }
         }
         PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
         if(patch == null) return;
         patch.getHoldingItemCapability(InteractionHand.MAIN_HAND).changeWeaponInnateSkill(patch, formItem);
 
-    }*/
+    }
 
     @Inject(method = "updateHeldItem", at = @At("TAIL"), cancellable = true, remap = false)
     public void onUpdateHeldItemTail(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack _to, InteractionHand hand, CallbackInfo ci) {

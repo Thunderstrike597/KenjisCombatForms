@@ -48,7 +48,7 @@ public class SwiftFist3Item extends BaseSwiftClass {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            int baseDamage = EpicFightCombatFormsCommon.SWIFT_FORM_BASE_DAMAGE.get();
+            double baseDamage = EpicFightCombatFormsCommon.SWIFT_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL3_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 

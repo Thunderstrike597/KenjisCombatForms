@@ -41,7 +41,7 @@ public class VoidFistItem extends BaseVoidClass {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            int baseDamage = EpicFightCombatFormsCommon.VOID_FORM_BASE_DAMAGE.get();
+            double baseDamage = EpicFightCombatFormsCommon.VOID_FORM_BASE_DAMAGE.get();
             double damageMultiplier = EpicFightCombatFormsCommon.LEVEL1_DAMAGE_MULTIPLIER.get();
             double finalDamage = baseDamage * damageMultiplier; // Subtracting 2 because Minecraft adds it
 

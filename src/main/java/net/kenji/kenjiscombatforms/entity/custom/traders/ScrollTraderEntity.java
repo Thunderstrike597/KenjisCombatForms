@@ -73,7 +73,7 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
             if (this.level().isClientSide && this.getTarget() == null && !this.isAngry()) {
                 // Ignore interaction on the client side
                 return InteractionResult.SUCCESS;
-            } else if(this.getTarget() != null || this.isAngry() || hasBeenProvoked) {
+            } else if(hasBeenProvoked) {
                 return InteractionResult.PASS; // Prevents interaction when angry or has target
             }
 

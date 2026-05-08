@@ -4,6 +4,7 @@ import net.kenji.epic_fight_combat_hotbar.capability.ModCapabilities;
 import net.kenji.epic_fight_combat_hotbar.client.HotbarSlotHandler;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 @Mixin(value = LivingEntity.class)
 public class MixinLivingEntityCombatHotbar {
