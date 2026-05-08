@@ -18,7 +18,7 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@Mixin(value = AnimationTrailParticle.Provider.class, remap = false)
+@Mixin(value = AnimationTrailParticle.Provider.class)
 public class MixinAnimationHotbarTrailParticle {
 
     @Redirect(

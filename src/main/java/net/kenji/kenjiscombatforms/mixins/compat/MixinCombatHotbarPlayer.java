@@ -3,6 +3,7 @@ package net.kenji.kenjiscombatforms.mixins.compat;
 import net.kenji.epic_fight_combat_hotbar.capability.ModCapabilities;
 import net.kenji.epic_fight_combat_hotbar.client.CombatModeHandler;
 import net.kenji.epic_fight_combat_hotbar.client.HotbarSlotHandler;
+import net.kenji.epic_fight_combat_hotbar.mixins.PlayerMixin;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jline.utils.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,9 +23,8 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
-@Mixin(value = Player.class)
+@Mixin(value = Player.class, priority = 1)
 public class MixinCombatHotbarPlayer {
-
 
     @Inject(method = "getItemBySlot", at = @At("HEAD"), cancellable = true)
     private void maybeReplaceGetItemBySlot(EquipmentSlot equipmentSlot, CallbackInfoReturnable<ItemStack> cir) {
@@ -65,7 +66,9 @@ public class MixinCombatHotbarPlayer {
         Player self = (Player) (Object) this;
         CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(self.getMainHandItem());
 
-        if(par2.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory))
+        if(par2.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory)) {
+            Log.info("Logging Set item By Slot!");
             ci.cancel();
+        }
     }
 }

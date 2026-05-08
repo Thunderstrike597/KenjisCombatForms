@@ -50,6 +50,9 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
             if (mixinClassName.endsWith("MixinAnimationHotbarTrailParticle")) {
                 return false;
             }
+            if (mixinClassName.endsWith("MixinMinecraftCombatHotbar")) {
+                return false;
+            }
         } else {
 
             if (mixinClassName.endsWith("MixinPlayer")) {
