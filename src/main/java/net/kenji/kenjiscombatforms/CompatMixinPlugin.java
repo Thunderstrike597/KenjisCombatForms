@@ -25,9 +25,13 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
         return mixins;
     }
 
+    boolean isCombatHotbarLoaded(){
+        return isLoaded("epic_fight_combat_hotbar");
+    }
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!isLoaded("epic_fight_combat_hotbar")) {
+
+        if (!isCombatHotbarLoaded()) {
             if (mixinClassName.endsWith("MixinCombatHotbarPlayer")) {
                 return false;
             }
@@ -47,6 +51,7 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
                 return false;
             }
         } else {
+
             if (mixinClassName.endsWith("MixinPlayer")) {
                 return false;
             }

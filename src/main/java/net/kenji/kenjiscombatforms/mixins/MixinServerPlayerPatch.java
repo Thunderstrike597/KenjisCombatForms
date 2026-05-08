@@ -49,9 +49,6 @@ public class MixinServerPlayerPatch {
 
         ItemStack heldStack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
 
-
-        Log.info("ToStack: " + _to);
-        Log.info("FromStack: " + from);
         boolean fromIsCombatWeapon = fromCap != null && fromCap.getWeaponCategory() instanceof CombatFormWeaponCategory;
         boolean toIsCombatWeapon = toCap != null && toCap.getWeaponCategory() instanceof CombatFormWeaponCategory;
 
@@ -77,7 +74,7 @@ public class MixinServerPlayerPatch {
                         weapon.getDamage(),
                         AttributeModifier.Operation.ADDITION
                 );                AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
-                if(instance != null) {
+                if(instance != null && !instance.hasModifier(damageModifier)) {
                     instance.addTransientModifier(damageModifier);
                 }
                 /*modifiers.forEach((attribute, modifier) -> {
@@ -90,31 +87,6 @@ public class MixinServerPlayerPatch {
 
             }
         }
-
-        // Both fist (e.g. first-tick setup call) → ensure modifiers are applied
-        if (fromIsCombatWeapon && toIsCombatWeapon) {
-            if (heldStack.getItem() instanceof BaseCombatWeapon weapon) {
-                AttributeModifier damageModifier = new AttributeModifier(
-                        WEAPON_DAMAGE_UUID,
-                        "weapon_damage_modifier",
-                        weapon.getDamage(),
-                        AttributeModifier.Operation.ADDITION
-                );                AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
-                if (instance != null)
-                    instance.addTransientModifier(damageModifier);
-
-                /*modifiers.forEach((attribute, modifier) -> {
-                    AttributeInstance instance = player.getAttribute(attribute);
-                    if (instance != null && !instance.hasModifier(modifier)) {
-                        instance.addTransientModifier(modifier);
-                    }
-                });*/
-            }
-        }
-        PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
-        if(patch == null) return;
-        patch.getHoldingItemCapability(InteractionHand.MAIN_HAND).changeWeaponInnateSkill(patch, formItem);
-
     }
 
     @Inject(method = "updateHeldItem", at = @At("TAIL"), cancellable = true, remap = false)

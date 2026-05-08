@@ -31,6 +31,11 @@ public class MixinPlayer {
         Player player = (Player) (Object)this;
         if(equipmentSlot != EquipmentSlot.MAINHAND) return;
 
+        PlayerPatch<?> playerPatch = EpicFightCapabilities.getPlayerPatch(player);
+        if(playerPatch != null && !playerPatch.isEpicFightMode()){
+            return;
+        }
+
         Form currentForm = FormManager.getCurrentForm(player);
         ItemStack currentFormItem = FormManager.getCurrentFormItem(player);
         if(currentForm == null || currentFormItem.isEmpty()) return;

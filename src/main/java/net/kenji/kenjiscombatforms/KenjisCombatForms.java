@@ -24,6 +24,7 @@ import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEnti
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFistCapabilityPresets;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.kenji.kenjiscombatforms.gameasset.ModSkills;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.kenji.kenjiscombatforms.network.NetworkHandler;
@@ -34,7 +35,6 @@ import net.kenji.kenjiscombatforms.screen.EssenceInfusingScreen;
 import net.kenji.kenjiscombatforms.screen.ModMenuTypes;
 import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.kenji.kenjiscombatforms.tab.ModTab;
-import net.kenji.woh.gameasset.WohWeaponCategories;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -116,7 +116,7 @@ public class KenjisCombatForms
         if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.addListener(KenjisCombatForms::registerPatchedEntityRenderers);        }
 
-        WeaponCategory.ENUM_MANAGER.registerEnumCls(MOD_ID, WohWeaponCategories.class);
+        WeaponCategory.ENUM_MANAGER.registerEnumCls(MOD_ID, CombatFormWeaponCategory.class);
         modEventBus.addListener(KenjisCombatForms::regIcon);
 
         modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
