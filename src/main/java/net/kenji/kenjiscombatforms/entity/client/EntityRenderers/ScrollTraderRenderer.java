@@ -1,10 +1,8 @@
 package net.kenji.kenjiscombatforms.entity.client.EntityRenderers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.entity.client.EntityModels.ScrollTraderModel;
 import net.kenji.kenjiscombatforms.entity.client.EntityModels.SenseiModel;
 import net.kenji.kenjiscombatforms.entity.client.ModModelLayers;
-import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;

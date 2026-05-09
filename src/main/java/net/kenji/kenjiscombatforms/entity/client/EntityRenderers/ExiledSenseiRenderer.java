@@ -1,10 +1,7 @@
 package net.kenji.kenjiscombatforms.entity.client.EntityRenderers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.entity.client.EntityModels.HumanoidSenseiModel;
-import net.kenji.kenjiscombatforms.entity.client.EntityModels.ScrollTraderModel;
 import net.kenji.kenjiscombatforms.entity.client.EntityModels.SenseiModel;
-import net.kenji.kenjiscombatforms.entity.client.EntityModels.UndeadSenseiModel;
 import net.kenji.kenjiscombatforms.entity.client.ModModelLayers;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
