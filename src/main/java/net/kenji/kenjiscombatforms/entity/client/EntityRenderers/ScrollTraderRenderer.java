@@ -2,17 +2,23 @@ package net.kenji.kenjiscombatforms.entity.client.EntityRenderers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.entity.client.EntityModels.ScrollTraderModel;
+import net.kenji.kenjiscombatforms.entity.client.EntityModels.SenseiModel;
 import net.kenji.kenjiscombatforms.entity.client.ModModelLayers;
 import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 
-public class ScrollTraderRenderer<T extends ScrollTraderEntity>
-        extends MobRenderer<T, ScrollTraderModel<T>> {
+public class ScrollTraderRenderer<T extends Mob>
+        extends MobRenderer<T, SenseiModel<T>> {
 
     public ScrollTraderRenderer(EntityRendererProvider.Context context) {
-        super(context, new ScrollTraderModel<>(context.bakeLayer(ModModelLayers.ABILITY_TRADER_LAYER)), 0.5f);
+        super(context, new SenseiModel<>(context.bakeLayer(ModModelLayers.SENSEI_LAYER)), 0.5f);
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+
     }
 
     @Override

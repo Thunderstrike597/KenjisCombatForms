@@ -1,5 +1,6 @@
 package net.kenji.kenjiscombatforms.mixins.compat;
 
+import net.kenji.epic_fight_combat_hotbar.capability.CombatHotbarProvider;
 import net.kenji.epic_fight_combat_hotbar.capability.ModCapabilities;
 import net.kenji.epic_fight_combat_hotbar.client.HotbarSlotHandler;
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
@@ -21,6 +22,22 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 @Mixin(value = LivingEntity.class)
 public class MixinLivingEntityCombatHotbar {
 
+    @Inject(method = "getItemInHand", at = @At("RETURN"), cancellable = true)
+    private void maybeReplaceGetItemInHand(CallbackInfoReturnable<ItemStack> cir) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (self instanceof Player player) {
+
+            if (cir.getReturnValue().getItem() instanceof BaseFistClass) {
+                player.getCapability(ModCapabilities.COMBAT_HOTBAR).ifPresent(handler -> {
+                    int selectedSlot = HotbarSlotHandler.getSelectedSlot(player);
+
+                    ItemStack stack = handler.getStackInSlot(selectedSlot);
+
+                    cir.setReturnValue(stack);
+                });
+            }
+        }
+    }
 
     @Inject(method = "getMainHandItem", at = @At("HEAD"), cancellable = true)
     private void maybeReplaceGetItemBySlot(CallbackInfoReturnable<ItemStack> cir) {

@@ -88,6 +88,7 @@ public class ModTab {
                 output.accept(ModItems.BLANK_ABILITY_SCROLL.get());
                 output.accept(ModItems.MYSTERIOUS_DUST.get());
                 output.accept(ModItems.SCROLL_DUST.get());
+                output.accept(ModItems.MYSTERIOUS_SCRAP_METAL.get());
 
                 output.accept(ModItems.VOID_ABILITY1_COMPONENT.get());
                 output.accept(ModItems.VOID_ABILITY2_COMPONENT.get());

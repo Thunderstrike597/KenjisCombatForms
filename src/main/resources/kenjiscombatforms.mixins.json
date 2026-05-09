@@ -22,8 +22,7 @@
     "compat.MixinLivingEntityCombatHotbar",
     "compat.MixinCombatHotbarPatchedItemInHandLayer",
     "compat.MixinLivingEntityPatchCombatHotbar",
-    "compat.MixinAnimationHotbarTrailParticle",
-    "compat.MixinMinecraftCombatHotbar"
+    "compat.MixinAnimationHotbarTrailParticle"
   ],
   "client": [
     "MixinEntityRenderer"

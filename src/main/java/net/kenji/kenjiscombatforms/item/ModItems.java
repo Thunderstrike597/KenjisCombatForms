@@ -75,6 +75,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> SCROLL_DUST = ITEMS.register("glowing_scroll_dust", () -> new ScrollDust(new Item.Properties()));
    public static final RegistryObject<Item> MYSTERIOUS_DUST = ITEMS.register("mysterious_dust", () -> new MysteriousDust(new Item.Properties()));
+    public static final RegistryObject<Item> MYSTERIOUS_SCRAP_METAL = ITEMS.register("mysterious_scrap_metal", () -> new Item(new Item.Properties().stacksTo(16)));
 
 
     public static final RegistryObject<SpawnEggItem> EXILED_DEVIL_SPAWN_EGG = ITEMS.register("exiled_devil_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.EXILED_DEVIL, 0x8B0000, 0x4B0000, new Item.Properties().stacksTo(16)));

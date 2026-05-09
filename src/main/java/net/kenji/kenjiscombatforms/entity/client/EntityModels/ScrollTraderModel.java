@@ -6,16 +6,15 @@ package net.kenji.kenjiscombatforms.entity.client.EntityModels;// Made with Bloc
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.entity.custom.traders.ScrollTraderEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
-public class ScrollTraderModel<T extends ScrollTraderEntity> extends EntityModel<T> {
+public class ScrollTraderModel<T extends LivingEntity> extends EntityModel<T> {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(KenjisCombatForms.MOD_ID, "scroll_trader_model"), "main");
     private final ModelPart root;

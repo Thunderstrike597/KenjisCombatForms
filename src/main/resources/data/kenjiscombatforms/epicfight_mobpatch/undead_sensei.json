@@ -1,7 +1,7 @@
 {
-  "model": "epicfight:entity/biped",
+  "model": "kenjiscombatforms:entity/sensei",
   "armature": "epicfight:entity/biped",
-  "renderer": "minecraft:zombie_villager",
+  "renderer": "kenjiscombatforms:undead_sensei",
   "isHumanoid": true,
   "faction": "undead",
   "attributes": {

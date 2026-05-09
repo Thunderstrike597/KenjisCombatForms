@@ -1,5 +1,5 @@
 {
-  "model": "epicfight:entity/zombie_villager",
+  "model": "kenjiscombatforms:entity/sensei",
   "armature": "epicfight:entity/biped",
   "renderer": "kenjiscombatforms:scroll_trader",
   "isHumanoid": true,

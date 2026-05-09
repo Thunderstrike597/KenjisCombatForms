@@ -1,17 +1,23 @@
 package net.kenji.kenjiscombatforms.entity.client.EntityRenderers;
 
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
-import net.kenji.kenjiscombatforms.entity.client.EntityModels.ExiledDevilModel;
+import net.kenji.kenjiscombatforms.entity.client.EntityModels.HumanoidSenseiModel;
+import net.kenji.kenjiscombatforms.entity.client.EntityModels.ScrollTraderModel;
+import net.kenji.kenjiscombatforms.entity.client.EntityModels.SenseiModel;
+import net.kenji.kenjiscombatforms.entity.client.EntityModels.UndeadSenseiModel;
 import net.kenji.kenjiscombatforms.entity.client.ModModelLayers;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
-public class ExiledDevilRenderer extends MobRenderer<ExiledDevilEntity, ExiledDevilModel<ExiledDevilEntity>> {
+public class ExiledDevilRenderer extends MobRenderer<ExiledDevilEntity, SenseiModel<ExiledDevilEntity>> {
 
     public ExiledDevilRenderer(EntityRendererProvider.Context context) {
-        super(context, new ExiledDevilModel<>(context.bakeLayer(ModModelLayers.EXILED_DEVIL_LAYER)), 0.5f);
+        super(context, new SenseiModel<>(context.bakeLayer(ModModelLayers.SENSEI_LAYER)), 0.5f);
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+
     }
 
     @Override

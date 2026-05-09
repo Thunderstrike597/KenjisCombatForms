@@ -17,7 +17,7 @@ import net.kenji.kenjiscombatforms.commands.*;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsClient;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
-import net.kenji.kenjiscombatforms.entity.client.EntityRenderers.patched_renderers.ScrollTraderPatchRenderer;
+import net.kenji.kenjiscombatforms.entity.client.EntityRenderers.patched_renderers.SenseiPatchRenderer;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledDevilEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.ExiledSenseiEntity;
 import net.kenji.kenjiscombatforms.entity.custom.SenseiEntities.UndeadSenseiEntity;
@@ -210,7 +210,22 @@ public class KenjisCombatForms
     }
     @SubscribeEvent
     public static void registerPatchedEntityRenderers(PatchedRenderersEvent.Add event) {
-        event.addPatchedEntityRenderer(SCROLL_TRADER.get(), entityType -> new ScrollTraderPatchRenderer(
+        event.addPatchedEntityRenderer(SCROLL_TRADER.get(), entityType -> new SenseiPatchRenderer(
+                        event.getContext(),
+                        entityType
+                )
+        );
+        event.addPatchedEntityRenderer(UNDEAD_SENSEI.get(), entityType -> new SenseiPatchRenderer(
+                        event.getContext(),
+                        entityType
+                )
+        );
+        event.addPatchedEntityRenderer(EXILED_SENSEI.get(), entityType -> new SenseiPatchRenderer(
+                        event.getContext(),
+                        entityType
+                )
+        );
+        event.addPatchedEntityRenderer(EXILED_DEVIL.get(), entityType -> new SenseiPatchRenderer(
                         event.getContext(),
                         entityType
                 )

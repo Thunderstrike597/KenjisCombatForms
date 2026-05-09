@@ -48,6 +48,8 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
     private boolean hasBeenProvoked = false;
     private static final Random RANDOM = new Random();
 
+    private static final float COMBAT_WEAPON_CHANCE = 0.145F;
+
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
@@ -122,7 +124,10 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
         offers.add(createTrade2(Items.EMERALD, 12, Items.PAPER, 6, ModItems.BLANK_ABILITY_SCROLL.get(), 1));
         offers.add(createTrade(Items.EMERALD, 3, Items.GLOW_INK_SAC, 2));
         offers.add(createTrade2(Items.EMERALD, 64, ModItems.POWERESSENCE_TIER2.get(), 2, ModItems.ABILITY_ESSENCE.get(), 1));
+        if(RANDOM.nextDouble() < EpicFightCombatFormsCommon.COMBAT_WEAPON_TRADE_CHANCE.get()){
+            offers.add(createTrade2(Items.EMERALD, 38, ModItems.MYSTERIOUS_SCRAP_METAL.get(), 1, ModItems.COMBAT_DAGGER.get(), 1));
 
+        }
         return offers;
     }
 

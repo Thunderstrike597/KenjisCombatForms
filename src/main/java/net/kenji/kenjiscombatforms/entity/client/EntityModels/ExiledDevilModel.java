@@ -6,12 +6,14 @@ package net.kenji.kenjiscombatforms.entity.client.EntityModels;// Made with Bloc
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
-public class ExiledDevilModel<T extends Entity> extends EntityModel<T> {
+public class ExiledDevilModel<T extends LivingEntity> extends HumanoidModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	private final ModelPart exiled_devil;
 	private final ModelPart body;
@@ -23,6 +25,7 @@ public class ExiledDevilModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart right_leg;
 
 	public ExiledDevilModel(ModelPart root) {
+        super(root);
 		this.exiled_devil = root.getChild("exiled_devil");
 		this.body = exiled_devil.getChild("body");
 		this.torso = exiled_devil.getChild("body").getChild("torso");
@@ -55,11 +58,6 @@ public class ExiledDevilModel<T extends Entity> extends EntityModel<T> {
 		PartDefinition right_leg = body.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(28, 14).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
-	}
-
-	@Override
-	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
 	}
 
 	@Override

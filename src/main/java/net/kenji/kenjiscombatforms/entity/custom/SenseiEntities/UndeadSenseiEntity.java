@@ -1,11 +1,16 @@
 package net.kenji.kenjiscombatforms.entity.custom.SenseiEntities;
 
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
+import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseCombatWeapon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -22,6 +27,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jline.utils.Log;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +44,7 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
 
     public double chance;
     public double chance2;
-
+    private static final double COMBAT_WEAPON_SPAWN_CHANCE = 0.08F;
 
     boolean hasBeenDamaged = false;
     private float lastHealth;
@@ -79,6 +87,20 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
                setHealth(this.getMaxHealth());
            }
        }
+       if(this.getRandom().nextDouble() < COMBAT_WEAPON_SPAWN_CHANCE){ /// CHANGE LATER TO USE CONFIG CHANCE
+           Log.info("Logging Main HAnd Item Add!");
+           this.setItemInHand(InteractionHand.MAIN_HAND, ModItems.COMBAT_DAGGER.get().getDefaultInstance()); /// CHANGE LATER TO SELECT A RANDOM WEAPON
+       }
+       super.onAddedToWorld();
+    }
+
+    @Override
+    public boolean canHoldItem(ItemStack pStack) {
+        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(pStack);
+        if(capItem != null) {
+            return capItem.getWeaponCategory() instanceof CombatFormWeaponCategory;
+        }
+        return false;
     }
 
 
@@ -99,10 +121,6 @@ public class UndeadSenseiEntity extends Monster implements Enemy {
         return false;
     }
 
-    @Override
-    public boolean canTakeItem(ItemStack p_21522_) {
-        return false;
-    }
 
 
     @Override

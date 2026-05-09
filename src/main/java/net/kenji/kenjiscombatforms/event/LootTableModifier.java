@@ -3,12 +3,19 @@ package net.kenji.kenjiscombatforms.event;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
 import net.kenji.kenjiscombatforms.item.ModItems;
+import net.kenji.kenjiscombatforms.item.ModTags;
+import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,8 +41,36 @@ public class LootTableModifier {
                             .setWeight(1))
                     .apply(SetItemCountFunction.setCount(BinomialDistributionGenerator.binomial(1, EpicFightCombatFormsCommon.TIER1_ESSENCE_CHANCE.get().floatValue())).when(LootItemKilledByPlayerCondition.killedByPlayer()));
 
-
             lootTable.addPool(essencePool.build());
+            LootPool.Builder scrapMetalPool = LootPool.lootPool()
+                    .name("scrap_metal_pool")
+
+                    .add(
+                            LootItem.lootTableItem(ModItems.MYSTERIOUS_SCRAP_METAL.get())
+                    )
+
+                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
+
+                    .when(
+                            LootItemEntityPropertyCondition.hasProperties(
+                                    LootContext.EntityTarget.THIS,
+                                    EntityPredicate.Builder.entity()
+                                            .equipment(
+                                                    EntityEquipmentPredicate.Builder.equipment()
+                                                            .mainhand(
+                                                                    ItemPredicate.Builder.item()
+                                                                            .of(ModTags.Items.COMBAT_WEAPONS)
+                                                                            .build()
+                                                            )
+                                                            .build()
+                                            )
+                            )
+                    )
+
+                    .when(LootItemRandomChanceCondition.randomChance(0.45F));
+
+            lootTable.addPool(scrapMetalPool.build());
+
         }
 
 

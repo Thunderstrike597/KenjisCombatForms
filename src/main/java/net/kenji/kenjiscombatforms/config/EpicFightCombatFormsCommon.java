@@ -25,6 +25,7 @@ public class EpicFightCombatFormsCommon {
     public static final ForgeConfigSpec.ConfigValue<Double> TIER3_ESSENCE_CHANCE;
 
     public static final ForgeConfigSpec.ConfigValue<Double> CHARGE_CHANCE;
+    public static final ForgeConfigSpec.ConfigValue<Double> COMBAT_WEAPON_TRADE_CHANCE;
 
     public static final ForgeConfigSpec.ConfigValue<Boolean> IS_SENSEI_TAMABLE;
     public static final ForgeConfigSpec.ConfigValue<Integer> TAMING_EMERALDS_MIN;
@@ -285,6 +286,12 @@ public class EpicFightCombatFormsCommon {
 
         LEVEL3_SPEED_MULTIPLIER = BUILDER.comment("This defines the amount of attack speed any Level 3 form is multiplied by")
                 .defineInRange("Level 3 Speed Multiplier", 1.3, 1,5.0);
+
+        BUILDER.pop();
+        BUILDER.push("Trades");
+        COMBAT_WEAPON_TRADE_CHANCE = BUILDER.comment("This defines the chance that a combat weapon will appear as a trade for the Scroll Trader")
+                .defineInRange("Combat Weapon Trade Chance", 0.14, 0,1);
+
 
         BUILDER.pop();
 
