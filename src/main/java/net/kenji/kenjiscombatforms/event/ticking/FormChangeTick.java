@@ -129,6 +129,9 @@ public class FormChangeTick {
                 SkillContainer weaponInnate = playerPatch.getSkill(SkillSlots.WEAPON_INNATE);
                 if (weaponInnate == null) return;
                 playerPatch.updateHeldItem(currentCap, currentCap, currentStack, currentStack, InteractionHand.MAIN_HAND);
+                FormManager.trueStackMap.put(player.getUUID(), player.getInventory().getSelected());
+                FormManager.trueLastStackMap.put(player.getUUID(), player.getInventory().getSelected());
+
             }
             ItemStack stack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
             ItemStack previousStack = FormManager.trueLastStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);

@@ -6,6 +6,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import org.jline.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,16 +27,18 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
-@Mixin(value = AttackAnimation.class, remap = false)
+@Mixin(value = AttackAnimation.class, remap = false, priority = 1)
 public class MixinAttackAnimation {
+
+
 
     @Inject(method = "getHitSound", at = @At("RETURN"), cancellable = true, remap = false)
     public void onGetHitSound(LivingEntityPatch<?> entitypatch, AttackAnimation.Phase phase, CallbackInfoReturnable<SoundEvent> cir) {
         AttackAnimation self = (AttackAnimation) (Object)this;
         if(!(entitypatch instanceof PlayerPatch<?> patch))return;
-        if(!FormManager.isHeldCategoryValid(patch.getOriginal(), patch.getOriginal().getInventory().getSelected())) return;
-        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY));
-
+        ItemStack trueStack = FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY);
+        if(!FormManager.isHeldCategoryValid(patch.getOriginal(), trueStack)) return;
+        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(trueStack);
         if(phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).isPresent()) {
             if (capItem == null || !(capItem.getWeaponCategory() instanceof CombatFormWeaponCategory)) {
                 if (phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).get() == EpicFightSounds.BLUNT_HIT.get())
@@ -59,7 +64,7 @@ public class MixinAttackAnimation {
                 return;
             }
         }
-        SoundEvent sound = EpicFightCapabilities.getItemStackCapability(patch.getOriginal().getInventory().getSelected()).getHitSound();
+        SoundEvent sound = EpicFightCapabilities.getItemStackCapability(trueStack).getHitSound();
 
         SoundEvent finalHitSound = sound != null ? sound : EpicFightSounds.BLUNT_HIT.get();
         cir.setReturnValue(finalHitSound);
@@ -68,27 +73,31 @@ public class MixinAttackAnimation {
     public void onSpawnHitParticle(ServerLevel world, LivingEntityPatch<?> attacker, Entity hit, AttackAnimation.Phase phase, CallbackInfo ci) {
         AttackAnimation self = (AttackAnimation) (Object)this;
         if(!(attacker instanceof PlayerPatch<?> patch))return;
-        if(!FormManager.isHeldCategoryValid(patch.getOriginal(), patch.getOriginal().getInventory().getSelected())) return;
+        ItemStack trueStack = FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY);
+
+        if(!FormManager.isHeldCategoryValid(patch.getOriginal(), trueStack)) return;
 
         ci.cancel();
         HitParticleType particle = EpicFightParticles.HIT_BLUNT.get();
-        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY));
+        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(trueStack);
 
         HitParticleType finalParticle = particle;
         if(capItem != null && capItem.getWeaponCategory() instanceof CombatFormWeaponCategory combatFormCategory){
             HumanoidArmature biped = Armatures.BIPED.get();
-
+            boolean shouldCancelHitParticle = false;
             for(AttackAnimation.JointColliderPair pair : phase.getColliders()) {
                 if(pair.getFirst() == biped.legR || pair.getFirst() == biped.legL ||
                         pair.getSecond() == WOMWeaponColliders.KICK ||
                         pair.getSecond() == WOMWeaponColliders.KICK_HUGE ||
                         pair.getSecond() == WOMWeaponColliders.KNEE) {
-                    if(combatFormCategory.hitParticle.get() != null)
-                        finalParticle = combatFormCategory.hitParticle.get().get();
+                    shouldCancelHitParticle = true;
                     break;
                 }
             }
-
+            if(!shouldCancelHitParticle) {
+                if (combatFormCategory.hitParticle.get() != null)
+                    finalParticle = combatFormCategory.hitParticle.get().get();
+            }
         }
         finalParticle.spawnParticleWithArgument(world, null, null, hit, attacker.getOriginal());
     }
