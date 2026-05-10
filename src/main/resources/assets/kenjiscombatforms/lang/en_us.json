@@ -50,7 +50,7 @@
   "entity.kenjiscombatforms.exiled_devil": "Exiled Devil",
   "entity.kenjiscombatforms.exiled_sensei": "Exiled Sensei",
   "entity.kenjiscombatforms.undead_sensei": "Undead Sensei",
-  "entity.kenjiscombatforms.ability_trader": "Ability Trader",
+  "entity.kenjiscombatforms.scroll_trader": "Scroll Trader",
   "entity.kenjiscombatforms.ender_entity": "Ender Entity",
   "entity.kenjiscombatforms.shadow_player": "Shadow Player",
   "entity.kenjiscombatforms.wither_player": "Wither Player",
@@ -117,6 +117,7 @@
   "item.kenjiscombatforms.ability_charge": "Ability Charge",
   "item.kenjiscombatforms.glowing_scroll_dust": "Scroll Dust",
   "item.kenjiscombatforms.mysterious_dust": "Mysterious Dust",
+  "item.kenjiscombatforms.mysterious_scrap_metal": "Mysterious Scrap Metal",
 
   "item.kenjiscombatforms.blank_form_scroll": "Blank Form Scroll",
 
@@ -173,6 +174,8 @@
   "item.kenjiscombatforms.power_fist_tier3": "§r",
   "item.kenjiscombatforms.ender_form_fist": "§r",
   "item.kenjiscombatforms.wither_form_fist": "§r",
+  
+  "item.kenjiscombatforms.combat_dagger": "Combat Dagger",
 
 
 

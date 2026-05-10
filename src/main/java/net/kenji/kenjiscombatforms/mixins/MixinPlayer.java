@@ -1,16 +1,12 @@
 package net.kenji.kenjiscombatforms.mixins;
 
-import net.kenji.epic_fight_combat_hotbar.capability.ModCapabilities;
-import net.kenji.epic_fight_combat_hotbar.client.CombatModeHandler;
-import net.kenji.epic_fight_combat_hotbar.client.HotbarSlotHandler;
-import net.kenji.kenjiscombatforms.KenjisCombatForms;
+
 import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
-import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
+
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
+
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +60,8 @@ public class MixinPlayer {
     private void maybeReplaceGetItemBySlot(EquipmentSlot equipmentSlot, CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof Player player) {
-            if (!CombatModeHandler.isInBattleMode(player)) {
+            PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
+            if (patch == null || !patch.isEpicFightMode()) {
                 return;
             }
 

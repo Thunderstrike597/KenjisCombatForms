@@ -5,6 +5,7 @@ import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jline.utils.Log;
 import org.slf4j.Logger;
@@ -64,6 +65,27 @@ public class MixinAttackAnimation {
                 return;
             }
         }
+        else{
+            ItemStack offHandStack = entitypatch.getOriginal().getOffhandItem();
+
+            CapabilityItem offHandCap = EpicFightCapabilities.getItemStackCapability(offHandStack);
+
+            if(offHandCap != null && offHandCap.getWeaponCategory() instanceof CombatFormWeaponCategory combatFormCategory){
+                HumanoidArmature biped = Armatures.BIPED.get();
+                boolean shouldAddHitSound = false;
+                for(AttackAnimation.JointColliderPair pair : phase.getColliders()) {
+                    if(pair.getFirst() == biped.toolL || pair.getFirst() == biped.handL) {
+                        shouldAddHitSound = true;
+                        break;
+                    }
+                }
+                if(shouldAddHitSound) {
+                    cir.setReturnValue(combatFormCategory.hitSound.get().get());
+                    return;
+                }
+            }
+        }
+
         SoundEvent sound = EpicFightCapabilities.getItemStackCapability(trueStack).getHitSound();
 
         SoundEvent finalHitSound = sound != null ? sound : EpicFightSounds.BLUNT_HIT.get();
@@ -95,8 +117,28 @@ public class MixinAttackAnimation {
                 }
             }
             if(!shouldCancelHitParticle) {
-                if (combatFormCategory.hitParticle.get() != null)
+                if (combatFormCategory.hitParticle.get() != null) {
                     finalParticle = combatFormCategory.hitParticle.get().get();
+                }
+            }
+        }
+        else{
+            ItemStack offHandStack = patch.getOriginal().getOffhandItem();
+
+            CapabilityItem offHandCap = EpicFightCapabilities.getItemStackCapability(offHandStack);
+
+            if(offHandCap != null && offHandCap.getWeaponCategory() instanceof CombatFormWeaponCategory combatFormCategory){
+                HumanoidArmature biped = Armatures.BIPED.get();
+                boolean shouldAddHitSound = false;
+                for(AttackAnimation.JointColliderPair pair : phase.getColliders()) {
+                    if(pair.getFirst() == biped.toolL || pair.getFirst() == biped.handL) {
+                        shouldAddHitSound = true;
+                        break;
+                    }
+                }
+                if(shouldAddHitSound) {
+                    finalParticle = combatFormCategory.hitParticle.get().get();
+                }
             }
         }
         finalParticle.spawnParticleWithArgument(world, null, null, hit, attacker.getOriginal());
