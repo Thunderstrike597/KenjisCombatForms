@@ -93,15 +93,18 @@ public class VoidFistCombos extends BaseComboBuilder {
         ComboNode basic13 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3);
         ComboNode basic14 = createComboNode(AnimsMoonless.MOONLESS_AUTO_2);
 
-        ComboNode dash = switch (tier.value) {
-            case 0, 1 -> createComboNode(AnimsMoonless.MOONLESS_AUTO_3).addCondition(new SprintingCondition());
-            default -> createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_PISTOLERO).addCondition(new SprintingCondition());
-        };
-        ComboNode airSlash = switch (tier.value) {
-            case 0 -> createAirComboNode(AnimsSatsujin.SATSUJIN_TSUKUYOMI).addCondition(new InAirCondition());
-            case 1 -> createAirComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AIRSHOOT).addCondition(new InAirCondition());
-            default -> createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AIRSHOOT).addCondition(new InAirCondition());
-        };
+
+        ComboNode dash = createComboNode(AnimsMoonless.MOONLESS_AUTO_3).addCondition(new SprintingCondition());
+        ComboNode shootDash = createComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_PISTOLERO).addCondition(new SprintingCondition()).addCondition(new FormLevelCondition(FistTier.TIER_3));
+        shootDash.addCondition(new CooldownCounterCondition(shootDash, 13.5));
+
+
+        ComboNode airSlash =  createAirComboNode(AnimsSatsujin.SATSUJIN_TSUKUYOMI).addCondition(new InAirCondition());
+        ComboNode shootAirSlash =  createAirComboNode(AnimsEnderblaster.ENDERBLASTER_TWOHAND_AIRSHOOT).addCondition(new InAirCondition()).addCondition(new FormLevelCondition(FistTier.TIER_2));
+
+        shootAirSlash.addCondition(new CooldownCounterCondition(shootAirSlash, tier.value == 1 ? 14 : 10.5));
+
+
         ComboNode leftDodgeAttack = createDodgeComboNode(WOMAnimations.ENDERSTEP_LEFT, basicLeft1).addCondition(new LeftCondition());
         leftDodgeAttack.addCondition(new CooldownCounterCondition(leftDodgeAttack, 60));
 
@@ -116,56 +119,56 @@ public class VoidFistCombos extends BaseComboBuilder {
         ComboNode shootAttack3 = createComboNode(AnimsEnderblaster.ENDERBLASTER_ONEHAND_SHOOT_3).addCondition(new PressedTimeCondition(10)).addCondition(new FormLevelCondition(FistTier.TIER_3));
 
 
-        createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(root, basicAttack, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
-        ComboNode rootDecision = createMovementCombo(basicAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        ComboNode rootDecision = createMovementCombo(basicAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
-        createMovementCombo(basic1, basic2, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basic2, basic3, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basic3, basic4, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basic1, basic2, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basic2, basic3, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basic3, basic4, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basic4, basic5, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basic5, basic6, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
-        createMovementCombo(basicLeft1, basicLeft2, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicLeft2, basicLeft3, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicLeft3, basicLeft4, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicLeft4, basic1, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicLeft1, basicLeft2, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicLeft2, basicLeft3, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicLeft3, basicLeft4, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicLeft4, basic1, new ComboNodeWrapper(rightDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
-        createMovementCombo(basicRight1, basicRight2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicRight2, basicRight3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicRight1, basicRight2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicRight2, basicRight3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicRight3, basicRight4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicRight4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
-        createMovementCombo(basicDown1, basicDown2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicDown2, basicDown3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicDown3, basicDown4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(basicDown4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(basicDown1, basicDown2, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicDown2, basicDown3, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicDown3, basicDown4, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(basicDown4, basic1, new ComboNodeWrapper(leftDodgeAttack, downDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
         if(tier.value >= 1) {
-            createMovementCombo(basic6, basic7, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic7, basic8, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic8, basic9, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic9, basic10, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+            createMovementCombo(basic6, basic7, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic7, basic8, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic8, basic9, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic9, basic10, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
-            createMovementCombo(shootAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack2));
+            createMovementCombo(shootAttack, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack2));
         }
 
         if(tier.value >= 2){
-            createMovementCombo(basic10, basic11, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic11, basic12, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic12, basic13, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
-            createMovementCombo(basic13, basic14, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack));
+            createMovementCombo(basic10, basic11, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic11, basic12, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic12, basic13, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+            createMovementCombo(basic13, basic14, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
-            createMovementCombo(shootAttack2, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, airSlash, dash, shootAttack3));
+            createMovementCombo(shootAttack2, basic1, new ComboNodeWrapper(leftDodgeAttack, rightDodgeAttack, downDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack3));
         }
 
-        createMovementCombo(leftDodgeAttack, basic2, new ComboNodeWrapper(rightDodgeAttack, airSlash, dash, shootAttack));
-        createMovementCombo(rightDodgeAttack, basic2, new ComboNodeWrapper(leftDodgeAttack, airSlash, dash, shootAttack));
+        createMovementCombo(leftDodgeAttack, basic2, new ComboNodeWrapper(rightDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
+        createMovementCombo(rightDodgeAttack, basic2, new ComboNodeWrapper(leftDodgeAttack, shootAirSlash, airSlash, shootDash, dash, shootAttack));
 
 
 
@@ -178,8 +181,9 @@ public class VoidFistCombos extends BaseComboBuilder {
             break;
         }
         dash.key1(rootDecision);
+        shootDash.key1(rootDecision);
         airSlash.key1(rootDecision);
-
+        shootAirSlash.key1(rootDecision);
         return registryWorker.build(skillName, ComboBasicAttack::new, ComboBasicAttack
                 .createComboBasicAttack()
                 .setCombo(root)
