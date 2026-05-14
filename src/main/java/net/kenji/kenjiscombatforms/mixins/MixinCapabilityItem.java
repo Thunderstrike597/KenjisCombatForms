@@ -32,6 +32,8 @@ public class MixinCapabilityItem {
     @Inject(method = "getLivingMotionModifier", at = @At("HEAD"), cancellable = true, remap = false)
     private void getCustomLivingMotion(LivingEntityPatch<?> patch, InteractionHand hand, CallbackInfoReturnable<Map<LivingMotion, AnimationManager.AnimationAccessor<? extends StaticAnimation>>> cir) {
         if(patch instanceof PlayerPatch<?> playerPatch) {
+            if (!playerPatch.isEpicFightMode()) return;
+
             String formName = FormManager.getInstance().getOrCreatePlayerFormData(playerPatch.getOriginal().getUUID()).selectedForm;
             Form currentForm = FormManager.getInstance().getForm(formName);
             ItemStack formItem = currentForm.getFormItem(playerPatch.getOriginal().getUUID());
@@ -42,10 +44,13 @@ public class MixinCapabilityItem {
                 return;
             CapabilityItem formCapItem = EpicFightCapabilities.getItemStackCapability(formItem);
             if (EpicFightCombatFormsCommon.ALTER_FIST_LIVING_MOTION.get()) {
-                if (formCapItem instanceof WeaponCapability weaponCapability) {
+                if (FormManager.isHeldCategoryValid(playerPatch.getOriginal(), FormManager.getTrueStackOr(playerPatch.getOriginal(), playerPatch.getOriginal().getInventory().getSelected()))) {
                     boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(patch.getOriginal().getUUID(), true);
-                    if (isToggled)
-                        cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
+                   if(formCapItem instanceof WeaponCapability weaponCapability) {
+                       if (isToggled) {
+                           cir.setReturnValue(kenjiscombatforms$getLivingMotions(playerPatch, weaponCapability));
+                       }
+                   }
                 }
             }
         }

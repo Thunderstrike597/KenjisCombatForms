@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCapability;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FormManager {
     public final Map<UUID, PlayerFormData> playerDataMap = new ConcurrentHashMap<>();
     public static final Map<UUID, Form> lastForm = new HashMap<>();
-    public static final Map<UUID, ItemStack> trueLastStackMap = new HashMap<>();
+    public static final Map<UUID, ItemStack> lastTrueStackMap = new HashMap<>();
     public static final Map<UUID, ItemStack> trueStackMap = new HashMap<>();
     public static final Map<UUID, Integer> lastSelectedMap = new HashMap<>();
 
@@ -36,10 +37,29 @@ public class FormManager {
         forms.put(form.getName(), form);
     }
 
+
     public Form getForm(String formName) {
         return formName != null && !formName.isEmpty() ? forms.get(formName) : forms.get("NONE");
     }
+    public static int getLastSelectedOr(Player player, int defaultValue){
+        return lastSelectedMap.getOrDefault(player.getUUID(), defaultValue);
+    }
+    public static void setLastSelected(Player player, int selected){
+        lastSelectedMap.put(player.getUUID(), selected);
+    }
+    public static ItemStack getLastTrueStackOr(Player player, ItemStack defaultStack){
+        return lastTrueStackMap.getOrDefault(player.getUUID(), defaultStack);
+    }
+    public static void setLastStackMap(Player player, ItemStack stack){
+        lastTrueStackMap.put(player.getUUID(), stack);
+    }
 
+    public static ItemStack getTrueStackOr(Player player, ItemStack defaultStack){
+       return trueStackMap.getOrDefault(player.getUUID(), defaultStack);
+    }
+    public static void setTrueStackMap(Player player, ItemStack stack){
+        trueStackMap.put(player.getUUID(), stack);
+    }
 
     public static class PlayerFormData{
         public String selectedForm = BasicForm.getInstance().getName();
@@ -132,8 +152,9 @@ public class FormManager {
     public static boolean isHeldCategoryValid(Player player, ItemStack stack){
        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
        WeaponCategory category = capItem.getWeaponCategory();
-
-       return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
+       if(!(capItem instanceof WeaponCapability))
+           return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
+        return category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
     }
 
 

@@ -35,6 +35,7 @@ import net.kenji.kenjiscombatforms.screen.EssenceInfusingScreen;
 import net.kenji.kenjiscombatforms.screen.ModMenuTypes;
 import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.kenji.kenjiscombatforms.tab.ModTab;
+import net.kenji.woh.WeaponsOfHarmony;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -50,6 +51,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -117,7 +119,8 @@ public class KenjisCombatForms
             modEventBus.addListener(KenjisCombatForms::registerPatchedEntityRenderers);        }
 
         WeaponCategory.ENUM_MANAGER.registerEnumCls(MOD_ID, CombatFormWeaponCategory.class);
-        modEventBus.addListener(KenjisCombatForms::regIcon);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(KenjisCombatForms::regIcon));
 
         modEventBus.addListener(KenjisCombatForms::RegisterWeaponType);
 

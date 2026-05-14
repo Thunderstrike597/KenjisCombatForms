@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
@@ -102,6 +103,7 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
     }
 
 
+
     @Override
     public float getSpeed() {
         if (this.getTarget() != null || this.isAngry()) {
@@ -140,6 +142,8 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
         this.goalSelector.addGoal(9, new InteractGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class,10,  true, false, this::isAngryAt));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this)); // Retaliates against ANY attacker
+
     }
 
     public void setWanderTarget(@javax.annotation.Nullable BlockPos p_35884_) {

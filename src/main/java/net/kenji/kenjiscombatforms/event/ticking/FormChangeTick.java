@@ -6,25 +6,9 @@ import net.kenji.kenjiscombatforms.api.handlers.FormChangeHandler;
 import net.kenji.kenjiscombatforms.api.handlers.LevelHandler;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.EnderPlayerDataSets;
 import net.kenji.kenjiscombatforms.api.handlers.power_data.WitherPlayerDataSets;
-import net.kenji.kenjiscombatforms.api.interfaces.form.AbstractFormData;
 import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
-import net.kenji.kenjiscombatforms.api.managers.FormLevelManager;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
-import net.kenji.kenjiscombatforms.api.managers.forms.*;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist2Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFist3Item;
 import net.kenji.kenjiscombatforms.item.custom.fist_forms.basic_form.BasicFistItem;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.power_form.PowerFist2Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.power_form.PowerFist3Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.power_form.PowerFistItem;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form.SwiftFist2Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form.SwiftFist3Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.swift_form.SwiftFistItem;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form.VoidFist2Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.void_form.VoidFistItem;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFist2Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFist3Item;
-import net.kenji.kenjiscombatforms.item.custom.fist_forms.wither_form.WitherFistItem;
 import net.kenji.kenjiscombatforms.item.custom.forms.BaseFormClass;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -35,11 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jline.utils.Log;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
@@ -130,11 +112,11 @@ public class FormChangeTick {
                 if (weaponInnate == null) return;
                 playerPatch.updateHeldItem(currentCap, currentCap, currentStack, currentStack, InteractionHand.MAIN_HAND);
                 FormManager.trueStackMap.put(player.getUUID(), player.getInventory().getSelected());
-                FormManager.trueLastStackMap.put(player.getUUID(), player.getInventory().getSelected());
+                FormManager.lastTrueStackMap.put(player.getUUID(), player.getInventory().getSelected());
 
             }
             ItemStack stack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
-            ItemStack previousStack = FormManager.trueLastStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
+            ItemStack previousStack = FormManager.lastTrueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
 
             if (!ItemStack.isSameItemSameTags(stack, previousStack)) {
                 CapabilityItem lastCapItem = EpicFightCapabilities.getItemStackCapability(previousStack);
@@ -143,7 +125,7 @@ public class FormChangeTick {
                 playerPatch.updateHeldItem(lastCapItem, capItem, previousStack, stack, InteractionHand.MAIN_HAND);
 
                 // ← Critical: update the "last" map so the guard actually holds next tick
-                FormManager.trueLastStackMap.put(player.getUUID(), stack);
+                FormManager.lastTrueStackMap.put(player.getUUID(), stack);
             }
 
             FormChangeTick.lastStack.put(player.getUUID(), currentStack);

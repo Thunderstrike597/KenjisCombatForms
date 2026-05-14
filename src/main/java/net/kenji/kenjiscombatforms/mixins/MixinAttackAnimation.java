@@ -37,7 +37,7 @@ public class MixinAttackAnimation {
     public void onGetHitSound(LivingEntityPatch<?> entitypatch, AttackAnimation.Phase phase, CallbackInfoReturnable<SoundEvent> cir) {
         AttackAnimation self = (AttackAnimation) (Object)this;
         if(!(entitypatch instanceof PlayerPatch<?> patch))return;
-        ItemStack trueStack = FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY);
+        ItemStack trueStack = FormManager.getTrueStackOr(patch.getOriginal(), ItemStack.EMPTY);
         if(!FormManager.isHeldCategoryValid(patch.getOriginal(), trueStack)) return;
         CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(trueStack);
         if(phase.getProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND).isPresent()) {
@@ -95,7 +95,7 @@ public class MixinAttackAnimation {
     public void onSpawnHitParticle(ServerLevel world, LivingEntityPatch<?> attacker, Entity hit, AttackAnimation.Phase phase, CallbackInfo ci) {
         AttackAnimation self = (AttackAnimation) (Object)this;
         if(!(attacker instanceof PlayerPatch<?> patch))return;
-        ItemStack trueStack = FormManager.trueStackMap.getOrDefault(patch.getOriginal().getUUID(), ItemStack.EMPTY);
+        ItemStack trueStack = FormManager.getTrueStackOr(patch.getOriginal(), ItemStack.EMPTY);
 
         if(!FormManager.isHeldCategoryValid(patch.getOriginal(), trueStack)) return;
 

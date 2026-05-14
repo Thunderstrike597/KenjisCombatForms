@@ -10,9 +10,7 @@ import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.ItemStack;
-import org.jline.utils.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +20,7 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
-@Mixin(value = Player.class)
+@Mixin(value = Player.class, priority = 500)
 public class MixinPlayer {
 
     @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
@@ -34,24 +32,24 @@ public class MixinPlayer {
             ItemStack stack = player.getInventory().getSelected();
 
 
-            ItemStack lastStack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
-            int lastSelected = FormManager.lastSelectedMap.getOrDefault(player.getUUID(), selectedSlot);
+            ItemStack lastStack = FormManager.getLastTrueStackOr(player, ItemStack.EMPTY);
+            int lastSelected = FormManager.getLastSelectedOr(player, selectedSlot);
 
 
             boolean slotChanged = selectedSlot != lastSelected;
 
             // Always track the slot, regardless of category
-            FormManager.lastSelectedMap.put(player.getUUID(), selectedSlot);
+            FormManager.setLastSelected(player, selectedSlot);
 
             if (slotChanged) {
                 // Snapshot what WAS in trueStackMap as the "last"
-                FormManager.trueLastStackMap.put(player.getUUID(), lastStack);
+                FormManager.setLastStackMap(player, lastStack);
                 // Now record the real item in the new slot
-                FormManager.trueStackMap.put(player.getUUID(), stack);
+                FormManager.setTrueStackMap(player, stack);
             }
 
             if (!slotChanged) {
-                FormManager.trueStackMap.put(player.getUUID(), stack);
+                FormManager.setTrueStackMap(player, stack);
             }
         }
     }
@@ -61,9 +59,8 @@ public class MixinPlayer {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof Player player) {
             PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
-            if (patch == null || !patch.isEpicFightMode()) {
-                return;
-            }
+            if (patch == null || !patch.isEpicFightMode()) return;
+
 
             ItemStack stack = player.getInventory().getSelected();
             if (equipmentSlot == EquipmentSlot.MAINHAND) {
@@ -80,11 +77,11 @@ public class MixinPlayer {
         }
     }
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)
-    public void onUpdateHeldItem(EquipmentSlot par1, ItemStack par2, CallbackInfo ci) {
+    public void onUpdateHeldItem(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
         Player self = (Player) (Object) this;
-        CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(self.getMainHandItem());
+        CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(stack);
 
-        if(par2.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory))
+        if(stack.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory))
             ci.cancel();
     }
 }

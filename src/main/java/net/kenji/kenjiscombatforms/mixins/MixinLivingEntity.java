@@ -29,6 +29,8 @@ public class MixinLivingEntity {
     private void maybeReplaceGetItemInHand(CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (self instanceof Player player) {
+            PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
+            if (patch == null || !patch.isEpicFightMode()) return;
 
             if (cir.getReturnValue().getItem() instanceof BaseFistClass) {
                 ItemStack stack = player.getInventory().getSelected();
@@ -38,7 +40,7 @@ public class MixinLivingEntity {
         }
     }
 
-        @Inject(method = "getMainHandItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getMainHandItem", at = @At("HEAD"), cancellable = true)
     private void maybeReplaceGetItemBySlot(CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (self instanceof Player player) {

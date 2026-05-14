@@ -47,7 +47,7 @@ public class MixinServerPlayerPatch {
         if (formItem == null) return;
         ServerPlayer player = (ServerPlayer) self.getOriginal();
 
-        ItemStack heldStack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
+        ItemStack heldStack = FormManager.getTrueStackOr(player, ItemStack.EMPTY);
 
         boolean fromIsCombatWeapon = fromCap != null && fromCap.getWeaponCategory() instanceof CombatFormWeaponCategory;
         boolean toIsCombatWeapon = toCap != null && toCap.getWeaponCategory() instanceof CombatFormWeaponCategory;

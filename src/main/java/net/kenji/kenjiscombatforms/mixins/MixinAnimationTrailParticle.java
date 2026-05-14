@@ -33,7 +33,7 @@ public class MixinAnimationTrailParticle {
         if (!(instance instanceof Player player)) return instance.getMainHandItem();
 
         AtomicReference<ItemStack> finalStack = new AtomicReference<>(instance.getMainHandItem());
-        ItemStack stack = FormManager.trueStackMap.getOrDefault(player.getUUID(), player.getInventory().getSelected());
+        ItemStack stack = FormManager.getTrueStackOr(player, player.getInventory().getSelected());
         CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
         if (FormManager.isHeldCategoryValid(player, stack) && capItem.getWeaponCategory() instanceof CombatFormWeaponCategory) {
             boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(player.getUUID(), true);

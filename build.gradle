@@ -179,9 +179,13 @@ dependencies {
     implementation fg.deobf("curse.maven:epicfight-resurrection-1151542:6931390")
     implementation fg.deobf("curse.maven:weapons-of-miracles-epicfight-918614:7517612")
     implementation fg.deobf("curse.maven:epic-fight-invincible-1184379:7679941")
+    implementation fg.deobf("curse.maven:epicfight-nightfall-1307848:8082392")
+    implementation fg.deobf("curse.maven:epic-fight-avalon-1268823:7619938")
     implementation fg.deobf("curse.maven:packet-fixer-689467:7221527")
 
-    implementation fg.deobf("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
+    if(enable_combat_hotbar)
+       implementation fg.deobf("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
+    else compileOnly("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
 
     //implementation fg.deobf("curse.maven:epicfight-resurrection-1151542:6931390")
 
