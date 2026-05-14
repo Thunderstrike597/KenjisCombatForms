@@ -12,12 +12,24 @@ modId="kenjiscombatforms"
 version="${mod_version}" #mandatory
 displayName="Epic Fight: KenjisCombatForms"
 authors="Kenji" #optional
+description='''
+This mod is an addon to the Epic Fight Mod that adds brand-new overhauled mechanics and features related to hand-to-hand combat and abilities!
+
+Creative Commons Attributions: [
+  Combat Dagger Model by 'Finn the Demon Cat': [
+    Model - https://sketchfab.com/3d-models/european-dao-16364608e0c041d3b4948cde5c4d6eb5
+
+    User - https://sketchfab.com/DemonCat9228
+]
+
+-Kenji
+'''
 
 [[mixins]]
 config = "mixins.kenjiscombatforms.json"
 
 
-description='''This mod is an addon to the Epic Fight Mod that adds brand-new overhauled mechanics and features related to hand-to-hand combat and abilities! -Kenji'''
+
 
 [modproperties.kenjiscombatforms]
 configuredBackground="minecraft:textures/block/cherry_leaves.png"
