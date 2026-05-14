@@ -90,6 +90,7 @@ public class CommonEventHandler {
                 //System.out.println("slot before dimension change: " + originalSlot);
                 CompoundTag nbt = player.getPersistentData();
                 getInstance().setStoredItemNBT(player, storedItem);
+                getInstance().setStoredItemNBT(player, storedItem);
                 getInstance().setOriginalSlot(player, originalSlot);
                 //System.out.println("Stored Item after dimension change: " + getInstance().getStoredItem(player));
                 //System.out.println("slot after dimension change: " + getInstance().getOriginalSlot(player));
