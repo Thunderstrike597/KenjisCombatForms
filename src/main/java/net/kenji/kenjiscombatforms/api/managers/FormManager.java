@@ -6,6 +6,7 @@ import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.ItemStack;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -152,9 +153,10 @@ public class FormManager {
     public static boolean isHeldCategoryValid(Player player, ItemStack stack){
        CapabilityItem capItem = EpicFightCapabilities.getItemStackCapability(stack);
        WeaponCategory category = capItem.getWeaponCategory();
-       if(!(capItem instanceof WeaponCapability))
-           return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
-        return category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
+       if(capItem instanceof WeaponCapability && category == CapabilityItem.WeaponCategories.FIST)
+           return false;
+
+       return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
     }
 
 
