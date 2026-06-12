@@ -40,7 +40,7 @@ public class MixinServerPlayerPatch {
     @Inject(method = "updateHeldItem", at = @At("HEAD"), cancellable = true, remap = false)
     public void onUpdateHeldItem(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack _to, InteractionHand hand, CallbackInfo ci) {
         ServerPlayerPatch self = (ServerPlayerPatch) (Object) this;
-
+        if(hand != InteractionHand.MAIN_HAND)return;
         String formName = FormManager.getInstance().getOrCreatePlayerFormData(self.getOriginal().getUUID()).selectedForm;
         Form currentForm = FormManager.getInstance().getForm(formName);
         ItemStack formItem = currentForm.getFormItem(self.getOriginal().getUUID());

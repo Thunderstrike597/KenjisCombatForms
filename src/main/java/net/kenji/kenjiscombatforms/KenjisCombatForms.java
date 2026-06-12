@@ -35,7 +35,7 @@ import net.kenji.kenjiscombatforms.screen.EssenceInfusingScreen;
 import net.kenji.kenjiscombatforms.screen.ModMenuTypes;
 import net.kenji.kenjiscombatforms.sound.ModSounds;
 import net.kenji.kenjiscombatforms.tab.ModTab;
-import net.kenji.woh.WeaponsOfHarmony;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;

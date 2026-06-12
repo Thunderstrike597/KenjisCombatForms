@@ -19,6 +19,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jline.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import yesman.epicfight.api.animation.LivingMotions;
+import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -40,6 +45,7 @@ public class FormChangeTick {
     private static final Map<UUID, ItemStack> lastStack = new HashMap<>();
 
     private static final Map<UUID, Set<UUID>> appliedModifiers = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(FormChangeTick.class);
 
     public static boolean isGuiOpen(Player player) {
         return playerGuiStates.getOrDefault(player.getUUID(), false);
@@ -113,7 +119,6 @@ public class FormChangeTick {
                 playerPatch.updateHeldItem(currentCap, currentCap, currentStack, currentStack, InteractionHand.MAIN_HAND);
                 FormManager.trueStackMap.put(player.getUUID(), player.getInventory().getSelected());
                 FormManager.lastTrueStackMap.put(player.getUUID(), player.getInventory().getSelected());
-
             }
             ItemStack stack = FormManager.trueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);
             ItemStack previousStack = FormManager.lastTrueStackMap.getOrDefault(player.getUUID(), ItemStack.EMPTY);

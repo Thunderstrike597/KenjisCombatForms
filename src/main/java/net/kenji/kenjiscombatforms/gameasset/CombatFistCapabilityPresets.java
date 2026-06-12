@@ -36,7 +36,9 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
-                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD);
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK_SHIELD, Animations.BIPED_BLOCK);
+
 
         return builder;
 
@@ -57,7 +59,7 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
-
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK_SHIELD, Animations.BIPED_BLOCK)
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())
                 .collider(ColliderPreset.DAGGER)
@@ -111,6 +113,7 @@ public class CombatFistCapabilityPresets {
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
+                .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.BLOCK_SHIELD, Animations.BIPED_BLOCK)
 
                 .swingSound(EpicFightSounds.WHOOSH.get())
                 .hitSound(EpicFightSounds.BLUNT_HIT.get())

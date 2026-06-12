@@ -185,7 +185,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:epicfight-nightfall-1307848:8082392")
     //implementation fg.deobf("curse.maven:epic-fight-avalon-1268823:7619938")
     implementation fg.deobf("curse.maven:packet-fixer-689467:7221527")
-
+    implementation 'net.kenji:weapons_of_harmony-efm-20-14-4:1.4.0'
     if(hotbarEnabled) {
         implementation fg.deobf("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
     }
@@ -197,9 +197,10 @@ dependencies {
 
     //implementation fg.deobf("curse.maven:corpse-316582:7018272")
 
-    implementation(fg.deobf("net.kenji:weapons_of_harmony-efm-20-14-4:1.4.0")) {
-        transitive = false
-    }
+   // implementation(fg.deobf("net.kenji:weapons_of_harmony-efm-20-14-4:1.4.0")) {
+       // transitive = false
+   // }
+
     implementation fg.deobf("curse.maven:packet-fixer-689467:7221527")
 
     implementation fg.deobf("curse.maven:jei-238222:5533463")

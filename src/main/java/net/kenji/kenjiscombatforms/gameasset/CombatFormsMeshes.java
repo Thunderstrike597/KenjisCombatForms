@@ -5,6 +5,9 @@ import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.InteractionHand;
+import yesman.epicfight.api.animation.LivingMotion;
+import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.client.model.Meshes;
 
 import java.util.concurrent.CompletableFuture;

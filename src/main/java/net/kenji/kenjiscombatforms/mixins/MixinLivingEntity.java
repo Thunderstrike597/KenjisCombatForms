@@ -18,8 +18,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import yesman.epicfight.skill.guard.GuardSkill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 @Mixin(value = LivingEntity.class)
 public class MixinLivingEntity {
@@ -53,7 +55,7 @@ public class MixinLivingEntity {
                         boolean isToggled = ControlHandler.toggleHandCombatMap.getOrDefault(player.getUUID(), true);
                         if (isToggled)
                             cir.setReturnValue(FormManager.getCurrentFormItem(player));
-                        return;
+                       return;
                     }
                     cir.setReturnValue(stack);
             }

@@ -1,7 +1,7 @@
 package net.kenji.kenjiscombatforms.event;
 
-import net.kenji.woh.WeaponsOfHarmony;
-import net.kenji.woh.registry.WohItems;
+
+import net.kenji.kenjiscombatforms.KenjisCombatForms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import yesman.epicfight.data.loot.function.SetSkillFunction;
 import yesman.epicfight.world.item.EpicFightItems;
 
-@Mod.EventBusSubscriber(modid = WeaponsOfHarmony.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LootTables {
     @SubscribeEvent
     public static void modifyVanillaLootPools(LootTableLoadEvent event) {
