@@ -37,6 +37,13 @@ public class ScrollFormingRecipe implements Recipe<SimpleContainer> {
         return inputItems;
     }
 
+    public NonNullList<Ingredient> getInputItems() {
+        return inputItems;
+    }
+
+    public int[] getIngredientCounts() {
+        return new int[]{ counts.get(0), counts.get(1), counts.get(2) };
+    }
     @Override
     public boolean matches(@NotNull SimpleContainer simpleContainer, Level level) {
         if (level.isClientSide()) {

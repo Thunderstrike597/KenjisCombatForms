@@ -18,6 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ScrollFormingCategory implements IRecipeCategory<ScrollFormingRecipe> {
     public static final ResourceLocation UID = new ResourceLocation(KenjisCombatForms.MOD_ID, "scroll_forming");
     public static final ResourceLocation TEXTURE = new ResourceLocation(KenjisCombatForms.MOD_ID, "textures/gui/menus/scroll_forming_menu.png");
@@ -56,12 +59,36 @@ public class ScrollFormingCategory implements IRecipeCategory<ScrollFormingRecip
 
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder iRecipeLayoutBuilder, ScrollFormingRecipe abilityInfusionRecipe, IFocusGroup iFocusGroup) {
-        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 80, 17).addIngredients(abilityInfusionRecipe.getIngredients().get(0));
-        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 54, 26).addIngredients(abilityInfusionRecipe.getIngredients().get(1));
-        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.INPUT, 106, 26).addIngredients(abilityInfusionRecipe.getIngredients().get(2));
-        iRecipeLayoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, 80, 55).addItemStack(abilityInfusionRecipe.getResultItem(null));
+    public void setRecipe(IRecipeLayoutBuilder builder, ScrollFormingRecipe recipe, IFocusGroup focuses) {
+        int[] counts = recipe.getIngredientCounts(); // your count array
+
+        addCountedSlot(builder, recipe, 0,  80, 17, counts[0]);
+        addCountedSlot(builder, recipe, 1,  54, 26, counts[1]);
+        addCountedSlot(builder, recipe, 2, 106, 26, counts[2]);
+
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 55)
+                .addItemStack(recipe.getResultItem(null));
     }
+
+    private void addCountedSlot(IRecipeLayoutBuilder builder, ScrollFormingRecipe recipe,
+                                int ingredientIndex, int x, int y, int count) {
+        ItemStack[] stacks = recipe.getIngredients().get(ingredientIndex).getItems();
+
+        if (stacks.length == 0) {
+            // Fallback: add the ingredient directly so JEI doesn't choke
+            builder.addSlot(RecipeIngredientRole.INPUT, x, y)
+                    .addIngredients(recipe.getIngredients().get(ingredientIndex));
+            return;
+        }
+
+        List<ItemStack> counted = Arrays.stream(stacks)
+                .map(s -> { ItemStack copy = s.copy(); copy.setCount(count); return copy; })
+                .toList();
+
+        builder.addSlot(RecipeIngredientRole.INPUT, x, y)
+                .addItemStacks(counted);
+    }
+
 
     @Override
     public void draw(ScrollFormingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
