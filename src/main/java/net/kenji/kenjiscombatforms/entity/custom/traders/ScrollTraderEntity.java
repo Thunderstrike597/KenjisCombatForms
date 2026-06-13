@@ -1,7 +1,10 @@
 package net.kenji.kenjiscombatforms.entity.custom.traders;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import jeresources.entry.AbstractVillagerEntry;
 import net.kenji.kenjiscombatforms.block.ModBlocks;
 import net.kenji.kenjiscombatforms.config.EpicFightCombatFormsCommon;
+import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.item.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -18,6 +21,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -55,12 +60,18 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("hasBeenProvoked", hasBeenProvoked);
+        if (this.offers != null) {
+            compound.put("Offers", this.offers.createTag());
+        }
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         hasBeenProvoked = compound.getBoolean("hasBeenProvoked");
+        if (compound.contains("Offers")) {
+            this.offers = new MerchantOffers(compound.getCompound("Offers"));
+        }
     }
 
 
@@ -120,17 +131,26 @@ public class ScrollTraderEntity extends WanderingTrader implements NeutralMob {
 
     @Override
     public MerchantOffers getOffers() {
-        MerchantOffers offers = new MerchantOffers();
-        offers.add(createTrade2(Items.EMERALD, 35, ModBlocks.ESSENCE_CHANNELING_STATION.get().asItem(), 1,ModBlocks.SCROLL_FORMING_STATION.get().asItem(), 1));
-        offers.add(createTrade2(Items.EMERALD, 16, Items.PAPER, 12, ModItems.BLANK_FORM_SCROLL.get(), 1));
-        offers.add(createTrade2(Items.EMERALD, 12, Items.PAPER, 6, ModItems.BLANK_ABILITY_SCROLL.get(), 1));
-        offers.add(createTrade(Items.EMERALD, 3, Items.GLOW_INK_SAC, 2));
-        offers.add(createTrade2(Items.EMERALD, 64, ModItems.POWERESSENCE_TIER2.get(), 2, ModItems.ABILITY_ESSENCE.get(), 1));
-        if(RANDOM.nextDouble() < EpicFightCombatFormsCommon.COMBAT_WEAPON_TRADE_CHANCE.get()){
-            offers.add(createTrade2(Items.EMERALD, 38, ModItems.MYSTERIOUS_SCRAP_METAL.get(), 1, ModItems.COMBAT_DAGGER.get(), 1));
+        if (this.offers == null || this.offers.isEmpty()) {
+            this.offers = new MerchantOffers();
+            this.offers.add(createTrade2(Items.EMERALD, 35,
+                    ModBlocks.ESSENCE_CHANNELING_STATION.get().asItem(), 1,
+                    ModBlocks.SCROLL_FORMING_STATION.get().asItem(), 1));
+            this.offers.add(createTrade2(Items.EMERALD, 16,
+                    Items.PAPER, 12, ModItems.BLANK_FORM_SCROLL.get(), 1));
+            this.offers.add(createTrade2(Items.EMERALD, 12,
+                    Items.PAPER, 6, ModItems.BLANK_ABILITY_SCROLL.get(), 1));
+            this.offers.add(createTrade(Items.EMERALD, 3, Items.GLOW_INK_SAC, 2));
+            this.offers.add(createTrade2(Items.EMERALD, 64,
+                    ModItems.POWERESSENCE_TIER2.get(), 2, ModItems.ABILITY_ESSENCE.get(), 1));
 
+            // Roll chance trade ONCE and cache it
+            if (RANDOM.nextDouble() < EpicFightCombatFormsCommon.COMBAT_WEAPON_TRADE_CHANCE.get()) {
+                this.offers.add(createTrade2(Items.EMERALD, 38,
+                        ModItems.MYSTERIOUS_SCRAP_METAL.get(), 1, ModItems.COMBAT_DAGGER.get(), 1));
+            }
         }
-        return offers;
+        return this.offers;
     }
 
 
@@ -349,6 +369,4 @@ return new MerchantOffer(
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
     }
-
-
 }

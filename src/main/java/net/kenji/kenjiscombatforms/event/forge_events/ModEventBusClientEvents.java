@@ -1,6 +1,9 @@
 package net.kenji.kenjiscombatforms.event.forge_events;
 
+import jeresources.JEResources;
+import jeresources.compatibility.api.JERAPI;
 import net.kenji.kenjiscombatforms.KenjisCombatForms;
+import net.kenji.kenjiscombatforms.compat.JERPlugin;
 import net.kenji.kenjiscombatforms.entity.ModEntities;
 import net.kenji.kenjiscombatforms.entity.client.EntityModels.*;
 import net.kenji.kenjiscombatforms.entity.client.EntityRenderers.*;
@@ -12,6 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
@@ -41,6 +45,9 @@ public class ModEventBusClientEvents {
         EntityRenderers.register(ModEntities.WITHER_PLAYER.get(), WitherPlayerRenderer::new);
         EntityRenderers.register(ModEntities.WITHER_MINION.get(), WitherMinionRenderer::new);
         EntityRenderers.register(ModEntities.SCROLL_TRADER.get(), ScrollTraderRenderer::new);
+
+
+
     }
 
     @SubscribeEvent
@@ -58,4 +65,5 @@ public class ModEventBusClientEvents {
     public static void registerRenderer(PatchedRenderersEvent.RegisterItemRenderer event) {
         event.addItemRenderer(KenjisCombatForms.identifier("combat_dagger"), CombatDaggerRender::new);
     }
+
 }
