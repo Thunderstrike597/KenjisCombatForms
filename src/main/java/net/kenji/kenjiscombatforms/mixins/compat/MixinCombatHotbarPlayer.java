@@ -23,10 +23,8 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem;
 @Mixin(value = Player.class, priority = 500)
 public class MixinCombatHotbarPlayer {
 
-
-
     @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
-    private void onTick(CallbackInfo ci) {
+    private void onTickTail(CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
         if(livingEntity instanceof Player player) {
 
@@ -90,6 +88,11 @@ public class MixinCombatHotbarPlayer {
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)
     public void onUpdateHeldItem(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
         Player self = (Player) (Object) this;
+        if(slot != EquipmentSlot.MAINHAND)return;
+        ItemStack mainHandItem = self.getMainHandItem();
+        if(stack == self.getOffhandItem() && (mainHandItem.getItem() instanceof BaseFistClass || mainHandItem.isEmpty())){
+            ci.cancel();
+        }
         CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(stack);
 
         if(stack.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory)) {

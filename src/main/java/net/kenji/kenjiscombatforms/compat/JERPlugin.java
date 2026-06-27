@@ -36,7 +36,6 @@ import java.util.List;
 
 @jeresources.api.JERPlugin
 public class JERPlugin{
-    private static boolean jerRegistered = false;
 
 
     public static void receive(IJERAPI api) {
@@ -50,6 +49,8 @@ public class JERPlugin{
             LootDrop drop = new LootDrop(offer.getResult());
             offersList.add(drop);
         }
+
+        offersList.add(new LootDrop(ModItems.COMBAT_DAGGER.get().getDefaultInstance()));
         LootDrop[] drops = offersList.toArray(new LootDrop[0]);
         api.getMobRegistry().register(
                 entity,
@@ -101,18 +102,5 @@ public class JERPlugin{
                 return false;
             }
         });
-    }
-    @Mod.EventBusSubscriber(modid = KenjisCombatForms.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-
-    public static class Events {
-        @SubscribeEvent
-        public static void onWorldLoad(TickEvent.PlayerTickEvent event) {
-            if (jerRegistered) return;
-            if (ModList.get().isLoaded("jeresources")) {
-                JERPlugin.init();
-                JERPlugin.receive(JERAPI.getInstance());
-                jerRegistered = true;
-            }
-        }
     }
 }

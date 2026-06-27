@@ -192,7 +192,8 @@ dependencies {
     else {
         compileOnly("curse.maven:epic-fight-combat-hotbar-1461210:7717714")
     }
-
+    implementation fg.deobf("curse.maven:battle-arts-933502:7936159")
+    implementation fg.deobf("curse.maven:battle-arts-api-1091499:7935961")
     //implementation fg.deobf("curse.maven:epicfight-resurrection-1151542:6931390")
 
     //implementation fg.deobf("curse.maven:corpse-316582:7018272")

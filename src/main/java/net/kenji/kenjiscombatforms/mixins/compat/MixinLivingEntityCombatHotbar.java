@@ -7,6 +7,8 @@ import net.kenji.kenjiscombatforms.api.handlers.ControlHandler;
 import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +25,9 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 public class MixinLivingEntityCombatHotbar {
 
     @Inject(method = "getItemInHand", at = @At("RETURN"), cancellable = true)
-    private void maybeReplaceGetItemInHand(CallbackInfoReturnable<ItemStack> cir) {
+    private void maybeReplaceGetItemInHand(InteractionHand hand, CallbackInfoReturnable<ItemStack> cir) {
+        if (hand != InteractionHand.MAIN_HAND) return;
+
         LivingEntity self = (LivingEntity) (Object) this;
         if (self instanceof Player player) {
 
@@ -39,7 +43,7 @@ public class MixinLivingEntityCombatHotbar {
         }
     }
 
-    @Inject(method = "getMainHandItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getMainHandItem", at = @At("RETURN"), cancellable = true)
     private void maybeReplaceGetItemBySlot(CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if(self instanceof Player player) {

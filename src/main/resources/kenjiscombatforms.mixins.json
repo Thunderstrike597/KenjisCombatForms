@@ -17,6 +17,7 @@
     "MixinCancellableDodge",
     "MixinPlayer",
     "MixinAttackAnimation",
+    "MixinServerboundPlayerActionPacket",
     "compat.MixinCombatHotbarPlayer",
     "compat.MixinCombatHotbarServerPlayerPatch",
     "compat.MixinLivingEntityCombatHotbar",

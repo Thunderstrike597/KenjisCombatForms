@@ -57,6 +57,8 @@ public class MixinPlayer {
     @Inject(method = "getItemBySlot", at = @At("HEAD"), cancellable = true)
     private void maybeReplaceGetItemBySlot(EquipmentSlot equipmentSlot, CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
+        if(equipmentSlot != EquipmentSlot.MAINHAND)return;
+
         if (livingEntity instanceof Player player) {
             PlayerPatch<?> patch = EpicFightCapabilities.getPlayerPatch(player);
             if (patch == null || !patch.isEpicFightMode()) return;
@@ -79,6 +81,11 @@ public class MixinPlayer {
     @Inject(method = "setItemSlot", at = @At("HEAD"), cancellable = true)
     public void onUpdateHeldItem(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
         Player self = (Player) (Object) this;
+        if(slot != EquipmentSlot.MAINHAND)return;
+        ItemStack mainHandItem = self.getMainHandItem();
+        if(stack == self.getOffhandItem() && (mainHandItem.getItem() instanceof BaseFistClass || mainHandItem.isEmpty())){
+            ci.cancel();
+        }
         CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(stack);
 
         if(stack.getItem() instanceof BaseFistClass || (itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory))

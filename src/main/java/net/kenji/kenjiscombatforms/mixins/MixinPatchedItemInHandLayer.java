@@ -1,5 +1,6 @@
 package net.kenji.kenjiscombatforms.mixins;
 
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +23,11 @@ public class MixinPatchedItemInHandLayer {
             )
     )
     public ItemStack getAltMainHandItem(LivingEntity instance){
+
         if(!(instance instanceof Player player)) return instance.getMainHandItem();
         CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(instance.getMainHandItem());
         if((itemCap != null && itemCap.getWeaponCategory() instanceof CombatFormWeaponCategory)) return player.getInventory().getSelected();
-        return player.getInventory().getSelected();
+        return FormManager.getTrueStackOr(player, player.getInventory().getSelected());
     }
 
 }
