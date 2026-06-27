@@ -1,5 +1,6 @@
 package net.kenji.kenjiscombatforms.mixins;
 
+import net.kenji.kenjiscombatforms.api.managers.FormManager;
 import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.network.protocol.game.ServerGamePacketListener;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
@@ -22,7 +23,9 @@ public class MixinServerboundPlayerActionPacket {
     public void onHandle(ServerboundPlayerActionPacket par1, CallbackInfo ci) {
         if (this.player == null) return;
         ItemStack mainHandItem = this.player.getMainHandItem();
-        if((mainHandItem.getItem() instanceof BaseFistClass || mainHandItem.isEmpty())) {
+        ItemStack offHandItem = this.player.getOffhandItem();
+
+        if(FormManager.isInstanceOfForm(mainHandItem) || FormManager.isInstanceOfForm(offHandItem)) {
             if (par1.getAction() == ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
                 ci.cancel();
             }

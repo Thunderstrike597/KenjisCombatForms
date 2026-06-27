@@ -83,7 +83,7 @@ public class MixinPlayer {
         Player self = (Player) (Object) this;
         if(slot != EquipmentSlot.MAINHAND)return;
         ItemStack mainHandItem = self.getMainHandItem();
-        if(stack == self.getOffhandItem() && (mainHandItem.getItem() instanceof BaseFistClass || mainHandItem.isEmpty())){
+        if(stack == self.getOffhandItem() && FormManager.isInstanceOfForm(mainHandItem)){
             ci.cancel();
         }
         CapabilityItem itemCap = EpicFightCapabilities.getItemStackCapability(stack);

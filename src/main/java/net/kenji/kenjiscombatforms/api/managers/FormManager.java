@@ -5,6 +5,8 @@ import net.kenji.kenjiscombatforms.api.interfaces.form.Form;
 import net.kenji.kenjiscombatforms.api.managers.client_data.ClientFistData;
 import net.kenji.kenjiscombatforms.api.managers.forms.BasicForm;
 import net.kenji.kenjiscombatforms.gameasset.CombatFormWeaponCategory;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseCombatWeapon;
+import net.kenji.kenjiscombatforms.item.custom.base_items.BaseFistClass;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.ItemStack;
@@ -158,8 +160,9 @@ public class FormManager {
 
        return category == CapabilityItem.WeaponCategories.FIST || category == CapabilityItem.WeaponCategories.NOT_WEAPON || category instanceof CombatFormWeaponCategory;
     }
-
-
+    public static boolean isInstanceOfForm(ItemStack itemStack){
+        return(itemStack.getItem() instanceof BaseFistClass || itemStack.getItem() instanceof BaseCombatWeapon || itemStack.isEmpty());
+    }
     public PlayerFormData getOrCreatePlayerFormData(UUID playerUuid){
         return playerDataMap.computeIfAbsent(playerUuid, k -> new PlayerFormData());
     }
