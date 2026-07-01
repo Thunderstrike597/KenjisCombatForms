@@ -32,7 +32,6 @@ public class CombatFistCapabilityPresets {
                         Animations.FIST_DASH, Animations.FIST_AIR_SLASH
                 )
                 .canBePlacedOffhand(true)
-                .offHandAlone(true)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.IDLE, Animations.BIPED_IDLE)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.WALK, Animations.BIPED_WALK)
                 .livingMotionModifier(CapabilityItem.Styles.COMMON, LivingMotions.RUN, Animations.BIPED_RUN)
